@@ -104,6 +104,10 @@ class Program
             // Create all necessary directories
             // For now, this is technically the only one we'll need
             Directory.CreateDirectory(Constants.ConfigurationDirectory);
+            
+            // Create them a default configuration file!
+            var json = JsonSerializer.Serialize(new ConfigMapping(), new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(Constants.ConfigurationFile, json);
         }
         finally
         {
@@ -129,6 +133,10 @@ class Program
         {
             Server.Instance.Configuration = new ConfigMapping();
             LogTool.Warn("Missing configuration file! Using default values.");
+            
+            // Quickly, save a default copy.
+            var json = JsonSerializer.Serialize(new ConfigMapping(), new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(Constants.ConfigurationFile, json);
             
             return;
         }
