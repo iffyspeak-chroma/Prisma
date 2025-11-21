@@ -15,6 +15,7 @@ class Program
 
         if (RequiredFileCheck() != 0)
         {
+            LogTool.Error("Missing required files in configuration folder!");
             Environment.Exit(RequiredFileCheck());
         }
     }
