@@ -1,7 +1,12 @@
-﻿using System.Text.Json;
+﻿using System.Net;
+using System.Text.Json;
 using API.Logging;
 using API.Networking;
+using DotNetty.Transport.Bootstrapping;
+using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
 using Server.ConfigurationTools;
+using Server.Networking;
 
 namespace Server;
 
@@ -25,8 +30,7 @@ class Program
         
         // Give the server a new instance.
         Server.Instance = new Server();
-
-
+        
         // NOW, we have the fun task of loading the configuration.
         try
         {
@@ -77,6 +81,9 @@ class Program
         {
             LogTool.Info("Packet report loaded!");
         }
+        
+        // It's officially time to try and start the server. For realsies now.
+        StartServerAsync().Wait();
     }
     
     static bool FirstLaunch()
@@ -127,5 +134,53 @@ class Program
         }
         
         LogTool.Error("Server instance is not initialized yet! (In theory, this shouldn't be possible. You messed up.)");
+    }
+
+    static async Task StartServerAsync()
+    {
+        IEventLoopGroup bossGroup = new MultithreadEventLoopGroup(1);
+        IEventLoopGroup workerGroup = new MultithreadEventLoopGroup(0);
+
+        try
+        {
+            var bootstrap = new ServerBootstrap();
+            bootstrap.Group(bossGroup, workerGroup)
+                .Channel<TcpServerSocketChannel>()
+                .Option(ChannelOption.SoBacklog, 128)
+                .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
+                {
+                    var pipeline = channel.Pipeline;
+                    pipeline.AddLast("handler", new PacketManager());
+                }));
+
+            if (Server.Instance == null)
+            {
+                LogTool.Error("Server instance is not initialized yet! (How did you manage to get here?)");
+                return;
+            }
+
+            if (Server.Instance.Configuration == null)
+            {
+                LogTool.Error("Server configuration is not initialized yet! (How did you manage to get here?)");
+                return;
+            }
+
+            IPAddress _bindAddress = Server.Instance.Configuration.BindAddress == "0.0.0.0"
+                ? IPAddress.Any
+                : IPAddress.Parse(Server.Instance.Configuration.BindAddress);
+
+            var _serverBind = await bootstrap.BindAsync(_bindAddress, Server.Instance.Configuration.Port);
+            LogTool.Info(
+                $"Server started successfully @ {_bindAddress.ToString()}:{Server.Instance.Configuration.Port}!");
+
+            await _serverBind.CloseCompletion;
+        }
+        finally
+        {
+            await Task.WhenAll(
+                bossGroup.ShutdownGracefullyAsync(),
+                workerGroup.ShutdownGracefullyAsync()
+            );
+        }
     }
 }

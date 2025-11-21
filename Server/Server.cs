@@ -1,5 +1,5 @@
-﻿using Server.ConfigurationTools;
-using API.Networking;
+﻿using API.Networking;
+using Server.ConfigurationTools;
 
 namespace Server;
 
