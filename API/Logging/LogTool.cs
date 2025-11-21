@@ -27,6 +27,19 @@ public class LogTool
         Console.ForegroundColor = fgOriginal;
     }
 
+    public static void Debug(string message, bool debug)
+    {
+        if (debug)
+        {
+            ConsoleColor fgOriginal = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Blue;
+        
+            Console.WriteLine($"Debug || {DateTime.Now} >> {message}");
+        
+            Console.ForegroundColor = fgOriginal;
+        }
+    }
+
     public static void Raw(string message, ConsoleColor color = ConsoleColor.White)
     {
         ConsoleColor fgOriginal = Console.ForegroundColor;
@@ -35,5 +48,19 @@ public class LogTool
         Console.WriteLine($"{message}");
         
         Console.ForegroundColor = fgOriginal;
+    }
+    
+    public static void RawDebug(string message, bool debug, ConsoleColor color = ConsoleColor.White)
+    {
+        if (debug)
+        {
+            Raw(message, color);
+        }
+    }
+
+    public static void Exception(Exception exception)
+    {
+        Error($"An exception occurred: {exception.Message}");
+        Raw($"{exception.StackTrace}", ConsoleColor.Red);
     }
 }
