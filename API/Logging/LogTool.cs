@@ -1,0 +1,39 @@
+﻿namespace API.Logging;
+
+public class LogTool
+{
+    public static void Info(string message)
+    {
+        Console.WriteLine($"Info || {DateTime.Now} >> {message}");
+    }
+
+    public static void Warn(string message)
+    {
+        ConsoleColor fgOriginal = Console.ForegroundColor;
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        
+        Console.WriteLine($"Warning || {DateTime.Now} >> {message}");
+        
+        Console.ForegroundColor = fgOriginal;
+    }
+
+    public static void Error(string message)
+    {
+        ConsoleColor fgOriginal = Console.ForegroundColor;
+        Console.ForegroundColor = ConsoleColor.Red;
+        
+        Console.WriteLine($"Error || {DateTime.Now} >> {message}");
+        
+        Console.ForegroundColor = fgOriginal;
+    }
+
+    public static void Raw(string message, ConsoleColor color = ConsoleColor.White)
+    {
+        ConsoleColor fgOriginal = Console.ForegroundColor;
+        Console.ForegroundColor = color;
+        
+        Console.WriteLine($"{message}");
+        
+        Console.ForegroundColor = fgOriginal;
+    }
+}
