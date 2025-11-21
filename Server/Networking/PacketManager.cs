@@ -31,7 +31,7 @@ public class PacketManager : ChannelHandlerAdapter
                 $"Packet is {length} bytes long.",
                 Server.Instance.Configuration.DebugMode);
             
-            LogTool.RawDebug($"Packet bytes: {Encoding.UTF8.GetString(buffer).Replace("-", "")}", 
+            LogTool.RawDebug($"Packet bytes: {Encoding.UTF8.GetString(p.ReadBytes(p.UnreadLength())).Replace("-", "")}", 
                 Server.Instance.Configuration.DebugMode, 
                 ConsoleColor.Blue);
             
