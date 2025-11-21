@@ -54,6 +54,9 @@ class Program
         finally
         {
             LogTool.Info("Configuration loaded!");
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            LogTool.Debug("Debug messages are enabled!", Server.Instance.Configuration.DebugMode);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
         
         // Next up, the packet report. It's pretty much the same thing but now for the packet report.
