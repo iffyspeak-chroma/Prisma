@@ -173,15 +173,15 @@ class Program
                 return;
             }
 
-            IPAddress _bindAddress = Server.Instance.Configuration.BindAddress == "0.0.0.0"
+            IPAddress bindAddress = Server.Instance.Configuration.BindAddress == "0.0.0.0"
                 ? IPAddress.Any
                 : IPAddress.Parse(Server.Instance.Configuration.BindAddress);
 
-            var _serverBind = await bootstrap.BindAsync(_bindAddress, Server.Instance.Configuration.Port);
+            var serverBind = await bootstrap.BindAsync(bindAddress, Server.Instance.Configuration.Port);
             LogTool.Info(
-                $"Server started successfully @ {_bindAddress.ToString()}:{Server.Instance.Configuration.Port}!");
+                $"Server started successfully @ {bindAddress.ToString()}:{Server.Instance.Configuration.Port}!");
 
-            await _serverBind.CloseCompletion;
+            await serverBind.CloseCompletion;
         }
         finally
         {
