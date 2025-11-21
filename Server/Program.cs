@@ -49,9 +49,10 @@ class Program
 
     static int RequiredFileCheck()
     {
-        int _configFile = 0b01;
-        int _packetsReport = 0b10;
+        const int configFile    = 0b00000001;
+        const int packetsReport = 0b00000010;
         
-        return (File.Exists(Constants.ConfigurationFile) ? 0 : _configFile) | (File.Exists(Constants.PacketReportFile) ? 0 : _packetsReport);
+        // Dependent on what's missing, it'll return that code.
+        return (File.Exists(Constants.ConfigurationFile) ? 0 : configFile) | (File.Exists(Constants.PacketReportFile) ? 0 : packetsReport);
     }
 }
