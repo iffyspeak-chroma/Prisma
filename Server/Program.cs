@@ -13,6 +13,7 @@ class Program
             Setup();
         }
 
+        // The config and packet report check.
         if (RequiredFileCheck() != 0)
         {
             LogTool.Error("Missing required files in configuration folder!");
