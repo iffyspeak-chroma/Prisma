@@ -123,6 +123,13 @@ namespace API.Networking
             }
         }
 
+        /// <summary>Moves the "read head" of the packet.</summary>
+        /// <param name="position">Where to set the "read head"</param>
+        public void SetReadPos(int position)
+        {
+            _readPos = position;
+        }
+
         #endregion
 
         #region Write Data
