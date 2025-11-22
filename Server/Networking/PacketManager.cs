@@ -58,12 +58,19 @@ public class PacketManager
 
     public void InitializePacketList()
     {
-        
         #region Handshake
 
         PacketList.Add(PlayerGamestate.Handshake, new Dictionary<int, PacketHandler>());
         
         PacketList[PlayerGamestate.Handshake].Add(PacketReport.Mapping.Handshake.Serverbound["minecraft:intention"].Id, new ServerboundHandshakePacket().Call);
+
+        #endregion
+
+        #region Status
+
+        PacketList.Add(PlayerGamestate.Status, new Dictionary<int, PacketHandler>());
+        
+        
 
         #endregion
     }
