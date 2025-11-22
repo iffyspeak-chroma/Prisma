@@ -2,6 +2,7 @@
 using API.Logging;
 using API.Networking;
 using DotNetty.Transport.Channels;
+using Server.Packets.Handshake;
 using Server.Players;
 
 namespace Server.Networking;
@@ -58,5 +59,12 @@ public class PacketManager
     public void InitializePacketList()
     {
         
+        #region Handshake
+
+        PacketList.Add(PlayerGamestate.Handshake, new Dictionary<int, PacketHandler>());
+        
+        PacketList[PlayerGamestate.Handshake].Add(PacketReport.Mapping.Handshake.Serverbound["minecraft:intention"].Id, new ServerboundHandshakePacket().Call);
+
+        #endregion
     }
 }
