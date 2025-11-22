@@ -1,4 +1,5 @@
-﻿using API.Networking;
+﻿using API.Logging;
+using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Packets.Status.Clientbound;
 
@@ -8,16 +9,13 @@ public class ServerboundPingRequestPacket : ICallable
 {
     public void Call(IChannelHandlerContext context, Packet? packet)
     {
-        if (packet == null)
-        {
-            return;
-        }
+        LogTool.Debug($"{context.Channel.RemoteAddress} sent a ping request", Server.Instance.Configuration.DebugMode);
         
         long timestamp = packet.ReadLong();
         
         using (Packet p = new Packet())
         {
-            p.Write(timestamp);
+            p.Write(timestamp, asVarLong: false);
 
             new ClientboundPongResponse().Call(context, p);
         }
