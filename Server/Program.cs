@@ -62,21 +62,14 @@ class Program
         // Next up, the packet report. It's pretty much the same thing but now for the packet report.
         try
         {
-            if (!File.Exists(Constants.ConfigurationFile))
+            if (!File.Exists(Constants.PacketReportFile))
             {
                 LogTool.Error("Missing packet report! (This isn't possible in theory but has occurred anyways.) Exiting!");
                 Environment.Exit(1);
             }
 
-            string json = File.ReadAllText(Constants.ConfigurationFile);
-
-            PacketReport? report = JsonSerializer.Deserialize<PacketReport>(json);
-
-            if (report == null)
-            {
-                LogTool.Error("Packet report potentially isn't valid. Exiting!");
-                Environment.Exit(1);
-            }
+            PacketReport report = new PacketReport();
+            report.Load(Constants.PacketReportFile);
 
             Server.Instance.PacketReport = report;
         }
