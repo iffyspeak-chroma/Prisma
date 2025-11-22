@@ -3,6 +3,7 @@ using API.Logging;
 using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Packets.Handshake;
+using Server.Packets.Login.Serverbound;
 using Server.Packets.Status.Serverbound;
 using Server.Players;
 
@@ -60,20 +61,33 @@ public class PacketManager
 
     public void InitializePacketList()
     {
-        #region Handshake
-
-        PacketList.Add(PlayerGamestate.Handshake, new Dictionary<int, PacketHandler>());
+        PlayerGamestate tState = PlayerGamestate.Handshake;
         
-        PacketList[PlayerGamestate.Handshake].Add(PacketReport.Mapping.Handshake.Serverbound["minecraft:intention"].Id, new ServerboundHandshakePacket().Call);
+        #region Handshake
+        tState = PlayerGamestate.Handshake;
+
+        PacketList.Add(tState, new Dictionary<int, PacketHandler>());
+        
+        PacketList[tState].Add(PacketReport.Mapping.Handshake.Serverbound["minecraft:intention"].Id, new ServerboundHandshakePacket().Call);
 
         #endregion
 
         #region Status
+        tState = PlayerGamestate.Status;
 
-        PacketList.Add(PlayerGamestate.Status, new Dictionary<int, PacketHandler>());
+        PacketList.Add(tState, new Dictionary<int, PacketHandler>());
         
-        PacketList[PlayerGamestate.Status].Add(PacketReport.Mapping.Status.Serverbound["minecraft:status_request"].Id, new ServerboundStatusRequestPacket().Call);
-        PacketList[PlayerGamestate.Status].Add(PacketReport.Mapping.Status.Serverbound["minecraft:ping_request"].Id, new ServerboundPingRequestPacket().Call);
+        PacketList[tState].Add(PacketReport.Mapping.Status.Serverbound["minecraft:status_request"].Id, new ServerboundStatusRequestPacket().Call);
+        PacketList[tState].Add(PacketReport.Mapping.Status.Serverbound["minecraft:ping_request"].Id, new ServerboundPingRequestPacket().Call);
+
+        #endregion
+
+        #region Login
+        tState = PlayerGamestate.Login;
+
+        PacketList.Add(tState, new Dictionary<int, PacketHandler>());
+        
+        PacketList[tState].Add(PacketReport.Mapping.Login.Serverbound["minecraft:hello"].Id, new ServerboundLoginStartPacket().Call);
 
         #endregion
     }
