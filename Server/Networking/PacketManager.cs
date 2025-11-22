@@ -23,21 +23,27 @@ public class PacketManager : ChannelHandlerAdapter
             var raw = new byte[data.ReadableBytes];
             data.GetBytes(data.ReaderIndex, raw);
             
-            using (Packet p = new Packet(raw))
+            LogTool.Debug($"Message length is {raw.Length} bytes\nMessage bytes: {BitConverter.ToString(raw).Replace("-", "")}", Server.Instance.Configuration.DebugMode);
+            
+            using (Packet rMessage = new Packet(raw))
             {
-                // Debugging information
-                int length = p.ReadVarInt();
-                p.SetReadPos(0);
-            
-                LogTool.Debug(
-                    $"Packet is {length} bytes long.",
-                    Server.Instance.Configuration.DebugMode);
-            
-                LogTool.RawDebug($"Packet bytes: {BitConverter.ToString(raw).Replace("-", "")}", 
-                    Server.Instance.Configuration.DebugMode, 
-                    ConsoleColor.Blue);
-            
-                // TODO: Actually handle the packet
+                while (rMessage.UnreadLength() > 0)
+                {
+                    byte[] payloadData = rMessage.ReadBytes(rMessage.ReadVarInt());
+                    LogTool.Debug($"Payload length is {payloadData.Length} bytes\nMessage bytes: {BitConverter.ToString(payloadData).Replace("-", "")}", Server.Instance.Configuration.DebugMode);
+
+                    try
+                    {
+                        using (Packet payload = new Packet(payloadData))
+                        {
+                            // TODO: Handle packet here.
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        LogTool.Exception(exception);
+                    }
+                }
             }
         }
     }
