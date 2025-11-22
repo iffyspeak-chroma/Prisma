@@ -12,8 +12,6 @@ public class ServerboundStatusRequestPacket : ICallable
 {
     public void Call(IChannelHandlerContext context, Packet? packet)
     {
-        LogTool.Debug($"{context.Channel.RemoteAddress} sent a status request", Server.Instance.Configuration.DebugMode);
-
         // TODO: We should only really be doing this if the server settings permit
         
         StatusResponseFormat status = new StatusResponseFormat();

@@ -16,21 +16,16 @@ public class ReceivedMessageHandler : ChannelHandlerAdapter
         Debug.Assert(Server.Instance != null, "Server.Instance != null");
         Debug.Assert(Server.Instance.Configuration != null, "Server.Instance.Configuration != null");
         
-        LogTool.Debug($"Got a message from {context.Channel.RemoteAddress}", Server.Instance.Configuration.DebugMode);
-        
         if (message is IByteBuffer data)
         {
             var raw = new byte[data.ReadableBytes];
             data.GetBytes(data.ReaderIndex, raw);
-            
-            LogTool.Debug($"Message length is {raw.Length} bytes\nMessage bytes: {BitConverter.ToString(raw).Replace("-", "")}", Server.Instance.Configuration.DebugMode);
             
             using (Packet rMessage = new Packet(raw))
             {
                 while (rMessage.UnreadLength() > 0)
                 {
                     byte[] payloadData = rMessage.ReadBytes(rMessage.ReadVarInt());
-                    LogTool.Debug($"Payload length is {payloadData.Length} bytes\nMessage bytes: {BitConverter.ToString(payloadData).Replace("-", "")}", Server.Instance.Configuration.DebugMode);
 
                     try
                     {

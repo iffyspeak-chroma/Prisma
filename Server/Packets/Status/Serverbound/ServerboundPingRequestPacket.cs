@@ -9,8 +9,6 @@ public class ServerboundPingRequestPacket : ICallable
 {
     public void Call(IChannelHandlerContext context, Packet? packet)
     {
-        LogTool.Debug($"{context.Channel.RemoteAddress} sent a ping request", Server.Instance.Configuration.DebugMode);
-        
         long timestamp = packet.ReadLong();
         
         using (Packet p = new Packet())
