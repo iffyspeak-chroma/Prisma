@@ -7,7 +7,7 @@ using DotNetty.Transport.Channels;
 
 namespace Server.Networking;
 
-public class PacketHandler : ChannelHandlerAdapter
+public class ReceivedMessageHandler : ChannelHandlerAdapter
 {
     public override void ChannelRead(IChannelHandlerContext context, object message)
     {
