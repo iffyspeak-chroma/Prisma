@@ -150,7 +150,7 @@ class Program
     static async Task StartServerAsync()
     {
         IEventLoopGroup bossGroup = new MultithreadEventLoopGroup(1);
-        IEventLoopGroup workerGroup = new MultithreadEventLoopGroup(0);
+        IEventLoopGroup workerGroup = new MultithreadEventLoopGroup();
 
         try
         {
