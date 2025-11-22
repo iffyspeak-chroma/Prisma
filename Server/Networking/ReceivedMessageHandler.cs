@@ -36,7 +36,7 @@ public class ReceivedMessageHandler : ChannelHandlerAdapter
                     {
                         using (Packet payload = new Packet(payloadData))
                         {
-                            // TODO: Handle packet here.
+                            PacketManager.Instance.ReceivedPacket(context, payload);
                         }
                     }
                     catch (Exception exception)
