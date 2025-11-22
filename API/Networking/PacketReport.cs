@@ -40,7 +40,7 @@ public class PacketReport
         public int Id { get; set; }
     }
 
-    public static void Load(string path)
+    public void Load(string path)
     {
         string json = File.ReadAllText(path);
         Mapping = JsonSerializer.Deserialize<MappingRoot>(json);
