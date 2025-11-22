@@ -54,4 +54,9 @@ public class PacketManager
             LogTool.Exception(exception);
         }
     }
+
+    public void InitializePacketList()
+    {
+        
+    }
 }
