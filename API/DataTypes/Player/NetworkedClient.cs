@@ -11,8 +11,8 @@ public class NetworkedClient
     public bool IsEncrypting { get; set; }
     public IChannel Channel { get; set; }
     public PlayerGamestate Gamestate { get; set; }
-    
     public PlayerConnectionInfo PlayerConnectionInfo { get; set; }
+    public ServerPlayer Player { get; set; }
 
     public NetworkedClient(IChannel channel, PlayerConnectionInfo pci)
     {
