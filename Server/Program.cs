@@ -161,7 +161,7 @@ class Program
                 .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
                 {
                     var pipeline = channel.Pipeline;
-                    pipeline.AddLast("handler", new PacketManager());
+                    pipeline.AddLast("handler", new PacketHandler());
                 }));
 
             if (Server.Instance == null)
