@@ -39,6 +39,7 @@ public class PacketManager
             // Don't decompress, the client and server haven't agreed to just yet.
             
             HandleDecompressedPacket(context, packet);
+            return;
         }
         
         // Decompress the packet, the client and server have agreed!
