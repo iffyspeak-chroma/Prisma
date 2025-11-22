@@ -1,4 +1,5 @@
-﻿using API.Networking;
+﻿using API.Logging;
+using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Players;
 
@@ -12,8 +13,12 @@ public class ClientboundPongResponse : ICallable
         {
             p.InsertInt(PacketReport.Mapping.Status.Clientbound["minecraft:pong_response"].Id);
             p.WriteLength();
-            
+
             await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
+
+            // Since they aren't actually dead-set on playing just yet, we'll remove them from our list
+            PlayerManager.Instance.ConnectedClients[context.Channel].DisconnectChannel();
+            PlayerManager.Instance.ConnectedClients.Remove(context.Channel);
         }
     }
 }

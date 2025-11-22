@@ -38,4 +38,9 @@ public class NetworkedClient
         var buffer = Unpooled.WrappedBuffer(packet.ToArray());
         await Channel.WriteAndFlushAsync(buffer);
     }
+
+    public void DisconnectChannel()
+    {
+        Channel.CloseAsync();
+    }
 }
