@@ -11,25 +11,27 @@ public class PacketManager : ChannelHandlerAdapter
 {
     public override void ChannelRead(IChannelHandlerContext context, object message)
     {
-        if (message is not IByteBuffer data) return;
+        // At this stage, if these are null, we are in big trouble.
+        // This should be okay, but probably isn't.
+        Debug.Assert(Server.Instance != null, "Server.Instance != null");
+        Debug.Assert(Server.Instance.Configuration != null, "Server.Instance.Configuration != null");
         
-        byte[] buffer = new byte[data.ReadableBytes];
-        data.GetBytes(data.ReaderIndex, buffer);
-
-        using (Packet p = new Packet(buffer))
+        LogTool.Debug($"Got a message from {context.Channel.RemoteAddress}", Server.Instance.Configuration.DebugMode);
+        
+        if (message is IByteBuffer data)
         {
-            // Debugging information
-            int length = p.ReadVarInt();
-            p.SetReadPos(0);
-
-            // At this stage, if these are null, we are in big trouble.
-            // This should be okay, but probably isn't.
-            Debug.Assert(Server.Instance != null, "Server.Instance != null");
-            Debug.Assert(Server.Instance.Configuration != null, "Server.Instance.Configuration != null");
+            var raw = new byte[data.ReadableBytes];
+            data.GetBytes(data.ReaderIndex, raw);
             
-            LogTool.Debug(
-                $"Packet is {length} bytes long.",
-                Server.Instance.Configuration.DebugMode);
+            using (Packet p = new Packet(raw))
+            {
+                // Debugging information
+                int length = p.ReadVarInt();
+                p.SetReadPos(0);
+            
+                LogTool.Debug(
+                    $"Packet is {length} bytes long.",
+                    Server.Instance.Configuration.DebugMode);
             
             LogTool.RawDebug($"Packet bytes: {Encoding.UTF8.GetString(p.ReadBytes(p.UnreadLength())).Replace("-", "")}", 
                 Server.Instance.Configuration.DebugMode, 
