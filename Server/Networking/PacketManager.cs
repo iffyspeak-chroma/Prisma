@@ -3,6 +3,7 @@ using API.Logging;
 using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Packets.Handshake;
+using Server.Packets.Status.Serverbound;
 using Server.Players;
 
 namespace Server.Networking;
@@ -70,7 +71,7 @@ public class PacketManager
 
         PacketList.Add(PlayerGamestate.Status, new Dictionary<int, PacketHandler>());
         
-        
+        PacketList[PlayerGamestate.Status].Add(PacketReport.Mapping.Status.Serverbound["minecraft:status_request"].Id, new ServerboundStatusRequestPacket().Call);
 
         #endregion
     }
