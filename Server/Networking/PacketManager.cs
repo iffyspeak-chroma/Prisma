@@ -73,6 +73,7 @@ public class PacketManager
         PacketList.Add(PlayerGamestate.Status, new Dictionary<int, PacketHandler>());
         
         PacketList[PlayerGamestate.Status].Add(PacketReport.Mapping.Status.Serverbound["minecraft:status_request"].Id, new ServerboundStatusRequestPacket().Call);
+        PacketList[PlayerGamestate.Status].Add(PacketReport.Mapping.Status.Serverbound["minecraft:ping_request"].Id, new ServerboundPingRequestPacket().Call);
 
         #endregion
     }
