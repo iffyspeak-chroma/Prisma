@@ -19,7 +19,7 @@ public class ServerboundLoginStartPacket : ICallable
         
         LogTool.Info($"{playerName}[{playerId.ToString()}] is attempting to connect to the server.");
         
-        // TODO: Replace this with the actual next step.
+        // TODO: Cryptography.
         using (Packet p = new Packet())
         {
             // I'm just going to disconnect them for now
