@@ -8,16 +8,19 @@ namespace Server.Packets.GamestateIndependent.Clientbound;
 
 public class ClientboundDisconnectPacket : ICallable
 {
+    public TextComponentBuilder DisconnectMessage = new TextComponentBuilder();
     public async void Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         
+        /*
         TextComponentBuilder builder = new TextComponentBuilder();
 
         builder.AddText("Uh oh!\n", color: "red");
         builder.AddText("I'm not quite ready for that kinda thing just yet.");
+        */
             
-        packet.Write(builder.Build());
+        packet.Write(DisconnectMessage.Build());
 
         switch (client.Gamestate)
         {
