@@ -45,7 +45,7 @@ public class PacketManager
         }
         
         // Decompress the packet, the client and server have agreed!
-        throw new NotImplementedException("Oopsies! I haven't implemented compression or decompression.");
+        throw new NotImplementedException("Oopsies! Compression or Decompression have yet to be implemented..");
     }
 
     private void HandleDecompressedPacket(IChannelHandlerContext context, Packet packet)
