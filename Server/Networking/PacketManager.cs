@@ -88,6 +88,7 @@ public class PacketManager
         PacketList.Add(tState, new Dictionary<int, PacketHandler>());
         
         PacketList[tState].Add(PacketReport.Mapping.Login.Serverbound["minecraft:hello"].Id, new ServerboundLoginStartPacket().Call);
+        PacketList[tState].Add(PacketReport.Mapping.Login.Serverbound["minecraft:login_acknowledged"].Id, new ServerboundLoginAcknowledgePacket().Call);
 
         #endregion
     }
