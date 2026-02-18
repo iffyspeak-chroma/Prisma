@@ -19,7 +19,7 @@ public class PlayerManager
         packet.Call(player, new Packet());
     }
     
-    public static void DisconnectPlayer(NetworkedClient player, string reason)
+    public static void DisconnectPlayer(NetworkedClient player, string reason = "No reason specified!")
     {
 
         TextComponentBuilder builder = new TextComponentBuilder();
