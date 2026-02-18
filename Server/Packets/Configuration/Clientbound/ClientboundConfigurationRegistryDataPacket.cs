@@ -12,7 +12,7 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
     {
         Packet syncPacket = new Packet();
         
-        syncPacket.Write("identifier");
+        syncPacket.Write(identifier);
         syncPacket.Write(identities.Count);
 
         foreach (string identity in identities)
@@ -249,6 +249,18 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
         
         _registrySync.Add(GenerateRegistryDataPacket("minecraft:wolf_variant", wolfIdentityList));
         _registrySync.Add(GenerateRegistryDataPacket("minecraft:wolf_sound_variant", wolfSoundIdentityList));
+
+        #endregion
+
+        #region Zombie Nautilus Variants
+
+        List<string> zombieNautilusIdentityList = new List<string>()
+        {
+            "minecraft:temperate",
+            "minecraft:warm"
+        };
+        
+        _registrySync.Add(GenerateRegistryDataPacket("minecraft:zombie_nautilus_variant", zombieNautilusIdentityList));
 
         #endregion
 
