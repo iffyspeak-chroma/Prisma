@@ -23,6 +23,7 @@ public class ServerboundLoginStartPacket : ICallable
         // TODO: Check if theres even space for a player or if the player is allowed to join while the server is full.
         using (Packet p = new Packet())
         {
+            /*
             // I'm just going to disconnect them for now
             TextComponentBuilder builder = new TextComponentBuilder();
 
@@ -32,6 +33,13 @@ public class ServerboundLoginStartPacket : ICallable
             p.Write(builder.Build());
 
             new ClientboundLoginDisconnectPacket().Call(context, p);
+            */
+            
+            // Write in the player's "GameProfile" (https://minecraft.wiki/w/Java_Edition_protocol/Packets#Game_Profile)
+            p.Write(playerId);
+            p.Write(playerName);
+            
+            new ClientboundLoginSuccessPacket().Call(context, p);
         }
     }
 }
