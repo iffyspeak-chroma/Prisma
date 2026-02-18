@@ -9,7 +9,7 @@ namespace Server.Packets.Play.Clientbound;
 
 public class ClientboundPlayLoginPacket : ICallable
 {
-    public void Call(IChannelHandlerContext context, Packet? packet)
+    public async void Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         ServerPlayer player = client.Player;
@@ -91,5 +91,10 @@ public class ClientboundPlayLoginPacket : ICallable
         
         // Enforce Secure Chat (lmao fuck no)
         packet.Write(false);
+        
+        packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:login"].Id);
+        packet.WriteLength();
+
+        await client.SendPacket(packet);
     }
 }
