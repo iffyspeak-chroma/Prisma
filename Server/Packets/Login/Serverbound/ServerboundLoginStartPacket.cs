@@ -4,7 +4,7 @@ using API.Networking;
 using API.TextComponents;
 using DotNetty.Transport.Channels;
 using Server.Packets.Login.Clientbound;
-using Server.Players;
+using Server.Managers;
 
 namespace Server.Packets.Login.Serverbound;
 

@@ -5,11 +5,11 @@ using API.TextComponents;
 using DotNetty.Transport.Channels;
 using Server.Packets.GamestateIndependent.Clientbound;
 
-namespace Server.Players;
+namespace Server.Managers;
 
 public class PlayerManager
 {
-    public static readonly PlayerManager Instance = new  PlayerManager();
+    public static readonly PlayerManager Instance = new PlayerManager();
 
     public static void DisconnectPlayer(NetworkedClient player, TextComponentBuilder reason)
     {

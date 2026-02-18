@@ -2,7 +2,7 @@
 using API.Networking;
 using API.TextComponents;
 using DotNetty.Transport.Channels;
-using Server.Players;
+using Server.Managers;
 
 namespace Server.Packets.GamestateIndependent.Clientbound;
 

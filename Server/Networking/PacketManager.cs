@@ -6,7 +6,7 @@ using Server.Packets.Configuration.Serverbound;
 using Server.Packets.Handshake;
 using Server.Packets.Login.Serverbound;
 using Server.Packets.Status.Serverbound;
-using Server.Players;
+using Server.Managers;
 
 namespace Server.Networking;
 

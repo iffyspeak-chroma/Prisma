@@ -3,7 +3,7 @@ using API.Logging;
 using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Packets.Play.Clientbound;
-using Server.Players;
+using Server.Managers;
 
 namespace Server.Packets.Configuration.Serverbound;
 

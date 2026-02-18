@@ -1,7 +1,7 @@
 ﻿using API.DataTypes.Player;
 using API.Networking;
 using DotNetty.Transport.Channels;
-using Server.Players;
+using Server.Managers;
 
 namespace Server.Packets.Handshake;
 
