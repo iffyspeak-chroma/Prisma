@@ -12,7 +12,7 @@ public class ServerboundConfigurationAcknowledgeFinishPacket : ICallable
     public void Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
-        ServerPlayer player = new ServerPlayer();
+        ServerPlayer player = client.Player;
 
         client.Gamestate = PlayerGamestate.Play;
         LogTool.Info($"{NetworkedClient.GetPlayerIdentifier(player)} finished configuration!");
