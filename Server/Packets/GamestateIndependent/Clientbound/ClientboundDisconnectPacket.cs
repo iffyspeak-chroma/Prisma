@@ -36,6 +36,9 @@ public class ClientboundDisconnectPacket : ICallable
             case PlayerGamestate.Configuration:
             {
                 packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:disconnect"].Id);
+                packet.WriteLength();
+                
+                await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
                 break;
             }
 
