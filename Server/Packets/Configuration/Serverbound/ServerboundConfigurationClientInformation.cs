@@ -11,6 +11,8 @@ public class ServerboundConfigurationClientInformation : ICallable
     public void Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
+        ServerPlayer player = client.Player;
+        
         ClientSettings cs = new ClientSettings();
         
         cs.Locale = packet.ReadString();
@@ -24,8 +26,6 @@ public class ServerboundConfigurationClientInformation : ICallable
         cs.ParticlePreference = (ParticlePreference) packet.ReadVarInt();
 
         client.Player.ClientSettings = cs;
-        LogTool.Info($"");
-        
-        throw new NotImplementedException();
+        LogTool.Debug($"{PlayerManager.GetPlayerIdentifier(player)} uses {cs.Locale} and draws {cs.ViewDistance} chunks away.", true);
     }
 }
