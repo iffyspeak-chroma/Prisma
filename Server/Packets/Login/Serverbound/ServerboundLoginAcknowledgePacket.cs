@@ -15,6 +15,6 @@ public class ServerboundLoginAcknowledgePacket : ICallable
 
         client.Gamestate = PlayerGamestate.Configuration;
         
-        LogTool.Info($"Configuring data for {player.Username}[{player.Uuid.ToString()}]...");
+        LogTool.Info($"Configuring data for {PlayerManager.GetPlayerIdentifier(player)}...");
     }
 }
