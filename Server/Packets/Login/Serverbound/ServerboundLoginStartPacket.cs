@@ -19,7 +19,8 @@ public class ServerboundLoginStartPacket : ICallable
         
         LogTool.Info($"{playerName}[{playerId.ToString()}] is attempting to connect to the server.");
         
-        // TODO: Cryptography.
+        // TODO: Cryptography and Compression
+        // TODO: Check if theres even space for a player or if the player is allowed to join while the server is full.
         using (Packet p = new Packet())
         {
             // I'm just going to disconnect them for now
