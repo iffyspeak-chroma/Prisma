@@ -24,18 +24,6 @@ public class ServerboundLoginStartPacket : ICallable
         // TODO: Check for duplicates of a player.
         using (Packet p = new Packet())
         {
-            /*
-            // I'm just going to disconnect them for now
-            TextComponentBuilder builder = new TextComponentBuilder();
-
-            builder.AddText("Uh oh!\n", color: "red");
-            builder.AddText("I'm not quite ready for that kinda thing just yet.");
-            
-            p.Write(builder.Build());
-
-            new ClientboundLoginDisconnectPacket().Call(context, p);
-            */
-            
             // Write in the player's "GameProfile" (https://minecraft.wiki/w/Java_Edition_protocol/Packets#Game_Profile)
             p.Write(playerId); // UUID
             p.Write(playerName); // User
