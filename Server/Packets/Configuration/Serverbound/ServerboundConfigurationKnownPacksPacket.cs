@@ -3,6 +3,7 @@ using API.DataTypes.Player;
 using API.Logging;
 using API.Networking;
 using DotNetty.Transport.Channels;
+using Server.Packets.Configuration.Clientbound;
 using Server.Players;
 
 namespace Server.Packets.Configuration.Serverbound;
@@ -26,5 +27,7 @@ public class ServerboundConfigurationKnownPacksPacket : ICallable
         }
         
         LogTool.Info($"{NetworkedClient.GetPlayerIdentifier(client.Player)} selected {packs.Count} pack(s).");
+        
+        new ClientboundConfigurationRegistryDataPacket().Call(context, null);
     }
 }
