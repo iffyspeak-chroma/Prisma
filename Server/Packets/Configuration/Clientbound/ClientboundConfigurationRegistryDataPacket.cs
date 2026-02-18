@@ -262,6 +262,6 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
             await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
         }
         
-        throw new NotImplementedException();
+        new ClientboundConfigurationFinishPacket().Call(context, null);
     }
 }
