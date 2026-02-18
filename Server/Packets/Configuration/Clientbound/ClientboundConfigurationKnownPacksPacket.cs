@@ -1,4 +1,5 @@
-﻿using API.Networking;
+﻿using API.DataTypes.DataPacks;
+using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Players;
 
@@ -10,9 +11,23 @@ public class ClientboundConfigurationKnownPacksPacket : ICallable
     {
         using (Packet p = new Packet())
         {
-            p.Write("minecraft");
-            p.Write("core");
-            p.Write("1.21.11");
+            List<DataPackIdentity> datapacks = new List<DataPackIdentity>();
+            
+            DataPackIdentity corePack = new DataPackIdentity();
+            
+            corePack.Namespace = "minecraft";
+            corePack.ID = "core";
+            corePack.Version = "1.21.11";
+            
+            datapacks.Add(corePack);
+
+            p.Write(datapacks.Count);
+            foreach (DataPackIdentity pack in datapacks)
+            {
+                p.Write(pack.Namespace);
+                p.Write(pack.ID);
+                p.Write(pack.Version);
+            }
             
             p.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:select_known_packs"].Id);
             p.WriteLength();
