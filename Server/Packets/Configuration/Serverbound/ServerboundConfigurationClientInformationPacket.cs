@@ -6,7 +6,7 @@ using Server.Players;
 
 namespace Server.Packets.Configuration.Serverbound;
 
-public class ServerboundConfigurationClientInformation : ICallable
+public class ServerboundConfigurationClientInformationPacket : ICallable
 {
     public void Call(IChannelHandlerContext context, Packet? packet)
     {

@@ -99,7 +99,7 @@ public class PacketManager
         PacketList.Add(tState, new Dictionary<int, PacketHandler>());
         
         PacketList[tState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:client_information"].Id, 
-            new ServerboundConfigurationClientInformation().Call);
+            new ServerboundConfigurationClientInformationPacket().Call);
         PacketList[tState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:custom_payload"].Id,
             new ServerboundConfigurationPluginMessagePacket().Call);
         #endregion
