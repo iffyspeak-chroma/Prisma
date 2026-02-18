@@ -62,50 +62,57 @@ public class PacketManager
 
     public void InitializePacketList()
     {
-        PlayerGamestate tState = PlayerGamestate.Handshake;
+        PlayerGamestate initialState = PlayerGamestate.Handshake;
         
         #region Handshake
-        tState = PlayerGamestate.Handshake;
+        initialState = PlayerGamestate.Handshake;
 
-        PacketList.Add(tState, new Dictionary<int, PacketHandler>());
+        PacketList.Add(initialState, new Dictionary<int, PacketHandler>());
         
-        PacketList[tState].Add(PacketReport.Mapping.Handshake.Serverbound["minecraft:intention"].Id, new ServerboundHandshakePacket().Call);
+        PacketList[initialState].Add(PacketReport.Mapping.Handshake.Serverbound["minecraft:intention"].Id, new ServerboundHandshakePacket().Call);
 
         #endregion
 
         #region Status
-        tState = PlayerGamestate.Status;
+        initialState = PlayerGamestate.Status;
 
-        PacketList.Add(tState, new Dictionary<int, PacketHandler>());
+        PacketList.Add(initialState, new Dictionary<int, PacketHandler>());
         
-        PacketList[tState].Add(PacketReport.Mapping.Status.Serverbound["minecraft:status_request"].Id, new ServerboundStatusRequestPacket().Call);
-        PacketList[tState].Add(PacketReport.Mapping.Status.Serverbound["minecraft:ping_request"].Id, new ServerboundPingRequestPacket().Call);
+        PacketList[initialState].Add(PacketReport.Mapping.Status.Serverbound["minecraft:status_request"].Id, new ServerboundStatusRequestPacket().Call);
+        PacketList[initialState].Add(PacketReport.Mapping.Status.Serverbound["minecraft:ping_request"].Id, new ServerboundPingRequestPacket().Call);
 
         #endregion
 
         #region Login
-        tState = PlayerGamestate.Login;
+        initialState = PlayerGamestate.Login;
 
-        PacketList.Add(tState, new Dictionary<int, PacketHandler>());
+        PacketList.Add(initialState, new Dictionary<int, PacketHandler>());
         
-        PacketList[tState].Add(PacketReport.Mapping.Login.Serverbound["minecraft:hello"].Id, new ServerboundLoginStartPacket().Call);
-        PacketList[tState].Add(PacketReport.Mapping.Login.Serverbound["minecraft:login_acknowledged"].Id, new ServerboundLoginAcknowledgePacket().Call);
+        PacketList[initialState].Add(PacketReport.Mapping.Login.Serverbound["minecraft:hello"].Id, new ServerboundLoginStartPacket().Call);
+        PacketList[initialState].Add(PacketReport.Mapping.Login.Serverbound["minecraft:login_acknowledged"].Id, new ServerboundLoginAcknowledgePacket().Call);
 
         #endregion
         
         #region Configuration
-        tState = PlayerGamestate.Configuration;
+        initialState = PlayerGamestate.Configuration;
         
-        PacketList.Add(tState, new Dictionary<int, PacketHandler>());
+        PacketList.Add(initialState, new Dictionary<int, PacketHandler>());
         
-        PacketList[tState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:client_information"].Id, 
+        PacketList[initialState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:client_information"].Id, 
             new ServerboundConfigurationClientInformationPacket().Call);
-        PacketList[tState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:custom_payload"].Id,
+        PacketList[initialState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:custom_payload"].Id,
             new ServerboundConfigurationPluginMessagePacket().Call);
-        PacketList[tState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:select_known_packs"].Id,
+        PacketList[initialState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:select_known_packs"].Id,
             new ServerboundConfigurationKnownPacksPacket().Call);
-        PacketList[tState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:finish_configuration"].Id,
+        PacketList[initialState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:finish_configuration"].Id,
             new ServerboundConfigurationAcknowledgeFinishPacket().Call);
+
+        #endregion
+
+        #region Play
+        initialState = PlayerGamestate.Play;
+        
+        
 
         #endregion
     }
