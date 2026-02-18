@@ -28,6 +28,6 @@ public class ServerboundConfigurationKnownPacksPacket : ICallable
         
         LogTool.Info($"{NetworkedClient.GetPlayerIdentifier(client.Player)} selected {packs.Count} pack(s).");
         
-        new ClientboundConfigurationRegistryDataPacket().Call(context, null);
+        new ClientboundConfigurationFinishPacket().Call(context, null); 
     }
 }
