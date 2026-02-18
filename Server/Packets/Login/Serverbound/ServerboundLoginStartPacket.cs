@@ -37,8 +37,9 @@ public class ServerboundLoginStartPacket : ICallable
             */
             
             // Write in the player's "GameProfile" (https://minecraft.wiki/w/Java_Edition_protocol/Packets#Game_Profile)
-            p.Write(playerId);
-            p.Write(playerName);
+            p.Write(playerId); // UUID
+            p.Write(playerName); // User
+            p.Write(0); // Properties
             
             new ClientboundLoginSuccessPacket().Call(context, p);
         }
