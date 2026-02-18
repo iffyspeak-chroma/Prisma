@@ -4,7 +4,7 @@ using Server.Players;
 
 namespace Server.Packets.Configuration.Clientbound;
 
-public class ClientboundFeatureFlagsPacket : ICallable
+public class ClientboundConfigurationFeatureFlagsPacket : ICallable
 {
     public async void Call(IChannelHandlerContext context, Packet? packet)
     {
@@ -27,5 +27,7 @@ public class ClientboundFeatureFlagsPacket : ICallable
             
             await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
         }
+        
+        new ClientboundConfigurationKnownPacksPacket().Call(context, null);
     }
 }
