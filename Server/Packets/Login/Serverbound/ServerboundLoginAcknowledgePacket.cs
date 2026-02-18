@@ -16,8 +16,5 @@ public class ServerboundLoginAcknowledgePacket : ICallable
         client.Gamestate = PlayerGamestate.Configuration;
         
         LogTool.Info($"Configuring data for {player.Username}[{player.Uuid.ToString()}]...");
-        
-        // I don't know what else to do after this point,
-        // so I'm committing, running, and waiting for an exception to occur.
     }
 }

@@ -2,6 +2,7 @@
 using API.Logging;
 using API.Networking;
 using DotNetty.Transport.Channels;
+using Server.Packets.Configuration.Serverbound;
 using Server.Packets.Handshake;
 using Server.Packets.Login.Serverbound;
 using Server.Packets.Status.Serverbound;
@@ -90,6 +91,16 @@ public class PacketManager
         PacketList[tState].Add(PacketReport.Mapping.Login.Serverbound["minecraft:hello"].Id, new ServerboundLoginStartPacket().Call);
         PacketList[tState].Add(PacketReport.Mapping.Login.Serverbound["minecraft:login_acknowledged"].Id, new ServerboundLoginAcknowledgePacket().Call);
 
+        #endregion
+        
+        #region Configuration
+        tState = PlayerGamestate.Configuration;
+        
+        PacketList.Add(tState, new Dictionary<int, PacketHandler>());
+        
+        PacketList[tState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:client_information"].Id, 
+            new ServerboundConfigurationClientInformation().Call);
+        
         #endregion
     }
 }
