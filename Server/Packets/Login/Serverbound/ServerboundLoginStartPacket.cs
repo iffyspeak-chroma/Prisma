@@ -21,6 +21,7 @@ public class ServerboundLoginStartPacket : ICallable
         
         // TODO: Cryptography and Compression
         // TODO: Check if theres even space for a player or if the player is allowed to join while the server is full.
+        // TODO: Check for duplicates of a player.
         using (Packet p = new Packet())
         {
             /*
