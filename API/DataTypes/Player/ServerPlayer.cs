@@ -1,4 +1,6 @@
-﻿namespace API.DataTypes.Player;
+﻿using API.DataTypes.Entities;
+
+namespace API.DataTypes.Player;
 
 public class ServerPlayer
 {
@@ -9,6 +11,9 @@ public class ServerPlayer
     {
         {"minecraft:brand", null}
     };
+
+    public GenericEntity? AssociatedEntity = null;
+    
     public ServerPlayer() {}
 
     public ServerPlayer(string u, Guid gu)
