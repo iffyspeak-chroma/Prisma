@@ -110,7 +110,7 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
             "minecraft:cotan",
             "minecraft:endboss",
             "minecraft:fern",
-            "minecraft:owlmelons",
+            "minecraft:owlemons",
             "minecraft:sunflowers",
             "minecraft:tides",
             "minecraft:dennis",
