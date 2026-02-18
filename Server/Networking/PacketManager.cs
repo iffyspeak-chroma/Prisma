@@ -104,6 +104,9 @@ public class PacketManager
             new ServerboundConfigurationPluginMessagePacket().Call);
         PacketList[tState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:select_known_packs"].Id,
             new ServerboundConfigurationKnownPacksPacket().Call);
+        PacketList[tState].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:finish_configuration"].Id,
+            new ServerboundConfigurationAcknowledgeFinishPacket().Call);
+
         #endregion
     }
 }
