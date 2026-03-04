@@ -70,7 +70,7 @@ public class ClientboundPlayLoginPacket : ICallable
         packet.Write("minecraft:overworld");
         
         // Hashed seed
-        packet.Write(0L);
+        packet.Write(0L, asVarLong: false);
         
         // Game mode
         packet.Write(GameMode.Spectator);
