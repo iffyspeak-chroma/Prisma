@@ -100,5 +100,7 @@ public class ClientboundPlayLoginPacket : ICallable
         packet.WriteLength();
 
         await client.SendPacket(packet);
+        
+        new ClientboundPlayDifficultyPacket().Call(context, null);
     }
 }
