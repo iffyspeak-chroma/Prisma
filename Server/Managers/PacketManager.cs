@@ -118,9 +118,10 @@ public class PacketManager
         // this will be the first instance of a client not getting a response about a packet.
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:client_tick_end"].Id,
             null);
-        
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:accept_teleportation"].Id,
             new ServerboundPlayAcceptTeleportPacket().Call);
+        PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:move_player_pos_rot"].Id,
+            new ServerboundPlaySetPlayerPosRotPacket().Call);
 
         #endregion
     }
