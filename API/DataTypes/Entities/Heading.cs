@@ -1,6 +1,8 @@
-﻿namespace API.DataTypes.Entities;
+﻿using API.Networking;
 
-public class Heading
+namespace API.DataTypes.Entities;
+
+public class Heading : IWriteToPackets
 {
     public float Yaw;
     public float Pitch;
@@ -9,5 +11,11 @@ public class Heading
     {
         Yaw = 0;
         Pitch = 0;
+    }
+
+    public void WriteToPacket(Packet packet)
+    {
+        packet.Write(Yaw);
+        packet.Write(Pitch);
     }
 }
