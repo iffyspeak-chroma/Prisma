@@ -1,6 +1,8 @@
 ﻿using API.DataTypes;
 using API.DataTypes.Entities;
+using API.DataTypes.Mojang;
 using API.DataTypes.Player;
+using API.Logging;
 using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Managers;
@@ -28,17 +30,17 @@ public class ClientboundPlayLoginPacket : ICallable
         packet.Write((entityId % 2 == 0));
         
         // Server's dimension names
-        List<string> dimensionList = new List<string>()
+        List<Identifier> dimensionList = new List<Identifier>()
         {
-            "minecraft:overworld",
-            "minecraft:the_nether",
-            "minecraft:the_end"
+            Identifier.Parse("minecraft:overworld"),
+            Identifier.Parse("minecraft:the_nether"),
+            Identifier.Parse("minecraft:the_end")
         };
         
         packet.Write(dimensionList.Count);
-        foreach (string dimension in dimensionList)
+        foreach (Identifier dimension in dimensionList)
         {
-            packet.Write(dimension);
+            dimension.Write(packet);
         }
         
         // Server's max player count
