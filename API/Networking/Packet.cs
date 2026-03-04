@@ -221,6 +221,13 @@ namespace API.Networking
 
             _buffer.AddRange(bytes);
         }
+        
+        /// <summary>Adds a double to the packet.</summary>
+        /// <param name="value">The string to add.</param>
+        public void Write(double value)
+        {
+            _buffer.AddRange(BitConverter.GetBytes(value));
+        }
 
         #endregion
 
@@ -494,6 +501,28 @@ namespace API.Networking
             }
 
             return new Guid(bytes);
+        }
+        
+        /// <summary>Reads a double from the packet.</summary>
+        /// <param name="moveReadPos">Move the buffer's read position.</param>
+        public double ReadDouble(bool moveReadPos = true)
+        {
+            if (_buffer.Count > _readPos)
+            {
+                // If there are unread bytes
+                double value = BitConverter.ToDouble(_readableBuffer, _readPos); // Convert the bytes to a float
+                if (moveReadPos)
+                {
+                    // If moveReadPos is true
+                    _readPos += 8; // Increase readPos by 4
+                }
+
+                return value; // Return the float
+            }
+            else
+            {
+                throw new Exception("Could not read value of type 'float'!");
+            }
         }
 
         #endregion
