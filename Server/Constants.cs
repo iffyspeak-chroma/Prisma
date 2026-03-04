@@ -16,4 +16,10 @@ public class Constants
     
     #endregion
 
+    #region Varied Variables
+
+    public static int GlobalTeleportId = 0;
+
+    #endregion
+
 }

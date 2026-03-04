@@ -25,5 +25,7 @@ public class ClientboundPlaySetHeldSlotPacket : ICallable
 
             await client.SendPacket(p);
         }
+        
+        new ClientboundPlaySynchronizePlayerPositionPacket().Call(context, null);
     }
 }

@@ -13,6 +13,8 @@ public class ServerPlayer
     };
 
     public GenericEntity? AssociatedEntity = null;
+
+    public int RecentTeleportId = -1;
     
     public ServerPlayer() {}
 
