@@ -63,4 +63,13 @@ public class Identifier
     { 
         packet.Write($"{this.Namespace}:{this.Value}");
     }
+
+    public override string ToString()
+    {
+        ValidateNamespace(this.Namespace);
+        ValidateValue(this.Value);
+
+        return $"{this.Namespace}:{this.Value}";
+    }
+
 }
