@@ -263,9 +263,23 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
             Identifier.Parse("minecraft:warm")
         };
         
-        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:root/minecraft:zombie_nautilus_variant"), zombieNautilusIdentityList));
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:zombie_nautilus_variant"), zombieNautilusIdentityList));
 
         #endregion
+
+        #endregion
+
+        #region Timeline
+
+        List<Identifier> timelineIdentityList = new List<Identifier>()
+        {
+            Identifier.Parse("minecraft:day"),
+            Identifier.Parse("minecraft:early_game"),
+            Identifier.Parse("minecraft:moon"),
+            Identifier.Parse("minecraft:villager_schedule")
+        };
+        
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:timeline"), timelineIdentityList));
 
         #endregion
 
@@ -277,6 +291,7 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
             await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
         }
         
-        new ClientboundConfigurationFinishPacket().Call(context, null);
+        new ClientboundConfigurationUpdateTagsPacket().Call(context, null);
+        //new ClientboundConfigurationFinishPacket().Call(context, null);
     }
 }
