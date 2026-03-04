@@ -1,4 +1,5 @@
 ﻿using API.DataTypes.DataPacks;
+using API.DataTypes.Mojang;
 using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Managers;
@@ -13,11 +14,9 @@ public class ClientboundConfigurationKnownPacksPacket : ICallable
         {
             List<DataPackIdentity> datapacks = new List<DataPackIdentity>();
             
-            DataPackIdentity corePack = new DataPackIdentity();
-            
-            corePack.Namespace = "minecraft";
-            corePack.ID = "core";
-            corePack.Version = "1.21.11";
+            DataPackIdentity corePack = new DataPackIdentity(
+                Identifier.Parse("minecraft:core"),
+                "1.21.11");
             
             datapacks.Add(corePack);
 

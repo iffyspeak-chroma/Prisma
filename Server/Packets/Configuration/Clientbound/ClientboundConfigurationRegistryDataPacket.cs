@@ -1,4 +1,5 @@
-﻿using API.Networking;
+﻿using API.DataTypes.Mojang;
+using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
@@ -8,16 +9,18 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
 {
     private List<Packet> _registrySync = new List<Packet>();
 
-    private Packet GenerateRegistryDataPacket(string identifier, List<string> identities)
+    private Packet GenerateRegistryDataPacket(Identifier identifier, List<Identifier> identities)
     {
         Packet syncPacket = new Packet();
         
-        syncPacket.Write(identifier);
+        syncPacket.Write(identifier.ToString());
+        
         syncPacket.Write(identities.Count);
-
-        foreach (string identity in identities)
+        foreach (Identifier identity in identities)
         {
-            syncPacket.Write(identity);
+            syncPacket.Write(identity.ToString());
+            
+            // Don't send the optional NBT (because we're mean and evil)
             syncPacket.Write(false);
         }
 
@@ -29,120 +32,120 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
         // What is about to happen here is nasty and gross to me but
         // gets me to the next phase with minimal brain effort.
         
-        #region Damage Types
-        
-        List<string> damageTypeIdentities = new List<string>()
-        {
-            "minecraft:cactus",
-            "minecraft:campfire",
-            "minecraft:cramming",
-            "minecraft:dragon_breath",
-            "minecraft:drown",
-            "minecraft:dry_out",
-            "minecraft:ender_pearl",
-            "minecraft:fall",
-            "minecraft:fly_into_wall",
-            "minecraft:freeze",
-            "minecraft:generic",
-            "minecraft:generic_kill",
-            "minecraft:hot_floor",
-            "minecraft:in_fire",
-            "minecraft:in_wall",
-            "minecraft:lava",
-            "minecraft:lightning_bolt",
-            "minecraft:magic",
-            "minecraft:on_fire",
-            "minecraft:out_of_world",
-            "minecraft:outside_border",
-            "minecraft:stalagmite",
-            "minecraft:starve",
-            "minecraft:sweet_berry_bush",
-            "minecraft:wither"
-        };
-
-        _registrySync.Add(GenerateRegistryDataPacket("minecraft:damage_type", damageTypeIdentities));
-        
-        #endregion
-
         #region Dimension Types
         
-        List<string> dimensionTypeIdentities = new List<string>()
+        List<Identifier> dimensionTypeIdentities = new List<Identifier>()
         {
-            "minecraft:the_nether",
-            "minecraft:overworld",
-            "minecraft:the_end"
+            Identifier.Parse("minecraft:the_nether"), 
+            Identifier.Parse("minecraft:overworld"),
+            Identifier.Parse("minecraft:the_end")
         };
         
-        _registrySync.Add(GenerateRegistryDataPacket("minecraft:dimension_type", dimensionTypeIdentities));
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:dimension_type"), dimensionTypeIdentities));
 
+        #endregion
+        
+        #region Damage Types
+        
+        List<Identifier> damageTypeIdentities = new List<Identifier>()
+        {
+            Identifier.Parse("minecraft:cactus"),
+            Identifier.Parse("minecraft:campfire"),
+            Identifier.Parse("minecraft:cramming"),
+            Identifier.Parse("minecraft:dragon_breath"),
+            Identifier.Parse("minecraft:drown"),
+            Identifier.Parse("minecraft:dry_out"),
+            Identifier.Parse("minecraft:ender_pearl"),
+            Identifier.Parse("minecraft:fall"),
+            Identifier.Parse("minecraft:fly_into_wall"),
+            Identifier.Parse("minecraft:freeze"),
+            Identifier.Parse("minecraft:generic"),
+            Identifier.Parse("minecraft:generic_kill"),
+            Identifier.Parse("minecraft:hot_floor"),
+            Identifier.Parse("minecraft:in_fire"),
+            Identifier.Parse("minecraft:in_wall"),
+            Identifier.Parse("minecraft:lava"),
+            Identifier.Parse("minecraft:lightning_bolt"),
+            Identifier.Parse("minecraft:magic"),
+            Identifier.Parse("minecraft:on_fire"),
+            Identifier.Parse("minecraft:out_of_world"),
+            Identifier.Parse("minecraft:outside_border"),
+            Identifier.Parse("minecraft:stalagmite"),
+            Identifier.Parse("minecraft:starve"),
+            Identifier.Parse("minecraft:sweet_berry_bush"),
+            Identifier.Parse("minecraft:wither")
+        };
+
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:damage_type"), damageTypeIdentities));
+        
         #endregion
 
         #region Painting Variants
 
-        List<string> paintingVariantIdentities = new List<string>()
+        List<Identifier> paintingVariantIdentities = new List<Identifier>()
         {
-            "minecraft:kebab",
-            "minecraft:aztec",
-            "minecraft:alban",
-            "minecraft:aztec2",
-            "minecraft:bomb",
-            "minecraft:plant",
-            "minecraft:wasteland",
-            "minecraft:meditative",
-            "minecraft:wanderer",
-            "minecraft:graham",
-            "minecraft:prairie_ride",
-            "minecraft:pool",
-            "minecraft:courbet",
-            "minecraft:sunset",
-            "minecraft:sea",
-            "minecraft:creebet",
-            "minecraft:match",
-            "minecraft:bust",
-            "minecraft:stage",
-            "minecraft:void",
-            "minecraft:skull_and_roses",
-            "minecraft:wither",
-            "minecraft:baroque",
-            "minecraft:humble",
-            "minecraft:bouquet",
-            "minecraft:cavebird",
-            "minecraft:cotan",
-            "minecraft:endboss",
-            "minecraft:fern",
-            "minecraft:owlemons",
-            "minecraft:sunflowers",
-            "minecraft:tides",
-            "minecraft:dennis",
-            "minecraft:backyard",
-            "minecraft:pond",
-            "minecraft:fighters",
-            "minecraft:changing",
-            "minecraft:finding",
-            "minecraft:lowmist",
-            "minecraft:passage",
-            "minecraft:skeleton",
-            "minecraft:donkey_kong",
-            "minecraft:pointer",
-            "minecraft:pigscene",
-            "minecraft:burning_skull",
-            "minecraft:orb",
-            "minecraft:unpacked"
+            Identifier.Parse("minecraft:kebab"),
+            Identifier.Parse("minecraft:aztec"),
+            Identifier.Parse("minecraft:alban"),
+            Identifier.Parse("minecraft:aztec2"),
+            Identifier.Parse("minecraft:bomb"),
+            Identifier.Parse("minecraft:plant"),
+            Identifier.Parse("minecraft:wasteland"),
+            Identifier.Parse("minecraft:meditative"),
+            Identifier.Parse("minecraft:wanderer"),
+            Identifier.Parse("minecraft:graham"),
+            Identifier.Parse("minecraft:prairie_ride"),
+            Identifier.Parse("minecraft:pool"),
+            Identifier.Parse("minecraft:courbet"),
+            Identifier.Parse("minecraft:sunset"),
+            Identifier.Parse("minecraft:sea"),
+            Identifier.Parse("minecraft:creebet"),
+            Identifier.Parse("minecraft:match"),
+            Identifier.Parse("minecraft:bust"),
+            Identifier.Parse("minecraft:stage"),
+            Identifier.Parse("minecraft:void"),
+            Identifier.Parse("minecraft:skull_and_roses"),
+            Identifier.Parse("minecraft:wither"),
+            Identifier.Parse("minecraft:baroque"),
+            Identifier.Parse("minecraft:humble"),
+            Identifier.Parse("minecraft:bouquet"),
+            Identifier.Parse("minecraft:cavebird"),
+            Identifier.Parse("minecraft:cotan"),
+            Identifier.Parse("minecraft:endboss"),
+            Identifier.Parse("minecraft:fern"),
+            Identifier.Parse("minecraft:owlemons"),
+            Identifier.Parse("minecraft:sunflowers"),
+            Identifier.Parse("minecraft:tides"),
+            Identifier.Parse("minecraft:dennis"),
+            Identifier.Parse("minecraft:backyard"),
+            Identifier.Parse("minecraft:pond"),
+            Identifier.Parse("minecraft:fighters"),
+            Identifier.Parse("minecraft:changing"),
+            Identifier.Parse("minecraft:finding"),
+            Identifier.Parse("minecraft:lowmist"),
+            Identifier.Parse("minecraft:passage"),
+            Identifier.Parse("minecraft:skeleton"),
+            Identifier.Parse("minecraft:donkey_kong"),
+            Identifier.Parse("minecraft:pointer"),
+            Identifier.Parse("minecraft:pigscene"),
+            Identifier.Parse("minecraft:burning_skull"),
+            Identifier.Parse("minecraft:orb"),
+            Identifier.Parse("minecraft:unpacked")
         };
         
-        _registrySync.Add(GenerateRegistryDataPacket("minecraft:painting_variant", paintingVariantIdentities));
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:painting_variant"), paintingVariantIdentities));
 
         #endregion
         
         #region World Generation / Biome
 
-        List<string> biomeIdentityList = new List<string>()
+        List<Identifier> biomeIdentityList = new List<Identifier>()
         {
             // TODO: Biomes list brrr (https://minecraft.wiki/w/Biome)
-            "minecraft:plains"
+            Identifier.Parse("minecraft:plains")
         };
         
-        _registrySync.Add(GenerateRegistryDataPacket("minecraft:worldgen/biome", biomeIdentityList));
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:worldgen/biome"), biomeIdentityList));
         
         #endregion
 
@@ -150,117 +153,117 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
 
         #region Cat Variants
 
-        List<string> catIdentityList = new List<string>()
+        List<Identifier> catIdentityList = new List<Identifier>()
         {
-            "white",
-            "minecraft:black",
-            "minecraft:red",
-            "minecraft:siamese",
-            "minecraft:british_shorthair",
-            "minecraft:calico",
-            "minecraft:persian",
-            "minecraft:ragdoll",
-            "minecraft:tabby",
-            "minecraft:all_black",
-            "minecraft:jellie"
+            Identifier.Parse("minecraft:white"),
+            Identifier.Parse("minecraft:black"),
+            Identifier.Parse("minecraft:red"),
+            Identifier.Parse("minecraft:siamese"),
+            Identifier.Parse("minecraft:british_shorthair"),
+            Identifier.Parse("minecraft:calico"),
+            Identifier.Parse("minecraft:persian"),
+            Identifier.Parse("minecraft:ragdoll"),
+            Identifier.Parse("minecraft:tabby"),
+            Identifier.Parse("minecraft:all_black"),
+            Identifier.Parse("minecraft:jellie")
         };
         
-        _registrySync.Add(GenerateRegistryDataPacket("minecraft:cat_variant", catIdentityList));
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:cat_variant"), catIdentityList));
 
         #endregion
         
         #region Chicken Variants
 
-        List<string> chickenIdentityList = new List<string>()
+        List<Identifier> chickenIdentityList = new List<Identifier>()
         {
-            "minecraft:cold",
-            "minecraft:temperate",
-            "minecraft:warm"
+            Identifier.Parse("minecraft:cold"),
+            Identifier.Parse("minecraft:temperate"),
+            Identifier.Parse("minecraft:warm")
         };
 
-        _registrySync.Add(GenerateRegistryDataPacket("minecraft:chicken_variant", chickenIdentityList));
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:chicken_variant"), chickenIdentityList));
         
         #endregion
 
         #region Cow Variants
 
-        List<string> cowIdentityList = new List<string>()
+        List<Identifier> cowIdentityList = new List<Identifier>()
         {
-            "minecraft:cold",
-            "minecraft:temperate",
-            "minecraft:warm"
+            Identifier.Parse("minecraft:cold"),
+            Identifier.Parse("minecraft:temperate"),
+            Identifier.Parse("minecraft:warm")
         };
         
-        _registrySync.Add(GenerateRegistryDataPacket("minecraft:cow_variant", cowIdentityList));
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:cow_variant"), cowIdentityList));
 
         #endregion
 
         #region Frog Variants
 
-        List<string> frogIdentityList = new List<string>()
+        List<Identifier> frogIdentityList = new List<Identifier>()
         {
-            "minecraft:cold",
-            "minecraft:temperate",
-            "minecraft:warm"
+            Identifier.Parse("minecraft:cold"),
+            Identifier.Parse("minecraft:temperate"),
+            Identifier.Parse("minecraft:warm")
         };
         
-        _registrySync.Add(GenerateRegistryDataPacket("minecraft:frog_variant", frogIdentityList));
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:frog_variant"), frogIdentityList));
 
         #endregion
 
         #region Pig Variants
 
-        List<string> pigIdentityList = new List<string>()
+        List<Identifier> pigIdentityList = new List<Identifier>()
         {
-            "minecraft:cold",
-            "minecraft:temperate",
-            "minecraft:warm"
+            Identifier.Parse("minecraft:cold"),
+            Identifier.Parse("minecraft:temperate"),
+            Identifier.Parse("minecraft:warm")
         };
         
-        _registrySync.Add(GenerateRegistryDataPacket("minecraft:pig_variant", pigIdentityList));
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:pig_variant"), pigIdentityList));
 
         #endregion
 
         #region Wolf Variants
 
-        List<string> wolfIdentityList = new List<string>()
+        List<Identifier> wolfIdentityList = new List<Identifier>()
         {
-            "minecraft:pale",
-            "minecraft:ashen",
-            "minecraft:black",
-            "minecraft:chestnut",
-            "minecraft:rusty",
-            "minecraft:snowy",
-            "minecraft:spotted",
-            "minecraft:striped",
-            "minecraft:woods"
+            Identifier.Parse("minecraft:pale"),
+            Identifier.Parse("minecraft:ashen"),
+            Identifier.Parse("minecraft:black"),
+            Identifier.Parse("minecraft:chestnut"),
+            Identifier.Parse("minecraft:rusty"),
+            Identifier.Parse("minecraft:snowy"),
+            Identifier.Parse("minecraft:spotted"),
+            Identifier.Parse("minecraft:striped"),
+            Identifier.Parse("minecraft:woods")
         };
 
-        List<string> wolfSoundIdentityList = new List<string>()
+        List<Identifier> wolfSoundIdentityList = new List<Identifier>()
         {
-            "minecraft:classic",
-            "minecraft:angry",
-            "minecraft:big",
-            "minecraft:cute",
-            "minecraft:grumpy",
-            "minecraft:puglin",
-            "minecraft:sad"
+            Identifier.Parse("minecraft:classic"),
+            Identifier.Parse("minecraft:angry"),
+            Identifier.Parse("minecraft:big"),
+            Identifier.Parse("minecraft:cute"),
+            Identifier.Parse("minecraft:grumpy"),
+            Identifier.Parse("minecraft:puglin"),
+            Identifier.Parse("minecraft:sad")
         };
         
-        _registrySync.Add(GenerateRegistryDataPacket("minecraft:wolf_variant", wolfIdentityList));
-        _registrySync.Add(GenerateRegistryDataPacket("minecraft:wolf_sound_variant", wolfSoundIdentityList));
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:wolf_variant"), wolfIdentityList));
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:wolf_sound_variant"), wolfSoundIdentityList));
 
         #endregion
 
         #region Zombie Nautilus Variants
 
-        List<string> zombieNautilusIdentityList = new List<string>()
+        List<Identifier> zombieNautilusIdentityList = new List<Identifier>()
         {
-            "minecraft:temperate",
-            "minecraft:warm"
+            Identifier.Parse("minecraft:temperate"),
+            Identifier.Parse("minecraft:warm")
         };
         
-        _registrySync.Add(GenerateRegistryDataPacket("minecraft:zombie_nautilus_variant", zombieNautilusIdentityList));
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:root/minecraft:zombie_nautilus_variant"), zombieNautilusIdentityList));
 
         #endregion
 
