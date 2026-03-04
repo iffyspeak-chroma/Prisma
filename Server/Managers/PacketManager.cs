@@ -6,9 +6,8 @@ using Server.Packets.Configuration.Serverbound;
 using Server.Packets.Handshake;
 using Server.Packets.Login.Serverbound;
 using Server.Packets.Status.Serverbound;
-using Server.Managers;
 
-namespace Server.Networking;
+namespace Server.Managers;
 
 public class PacketManager
 {
@@ -112,7 +111,7 @@ public class PacketManager
         #region Play
         initialState = PlayerGamestate.Play;
         
-        
+        PacketList.Add(initialState, new Dictionary<int, PacketHandler>());
 
         #endregion
     }
