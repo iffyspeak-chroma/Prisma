@@ -49,8 +49,6 @@ public class ClientboundConfigurationUpdateTagsPacket : ICallable
             p.WriteLength();
 
             await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
-
-            LogTool.Debug(BitConverter.ToString(p.ToArray()).Replace("-", ""), true);
         }
         
         new ClientboundConfigurationFinishPacket().Call(context, null);
