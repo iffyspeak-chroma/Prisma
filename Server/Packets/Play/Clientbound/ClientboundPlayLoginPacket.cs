@@ -88,7 +88,7 @@ public class ClientboundPlayLoginPacket : ICallable
         packet.Write(false);
         
         // Portal tick cooldown
-        packet.Write(0);
+        packet.Write(5);
         
         // Sea level
         packet.Write(63);
