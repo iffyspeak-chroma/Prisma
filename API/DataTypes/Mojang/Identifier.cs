@@ -59,7 +59,7 @@ public class Identifier : IWriteToPackets
         }
     }
     
-    public void Write(Packet packet)
+    public void WriteToPacket(Packet packet)
     { 
         packet.Write($"{this.Namespace}:{this.Value}");
     }

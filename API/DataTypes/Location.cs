@@ -22,7 +22,7 @@ public class Location : IWriteToPackets
         Z = z;
     }
 
-    public void Write(Packet packet)
+    public void WriteToPacket(Packet packet)
     {
         packet.Write(X);
         packet.Write(Y);

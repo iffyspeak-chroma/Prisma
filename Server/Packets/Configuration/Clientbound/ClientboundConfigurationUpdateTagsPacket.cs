@@ -37,12 +37,12 @@ public class ClientboundConfigurationUpdateTagsPacket : ICallable
             // Only writing to 1 registry? (Some kind of something I didn't notice in the docs)
             p.Write(1);
             
-            registry.Write(p);
+            registry.WriteToPacket(p);
 
             p.Write(tags.Count);
             foreach (Tag tag in tags)
             {
-                tag.Write(p);
+                tag.WriteToPacket(p);
             }
             
             p.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:update_tags"].Id);

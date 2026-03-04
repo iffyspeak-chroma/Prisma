@@ -27,10 +27,10 @@ public class Optional<T> : IWriteToPackets
             _shouldWrite = false;
     }
 
-    public void Write(Packet packet)
+    public void WriteToPacket(Packet packet)
     {
         if (_shouldWrite)
-            _value!.Write(packet);
+            _value!.WriteToPacket(packet);
         else
             packet.Write(0);
     }

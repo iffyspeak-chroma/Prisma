@@ -13,9 +13,9 @@ public class Tag : IWriteToPackets
         this.Entries = entries;
     }
     
-    public void Write(Packet packet)
+    public void WriteToPacket(Packet packet)
     {
-        TagName.Write(packet);
+        TagName.WriteToPacket(packet);
         
         packet.Write(Entries.Count);
         foreach (int entry in Entries)

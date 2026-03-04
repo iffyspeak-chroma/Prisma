@@ -2,5 +2,5 @@
 
 public interface IWriteToPackets
 {
-    void Write(Packet packet);
+    void WriteToPacket(Packet packet);
 }
