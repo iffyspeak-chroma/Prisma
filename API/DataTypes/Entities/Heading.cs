@@ -12,6 +12,12 @@ public class Heading : IWriteToPackets
         Yaw = 0;
         Pitch = 0;
     }
+    
+    public Heading(float yaw, float pitch)
+    {
+        Yaw = yaw;
+        Pitch = pitch;
+    }
 
     public void WriteToPacket(Packet packet)
     {
