@@ -3,10 +3,13 @@
 public class GenericEntity
 {
     // TODO: Populate this
-    public Location location;
+    public Location Location;
+    public Location Velocity;
+    public Heading LookDirection;
 
     public GenericEntity()
     {
-        location = new Location();
+        Location = new Location();
+        Velocity = new Location();
     }
 }
