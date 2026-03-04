@@ -76,7 +76,7 @@ public class ClientboundPlayLoginPacket : ICallable
         packet.Write(GameMode.Spectator);
         
         // Previous Game mode
-        packet.Write(GameMode.Undefined);
+        packet.Write(GameMode.Survival);
         
         // World debug mode
         packet.Write(false);
