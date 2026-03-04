@@ -3,7 +3,7 @@ using API.Networking;
 
 namespace API.DataTypes.Mojang;
 
-public class Identifier
+public class Identifier : IWriteToPackets
 {
     public string Namespace { get; private set; }
     public string Value { get; private set; }
