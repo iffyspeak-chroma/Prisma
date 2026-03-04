@@ -109,9 +109,14 @@ public class PacketManager
         #endregion
 
         #region Play
-        initialState = PlayerGamestate.Play;
+        gamestate = PlayerGamestate.Play;
         
-        PacketList.Add(initialState, new Dictionary<int, PacketHandler>());
+        PacketList.Add(gamestate, new Dictionary<int, PacketHandler?>());
+        
+        // Not every packet really needs a response I don't think
+        // this will be the first instance of a client not getting a response about a packet.
+        PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:client_tick_end"].Id,
+            null);
 
         #endregion
     }
