@@ -47,9 +47,11 @@ public class ClientboundPlayLoginPacket : ICallable
         // TODO: Correct implementation
         packet.Write(20);
         
-        // Server's render distance and entity simulation distance
+        // Server's render distance
         // TODO: Correct implementation
         packet.Write(16);
+        
+        //and entity simulation distance
         packet.Write(16);
         
         // Server's debug status
