@@ -22,6 +22,8 @@ public class ClientboundPlayDifficultyPacket : ICallable
             p.WriteLength();
             
             await client.SendPacket(p);
+            
+            new ClientboundPlayPlayerAbilitiesPacket().Call(context, null);
         }
     }
 }
