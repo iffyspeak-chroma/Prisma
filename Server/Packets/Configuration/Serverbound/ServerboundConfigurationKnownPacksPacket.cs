@@ -20,7 +20,7 @@ public class ServerboundConfigurationKnownPacksPacket : ICallable
         for (int i = packCount; i > 0; i--)
         {
             Identifier identifier = Identifier.Parse($"{packet.ReadString()}:{packet.ReadString()}");
-            DataPackIdentity next = new  DataPackIdentity(identifier, packet.ReadString());
+            DataPackIdentity next = new DataPackIdentity(identifier, packet.ReadString());
             
             packs.Add(next);
         }
