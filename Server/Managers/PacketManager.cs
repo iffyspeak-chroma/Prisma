@@ -5,6 +5,7 @@ using DotNetty.Transport.Channels;
 using Server.Packets.Configuration.Serverbound;
 using Server.Packets.Handshake;
 using Server.Packets.Login.Serverbound;
+using Server.Packets.Play.Serverbound;
 using Server.Packets.Status.Serverbound;
 
 namespace Server.Managers;
@@ -117,6 +118,9 @@ public class PacketManager
         // this will be the first instance of a client not getting a response about a packet.
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:client_tick_end"].Id,
             null);
+        
+        PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:accept_teleportation"].Id,
+            new ServerboundPlayAcceptTeleportPacket().Call);
 
         #endregion
     }

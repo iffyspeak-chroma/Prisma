@@ -53,5 +53,7 @@ public class ClientboundPlaySynchronizePlayerPositionPacket : ICallable
         packet.WriteLength();
 
         await client.SendPacket(packet);
+
+        player.AcceptMovementPackets = false;
     }
 }
