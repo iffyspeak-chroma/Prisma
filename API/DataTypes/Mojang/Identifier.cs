@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using API.Networking;
 
 namespace API.DataTypes.Mojang;
 
@@ -56,5 +57,10 @@ public class Identifier
         {
             throw new ArgumentException("Value contains invalid characters!");
         }
+    }
+    
+    public void Write(Packet packet)
+    { 
+        packet.Write($"{this.Namespace}:{this.Value}");
     }
 }
