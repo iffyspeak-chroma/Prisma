@@ -68,8 +68,8 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
         
         List<string> dimensionTypeIdentities = new List<string>()
         {
-            "minecraft:overworld",
             "minecraft:the_nether",
+            "minecraft:overworld",
             "minecraft:the_end"
         };
         
@@ -152,7 +152,7 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
 
         List<string> catIdentityList = new List<string>()
         {
-            "minecraft:white",
+            "white",
             "minecraft:black",
             "minecraft:red",
             "minecraft:siamese",
