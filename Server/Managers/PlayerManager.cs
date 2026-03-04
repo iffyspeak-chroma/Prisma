@@ -29,6 +29,25 @@ public class PlayerManager
 
         DisconnectPlayer(player, builder);
     }
+
+    public static async void SendPacketToAll(Packet packet)
+    {
+        foreach (KeyValuePair<IChannel, NetworkedClient> pair in Instance.ConnectedClients)
+        {
+            await pair.Value.SendPacket(packet);
+        }
+    }
+
+    public static async void SendPacketToAll(Packet packet, NetworkedClient exception)
+    {
+        foreach (KeyValuePair<IChannel, NetworkedClient> pair in Instance.ConnectedClients)
+        {
+            if (pair.Value != exception)
+            {
+                await pair.Value.SendPacket(packet);
+            }
+        }
+    }
     
     public Dictionary<IChannel, NetworkedClient> ConnectedClients = new Dictionary<IChannel, NetworkedClient>();
 }
