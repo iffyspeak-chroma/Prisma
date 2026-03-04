@@ -1,0 +1,45 @@
+﻿using API.Networking;
+
+namespace API.DataTypes.Mojang;
+
+public class PrefixedOptional<T> : IWriteToPackets
+    where T : IWriteToPackets
+{
+    private readonly T? _value;
+
+    private bool _shouldWrite;
+
+    public PrefixedOptional(T value, bool sw = true)
+    {
+        CheckValidity();
+        
+        _value = value;
+        _shouldWrite = sw;
+    }
+
+    private void CheckValidity()
+    {
+        if (typeof(T) != typeof(IWriteToPackets))
+            throw new InvalidOperationException("Type does not inherit IWriteToPackets interface!");
+
+        // I mean if we're writing an optional of nothing... we really shouldn't write anything.
+        if (_value == null)
+            _shouldWrite = false;
+    }
+    
+    public void Write(Packet packet)
+    {
+        if (_shouldWrite)
+        {
+            packet.Write(true);
+            _value!.Write(packet);
+        }
+
+        else
+        {
+            packet.Write(false);
+            packet.Write(0);
+        }
+        
+    }
+}
