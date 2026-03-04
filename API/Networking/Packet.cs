@@ -510,7 +510,7 @@ namespace API.Networking
             if (_buffer.Count > _readPos)
             {
                 // If there are unread bytes
-                double value = BitConverter.ToDouble(_readableBuffer, _readPos); // Convert the bytes to a float
+                double value = BitConverter.ToDouble(_readableBuffer, _readPos); // Convert the bytes to a double
                 if (moveReadPos)
                 {
                     // If moveReadPos is true
@@ -521,7 +521,7 @@ namespace API.Networking
             }
             else
             {
-                throw new Exception("Could not read value of type 'float'!");
+                throw new Exception("Could not read value of type 'double'!");
             }
         }
 
