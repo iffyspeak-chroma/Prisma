@@ -9,91 +9,61 @@ namespace Server.Packets.GamestateIndependent.Clientbound;
 public class ClientboundDisconnectPacket : ICallable
 {
     public TextComponentBuilder DisconnectMessage = new TextComponentBuilder();
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public void Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
             
-        packet.Write(DisconnectMessage.Build());
-
-        switch (client.Gamestate)
-        {
-            case PlayerGamestate.Login:
-            {
-                packet.InsertInt(PacketReport.Mapping.Login.Clientbound["minecraft:login_disconnect"].Id);
-                packet.WriteLength();
-                
-                await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
-                break;
-            }
-
-            case PlayerGamestate.Configuration:
-            {
-                packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:disconnect"].Id);
-                packet.WriteLength();
-                
-                await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
-                break;
-            }
-
-            case PlayerGamestate.Play:
-            {
-                packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:disconnect"].Id);
-                packet.WriteLength();
-
-                await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
-                break;
-            }
-
-            default:
-            {
-                throw new NotImplementedException();
-            }
-        }
-        
-        PlayerManager.Instance.ConnectedClients[context.Channel].DisconnectChannel();
-        PlayerManager.Instance.ConnectedClients.Remove(context.Channel);
+        DoDisconnect(client);
     }
     
-    public async void Call(NetworkedClient client, Packet? packet)
+    public void Call(NetworkedClient client, Packet? packet)
     {
-        packet.Write(DisconnectMessage.Build());
+        DoDisconnect(client);
+    }
 
-        switch (client.Gamestate)
+    private async void DoDisconnect(NetworkedClient client)
+    {
+        using (Packet p = new Packet())
         {
-            case PlayerGamestate.Login:
-            {
-                packet.InsertInt(PacketReport.Mapping.Login.Clientbound["minecraft:login_disconnect"].Id);
-                packet.WriteLength();
-                
-                await PlayerManager.Instance.ConnectedClients[client.Channel].SendPacket(packet);
-                break;
-            }
+            p.Write(DisconnectMessage.Build());
 
-            case PlayerGamestate.Configuration:
+            switch (client.Gamestate)
             {
-                packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:disconnect"].Id);
-                packet.WriteLength();
+                case PlayerGamestate.Login:
+                {
+                    p.InsertInt(PacketReport.Mapping.Login.Clientbound["minecraft:login_disconnect"].Id);
+                    p.WriteLength();
                 
-                await PlayerManager.Instance.ConnectedClients[client.Channel].SendPacket(packet);
-                break;
-            }
+                    await PlayerManager.Instance.ConnectedClients[client.Channel].SendPacket(p);
+                    break;
+                }
+
+                case PlayerGamestate.Configuration:
+                {
+                    p.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:disconnect"].Id);
+                    p.WriteLength();
+                
+                    await PlayerManager.Instance.ConnectedClients[client.Channel].SendPacket(p);
+                    break;
+                }
             
-            case PlayerGamestate.Play:
-            {
-                packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:disconnect"].Id);
-                packet.WriteLength();
+                case PlayerGamestate.Play:
+                {
+                    p.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:disconnect"].Id);
+                    p.WriteLength();
 
-                await PlayerManager.Instance.ConnectedClients[client.Channel].SendPacket(packet);
-                break;
-            }
+                    await PlayerManager.Instance.ConnectedClients[client.Channel].SendPacket(p);
+                    break;
+                }
 
-            default:
-            {
-                throw new NotImplementedException();
+                default:
+                {
+                    throw new NotImplementedException();
+                }
             }
-        }
         
-        PlayerManager.Instance.ConnectedClients[client.Channel].DisconnectChannel();
-        PlayerManager.Instance.ConnectedClients.Remove(client.Channel);
+            PlayerManager.Instance.ConnectedClients[client.Channel].DisconnectChannel();
+            PlayerManager.Instance.ConnectedClients.Remove(client.Channel);
+        }
     }
 }
