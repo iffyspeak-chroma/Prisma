@@ -35,6 +35,15 @@ public class ClientboundDisconnectPacket : ICallable
                 break;
             }
 
+            case PlayerGamestate.Play:
+            {
+                packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:disconnect"].Id);
+                packet.WriteLength();
+
+                await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
+                break;
+            }
+
             default:
             {
                 throw new NotImplementedException();
