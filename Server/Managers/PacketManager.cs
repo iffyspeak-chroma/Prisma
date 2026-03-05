@@ -122,6 +122,8 @@ public class PacketManager
             new ServerboundPlayAcceptTeleportPacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:move_player_pos_rot"].Id,
             new ServerboundPlaySetPlayerPosRotPacket().Call);
+        PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:set_carried_item"].Id,
+            new ServerboundPlaySetCarriedItemPacket().Call);
 
         #endregion
     }
