@@ -1,4 +1,5 @@
 ﻿using API.DataTypes.Player;
+using API.DataTypes.Player.PlayerActionFlags;
 using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Managers;
@@ -27,5 +28,27 @@ public class ClientboundPlaySetHeldSlotPacket : ICallable
         }
         
         new ClientboundPlaySynchronizePlayerPositionPacket().Call(context, null);
+
+        ClientboundPlayPlayerInfoUpdatePacket otherPlayersInfoPacket = new ClientboundPlayPlayerInfoUpdatePacket();
+        foreach(KeyValuePair<IChannel, NetworkedClient> kvp in PlayerManager.Instance.ConnectedClients)
+        {
+            NetworkedClient otherClient = kvp.Value;
+            
+            if ((otherClient != client) && (otherClient.Gamestate == PlayerGamestate.Play))
+            {
+                otherPlayersInfoPacket.AffectedPlayers.Add(otherClient, new List<IPlayerActionFlag>()
+                {
+                    new AddPlayerAction(otherClient.Player)
+                });
+            }
+        }
+        otherPlayersInfoPacket.Call(context, null);
+
+        ClientboundPlayPlayerInfoUpdatePacket currentPlayerInfoPacket = new ClientboundPlayPlayerInfoUpdatePacket();
+        currentPlayerInfoPacket.AffectedPlayers.Add(client, new List<IPlayerActionFlag>()
+        {
+            new AddPlayerAction(client.Player)
+        });
+        currentPlayerInfoPacket.Call(context, null);
     }
 }
