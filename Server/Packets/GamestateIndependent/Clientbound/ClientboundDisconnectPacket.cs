@@ -25,10 +25,11 @@ public class ClientboundDisconnectPacket : ICallable
     {
         using (Packet p = new Packet())
         {
-            p.Write(DisconnectMessage.Build());
+            p.Write(DisconnectMessage.ToJson());
 
             switch (client.Gamestate)
             {
+                // JSON Text Component
                 case PlayerGamestate.Login:
                 {
                     p.InsertInt(PacketReport.Mapping.Login.Clientbound["minecraft:login_disconnect"].Id);
@@ -38,6 +39,7 @@ public class ClientboundDisconnectPacket : ICallable
                     break;
                 }
 
+                // NBT Text Component
                 case PlayerGamestate.Configuration:
                 {
                     p.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:disconnect"].Id);
@@ -47,6 +49,7 @@ public class ClientboundDisconnectPacket : ICallable
                     break;
                 }
             
+                // NBT Text Component
                 case PlayerGamestate.Play:
                 {
                     p.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:disconnect"].Id);

@@ -56,7 +56,7 @@ public class TextComponentBuilder
     /// <summary>
     /// Builds the JSON string manually.
     /// </summary>
-    public string Build()
+    public string ToJson()
     {
         return JsonSerializer.Serialize(ToObject(), new JsonSerializerOptions { WriteIndented = true });
     }
