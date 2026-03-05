@@ -21,7 +21,6 @@ public class PlayerManager
     
     public static void DisconnectPlayer(NetworkedClient player, string reason = "No reason specified!")
     {
-
         TextComponentBuilder builder = new TextComponentBuilder();
 
         builder.AddText("Uh oh!\n", color: "red");
