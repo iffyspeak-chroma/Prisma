@@ -143,8 +143,9 @@ namespace API.Networking
 
         /// <summary>Adds an array of bytes to the packet.</summary>
         /// <param name="value">The byte array to add.</param>
-        public void Write(byte[] value)
+        public void Write(byte[]? value)
         {
+            if (value == null) return;
             _buffer.AddRange(value);
         }
 
