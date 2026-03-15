@@ -50,5 +50,8 @@ public class ClientboundPlaySetHeldSlotPacket : ICallable
             new AddPlayerAction(client.Player)
         });
         currentPlayerInfoPacket.Call(context, null);
+
+        // TODO: REMOVE THIS
+        PlayerManager.DisconnectPlayer(client);
     }
 }
