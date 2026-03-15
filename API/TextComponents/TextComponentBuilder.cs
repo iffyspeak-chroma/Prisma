@@ -92,7 +92,7 @@ public class TextComponentBuilder
     /// </summary>
     public NbtCompound ToNbt()
     {
-        var root = new NbtCompound();
+        var root = new NbtCompound("");
         
         root.Add(new NbtString("text", ""));
         
