@@ -1,4 +1,5 @@
 ﻿using API.DataTypes.Player;
+using API.NBT;
 using API.Networking;
 using API.TextComponents;
 using DotNetty.Transport.Channels;
@@ -25,13 +26,12 @@ public class ClientboundDisconnectPacket : ICallable
     {
         using (Packet p = new Packet())
         {
-            p.Write(DisconnectMessage.ToJson());
-
             switch (client.Gamestate)
             {
                 // JSON Text Component
                 case PlayerGamestate.Login:
                 {
+                    p.Write(DisconnectMessage.ToJson());
                     p.InsertInt(PacketReport.Mapping.Login.Clientbound["minecraft:login_disconnect"].Id);
                     p.WriteLength();
                 
@@ -42,6 +42,7 @@ public class ClientboundDisconnectPacket : ICallable
                 // NBT Text Component
                 case PlayerGamestate.Configuration:
                 {
+                    p.Write(NbtUtility.ConvertToBytes(DisconnectMessage.ToNbt()));
                     p.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:disconnect"].Id);
                     p.WriteLength();
                 
@@ -52,6 +53,7 @@ public class ClientboundDisconnectPacket : ICallable
                 // NBT Text Component
                 case PlayerGamestate.Play:
                 {
+                    p.Write(NbtUtility.ConvertToBytes(DisconnectMessage.ToNbt()));
                     p.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:disconnect"].Id);
                     p.WriteLength();
 
