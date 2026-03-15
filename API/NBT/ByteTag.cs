@@ -13,7 +13,7 @@ public class ByteTag : AbstractTagType
         TagName = name;
         ValidateName();
         
-        AddIdentifiers(name);
+        AddIdentifiers();
         
         Payload.Add(value);
     }

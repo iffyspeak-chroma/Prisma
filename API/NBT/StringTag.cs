@@ -18,7 +18,7 @@ public class StringTag : AbstractTagType
             throw new ArgumentException($"Tag value is too long (Greater than {ushort.MaxValue})", value);
         }
         
-        AddIdentifiers(name);
+        AddIdentifiers();
         
         Payload.AddRange(BitConverter.GetBytes((ushort) value.Length));
         Payload.AddRange(Encoding.UTF8.GetBytes(value));
