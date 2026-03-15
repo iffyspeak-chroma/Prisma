@@ -10,8 +10,9 @@ public class StringTag : AbstractTagType
 
     public StringTag(string name, string value)
     {
+        TagName = name;
         ValidateName();
-
+        
         if (value.Length > ushort.MaxValue)
         {
             throw new ArgumentException($"Tag value is too long (Greater than {ushort.MaxValue})", value);

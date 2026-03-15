@@ -10,6 +10,7 @@ public class ByteTag : AbstractTagType
 
     public ByteTag(string name, byte value)
     {
+        TagName = name;
         ValidateName();
         
         AddIdentifiers(name);
