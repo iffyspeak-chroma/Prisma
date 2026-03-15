@@ -12,10 +12,7 @@ public class ByteTag : AbstractTagType
     {
         ValidateName();
         
-        Payload.Add(TagType);
-        
-        Payload.AddRange(BitConverter.GetBytes((ushort) name.Length));
-        Payload.AddRange(Encoding.UTF8.GetBytes(name));
+        AddIdentifiers(name);
         
         Payload.Add(value);
     }

@@ -1,4 +1,6 @@
-﻿namespace API.NBT;
+﻿using System.Text;
+
+namespace API.NBT;
 
 public abstract class AbstractTagType
 {
@@ -13,5 +15,13 @@ public abstract class AbstractTagType
         {
             throw new ArgumentException($"Tag name is too long (Greater than {ushort.MaxValue})", TagName);
         }
+    }
+
+    public void AddIdentifiers(string name)
+    {
+        Payload.Add(TagType);
+        
+        Payload.AddRange(BitConverter.GetBytes((ushort) name.Length));
+        Payload.AddRange(Encoding.UTF8.GetBytes(name));
     }
 }
