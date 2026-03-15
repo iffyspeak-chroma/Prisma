@@ -42,7 +42,8 @@ public class ClientboundDisconnectPacket : ICallable
                 // NBT Text Component
                 case PlayerGamestate.Configuration:
                 {
-                    p.Write(NbtUtility.ConvertToBytes(DisconnectMessage.ToNbt()));
+                    throw new NotImplementedException();
+                    //p.Write(NbtUtility.ConvertToBytes(DisconnectMessage.ToNetworkNbt()));
                     p.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:disconnect"].Id);
                     p.WriteLength();
                 
@@ -53,7 +54,8 @@ public class ClientboundDisconnectPacket : ICallable
                 // NBT Text Component
                 case PlayerGamestate.Play:
                 {
-                    p.Write(NbtUtility.ConvertToBytes(DisconnectMessage.ToNbt()));
+                    throw new NotImplementedException();
+                    //p.Write(NbtUtility.ConvertToBytes(DisconnectMessage.ToNetworkNbt()));
                     p.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:disconnect"].Id);
                     p.WriteLength();
 
