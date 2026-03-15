@@ -6,7 +6,6 @@ public class EndTag : AbstractTagType
 {
     public override byte TagType => 0;
     public override string? TagName => null;
-    public override List<byte> Payload { get; set; }
 
     public EndTag()
     {
