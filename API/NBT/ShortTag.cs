@@ -4,7 +4,6 @@
 public class ShortTag : AbstractTagType
 {
     public override byte TagType => 2;
-    public override string? TagName { get; }
 
     public ShortTag(string name, short value)
     {

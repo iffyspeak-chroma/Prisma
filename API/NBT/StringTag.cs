@@ -5,7 +5,6 @@ namespace API.NBT;
 public class StringTag : AbstractTagType
 {
     public override byte TagType => 8;
-    public override string? TagName { get; }
 
     public StringTag(string name, string value)
     {
