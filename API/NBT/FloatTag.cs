@@ -4,12 +4,12 @@ public class FloatTag : AbstractTagType
 {
     public override byte TagType => 5;
     
-    public FloatTag(string name, float value)
+    public FloatTag(string? name, float value, bool inList)
     {
         TagName = name;
         ValidateName();
         
-        AddIdentifiers();
+        AddIdentifiers(!inList);
         
         Payload.AddRange(BitConverter.GetBytes(value));
     }

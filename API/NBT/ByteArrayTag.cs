@@ -4,22 +4,22 @@ public class ByteArrayTag : AbstractTagType
 {
     public override byte TagType => 7;
 
-    public ByteArrayTag(string name, byte[] value)
+    public ByteArrayTag(string? name, byte[] value, bool inList = false)
     {
         TagName = name;
         ValidateName();
         
-        AddIdentifiers();
+        AddIdentifiers(!inList);
         
         AddToPayload(value);
     }
 
-    public ByteArrayTag(string name, List<byte> value)
+    public ByteArrayTag(string? name, List<byte> value, bool inList = false)
     {
         TagName = name;
         ValidateName();
         
-        AddIdentifiers();
+        AddIdentifiers(!inList);
         
         AddToPayload(value.ToArray());
     }

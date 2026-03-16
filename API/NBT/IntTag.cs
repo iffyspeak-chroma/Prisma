@@ -4,12 +4,12 @@ public class IntTag : AbstractTagType
 {
     public override byte TagType => 3;
 
-    public IntTag(string name, int value)
+    public IntTag(string? name, int value, bool inList)
     {
         TagName = name;
         ValidateName();
         
-        AddIdentifiers();
+        AddIdentifiers(!inList);
 
         Payload.AddRange(BitConverter.GetBytes(value));
     }

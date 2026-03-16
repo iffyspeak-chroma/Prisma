@@ -6,12 +6,12 @@ public class ByteTag : AbstractTagType
 {
     public override byte TagType => 1;
 
-    public ByteTag(string name, byte value)
+    public ByteTag(string? name, byte value, bool inList)
     {
         TagName = name;
         ValidateName();
         
-        AddIdentifiers();
+        AddIdentifiers(!inList);
         
         Payload.Add(value);
     }

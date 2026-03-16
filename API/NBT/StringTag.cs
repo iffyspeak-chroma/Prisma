@@ -6,7 +6,7 @@ public class StringTag : AbstractTagType
 {
     public override byte TagType => 8;
 
-    public StringTag(string name, string value)
+    public StringTag(string? name, string value, bool inList)
     {
         TagName = name;
         ValidateName();
@@ -16,7 +16,7 @@ public class StringTag : AbstractTagType
             throw new ArgumentException($"Tag value is too long (Greater than {ushort.MaxValue})", value);
         }
         
-        AddIdentifiers();
+        AddIdentifiers(!inList);
         
         Payload.AddRange(BitConverter.GetBytes((ushort) value.Length));
         Payload.AddRange(Encoding.UTF8.GetBytes(value));

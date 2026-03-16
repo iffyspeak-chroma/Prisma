@@ -17,14 +17,18 @@ public abstract class AbstractTagType
         }
     }
 
-    public void AddIdentifiers()
+    public void AddIdentifiers(bool addType)
     {
-        Payload.Add(TagType);
+        if (addType)
+        {
+            Payload.Add(TagType);
+        }
 
         if (TagName != null)
         {
             Payload.AddRange(BitConverter.GetBytes((ushort) TagName.Length));
             Payload.AddRange(Encoding.UTF8.GetBytes(TagName));
+            
         }
     }
 }

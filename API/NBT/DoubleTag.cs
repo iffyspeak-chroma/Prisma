@@ -4,12 +4,12 @@ public class DoubleTag : AbstractTagType
 {
     public override byte TagType => 6;
 
-    public DoubleTag(string name, double value)
+    public DoubleTag(string? name, double value, bool inList)
     {
         TagName = name;
         ValidateName();
         
-        AddIdentifiers();
+        AddIdentifiers(!inList);
         
         Payload.AddRange(BitConverter.GetBytes(value));
     }

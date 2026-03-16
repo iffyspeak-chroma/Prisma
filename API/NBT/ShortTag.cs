@@ -5,12 +5,12 @@ public class ShortTag : AbstractTagType
 {
     public override byte TagType => 2;
 
-    public ShortTag(string name, short value)
+    public ShortTag(string? name, short value, bool inList)
     {
         TagName = name;
         ValidateName();
         
-        AddIdentifiers();
+        AddIdentifiers(!inList);
         
         Payload.AddRange(BitConverter.GetBytes(value));
     }

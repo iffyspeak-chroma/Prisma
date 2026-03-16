@@ -4,12 +4,12 @@ public class ListTag<TType> : AbstractTagType where TType : AbstractTagType
 {
     public override byte TagType => 9;
 
-    public ListTag(string name, List<TType> tags)
+    public ListTag(string? name, List<TType> tags, bool inList)
     {
         TagName = name;
         ValidateName();
         
-        AddIdentifiers();
+        AddIdentifiers(!inList);
 
         if (tags.Count <= 0)
         {
