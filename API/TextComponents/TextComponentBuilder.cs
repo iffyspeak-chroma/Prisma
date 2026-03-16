@@ -46,6 +46,14 @@ public class TextComponentBuilder
     /// </summary>
     public object ToObject()
     {
+        return ToDictionary();
+    }
+
+    /// <summary>
+    /// Returns the dictionary structure used for serialization.
+    /// </summary>
+    public Dictionary<string, object> ToDictionary()
+    {
         return new Dictionary<string, object>
         {
             { "text", "" },
