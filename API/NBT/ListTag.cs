@@ -20,7 +20,10 @@ public class ListTag<TType> : AbstractTagType where TType : AbstractTagType
         
         Payload.Add(tags[0].TagType);
         
-        Payload.AddRange(BitConverter.GetBytes(tags.Count));
+        Payload.Add((byte)((tags.Count >> 24) & 0xFF));
+        Payload.Add((byte)((tags.Count >> 16) & 0xFF));
+        Payload.Add((byte)((tags.Count >> 8) & 0xFF));
+        Payload.Add((byte)(tags.Count & 0xFF));
         foreach (var tag in tags)
         {
             Payload.AddRange(tag.Payload);
