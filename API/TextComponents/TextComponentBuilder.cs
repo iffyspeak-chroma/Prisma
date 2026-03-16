@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using API.NBT;
 
 namespace API.TextComponents;
 
@@ -67,6 +68,32 @@ public class TextComponentBuilder
     public string ToJson()
     {
         return JsonSerializer.Serialize(ToObject(), new JsonSerializerOptions { WriteIndented = true });
+    }
+
+    /// <summary>
+    /// Builds an NbtCompound Tag manually.
+    /// </summary>
+    public CompoundTag ToNbtCompound()
+    {
+        CompoundTag root = new CompoundTag(null, true);
+        
+        root.Children.Add(new StringTag("text", ""));
+
+        CompoundTag extras = new CompoundTag("extra", false);
+
+        foreach (KeyValuePair<string, object> kvp in ToDictionary())
+        {
+            if (kvp.Value != null)
+            {
+                extras.Children.Add(new StringTag(kvp.Key.ToString().ToLower(), kvp.Value.ToString().ToLower()));
+            }
+        }
+        extras.AssemblePayload();
+        
+        root.Children.Add(extras);
+        root.AssemblePayload();
+
+        return root;
     }
 
     /// <summary>
