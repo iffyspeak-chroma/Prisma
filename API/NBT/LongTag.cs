@@ -4,7 +4,7 @@ public class LongTag : AbstractTagType
 {
     public override byte TagType => 4;
 
-    public LongTag(string? name, long value, bool inList)
+    public LongTag(string? name, long value, bool inList = false)
     {
         TagName = name;
         ValidateName();

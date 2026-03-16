@@ -6,7 +6,7 @@ public class StringTag : AbstractTagType
 {
     public override byte TagType => 8;
 
-    public StringTag(string? name, string value, bool inList)
+    public StringTag(string? name, string value, bool inList = false)
     {
         TagName = name;
         ValidateName();

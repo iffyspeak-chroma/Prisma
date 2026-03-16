@@ -4,7 +4,7 @@ public class DoubleTag : AbstractTagType
 {
     public override byte TagType => 6;
 
-    public DoubleTag(string? name, double value, bool inList)
+    public DoubleTag(string? name, double value, bool inList = false)
     {
         TagName = name;
         ValidateName();

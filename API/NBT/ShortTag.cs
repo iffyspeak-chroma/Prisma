@@ -5,7 +5,7 @@ public class ShortTag : AbstractTagType
 {
     public override byte TagType => 2;
 
-    public ShortTag(string? name, short value, bool inList)
+    public ShortTag(string? name, short value, bool inList = false)
     {
         TagName = name;
         ValidateName();

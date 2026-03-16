@@ -6,7 +6,7 @@ public class ByteTag : AbstractTagType
 {
     public override byte TagType => 1;
 
-    public ByteTag(string? name, byte value, bool inList)
+    public ByteTag(string? name, byte value, bool inList = false)
     {
         TagName = name;
         ValidateName();

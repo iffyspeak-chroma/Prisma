@@ -4,7 +4,7 @@ public class ListTag<TType> : AbstractTagType where TType : AbstractTagType
 {
     public override byte TagType => 9;
 
-    public ListTag(string? name, List<TType> tags, bool inList)
+    public ListTag(string? name, List<TType> tags, bool inList = false)
     {
         TagName = name;
         ValidateName();

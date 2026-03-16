@@ -4,7 +4,7 @@ public class FloatTag : AbstractTagType
 {
     public override byte TagType => 5;
     
-    public FloatTag(string? name, float value, bool inList)
+    public FloatTag(string? name, float value, bool inList = false)
     {
         TagName = name;
         ValidateName();

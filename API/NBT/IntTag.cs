@@ -4,7 +4,7 @@ public class IntTag : AbstractTagType
 {
     public override byte TagType => 3;
 
-    public IntTag(string? name, int value, bool inList)
+    public IntTag(string? name, int value, bool inList = false)
     {
         TagName = name;
         ValidateName();
