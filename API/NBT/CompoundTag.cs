@@ -19,6 +19,11 @@ public class CompoundTag : AbstractTagType
     {
         foreach (AbstractTagType child in Children)
         {
+            if (child.GetType() == typeof(CompoundTag))
+            {
+                CompoundTag b = (CompoundTag)child;
+                b.AssemblePayload();
+            }
             Payload.AddRange(child.Payload);
         }
 

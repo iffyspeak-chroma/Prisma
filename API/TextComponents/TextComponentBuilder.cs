@@ -88,7 +88,6 @@ public class TextComponentBuilder
                 extras.Children.Add(new StringTag(kvp.Key.ToString().ToLower(), kvp.Value.ToString().ToLower()));
             }
         }
-        extras.AssemblePayload();
         
         root.Children.Add(extras);
         root.AssemblePayload();
