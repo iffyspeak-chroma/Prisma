@@ -17,6 +17,9 @@ public class ClientboundPlayInitializeBorderPacket : ICallable
         }
         else
         {
+            packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:initialize_border"].Id);
+            packet.WriteLength();
+            
             await client.SendPacket(packet);
         }
         
@@ -44,5 +47,7 @@ public class ClientboundPlayInitializeBorderPacket : ICallable
         packet.WriteLength();
         
         await client.SendPacket(packet);
+        
+        new ClientboundPlaySetTimePacket().Call(context, null);
     }
 }
