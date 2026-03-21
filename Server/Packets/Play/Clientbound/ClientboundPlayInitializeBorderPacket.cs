@@ -20,6 +20,8 @@ public class ClientboundPlayInitializeBorderPacket : ICallable
             await client.SendPacket(packet);
         }
         
+        // TODO: This should be done based on world settings
+        
         // Border center XZ
         packet.Write(0d);
         packet.Write(0d);
