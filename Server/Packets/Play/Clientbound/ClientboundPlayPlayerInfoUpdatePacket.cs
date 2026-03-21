@@ -53,6 +53,8 @@ public class ClientboundPlayPlayerInfoUpdatePacket : ICallable
             p.WriteLength();
 
             await client.SendPacket(p);
+            
+            new ClientboundPlayInitializeBorderPacket().Call(context, null);
         }
     }
 }
