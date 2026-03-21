@@ -21,6 +21,7 @@ public class ClientboundPlayInitializeBorderPacket : ICallable
             packet.WriteLength();
             
             await client.SendPacket(packet);
+            return;
         }
         
         // TODO: This should be done based on world settings
