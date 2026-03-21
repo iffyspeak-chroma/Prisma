@@ -1,13 +1,14 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using API.NBT;
+using fNbt;
 
 namespace API.TextComponents;
 
 [JsonConverter(typeof(TextComponentConverter))]
 public class TextComponentBuilder
 {
-    private readonly List<Dictionary<string, object>> _components = new();
+    private readonly List<Dictionary<string, object>> _jsonComponents = new();
+    private readonly List<NbtCompound> _nbtComponents = new();
 
     public TextComponentBuilder AddText(
         string text,
@@ -19,26 +20,64 @@ public class TextComponentBuilder
         ClickEvent clickEvent = null,
         HoverEvent hoverEvent = null)
     {
-        var component = new Dictionary<string, object>
+        // For JSON Components
+        var jComponent = new Dictionary<string, object>
         {
             { "text", text }
         };
+        
+        // For NBT Components
+        NbtCompound nComponent = new NbtCompound()
+        {
+            new NbtString("text", text)
+        };
 
-        if (!string.IsNullOrEmpty(color)) component["color"] = color;
-        if (bold.HasValue) component["bold"] = bold.Value;
-        if (italic.HasValue) component["italic"] = italic.Value;
-        if (underlined.HasValue) component["underlined"] = underlined.Value;
-        if (strikethrough.HasValue) component["strikethrough"] = strikethrough.Value;
-        if (clickEvent != null) component["clickEvent"] = clickEvent.ToDictionary();
-        if (hoverEvent != null) component["hoverEvent"] = hoverEvent.ToDictionary();
+        if (!string.IsNullOrEmpty(color))
+        {
+            jComponent["color"] = color;
+            nComponent.Add(new NbtString("color", color));
+        }
 
-        _components.Add(component);
+        if (bold.HasValue)
+        {
+            jComponent["bold"] = bold.Value;
+            nComponent.Add(new NbtByte("bold", (byte) (bold.Value ? 1 : 0)));
+        }
+
+        if (italic.HasValue)
+        {
+            jComponent["italic"] = italic.Value;
+            nComponent.Add(new NbtByte("italic", (byte) (italic.Value ? 1 : 0)));
+        }
+
+        if (underlined.HasValue)
+        {
+            jComponent["underlined"] = underlined.Value;
+            nComponent.Add(new NbtByte("underlined", (byte) (underlined.Value ? 1 : 0)));
+        }
+
+        if (strikethrough.HasValue)
+        {
+            jComponent["strikethrough"] = strikethrough.Value;
+            nComponent.Add(new NbtByte("strikethrough", (byte) (strikethrough.Value ? 1 : 0)));
+        }
+        
+        if (clickEvent != null) jComponent["clickEvent"] = clickEvent.ToDictionary();
+        if (hoverEvent != null) jComponent["hoverEvent"] = hoverEvent.ToDictionary();
+
+        _jsonComponents.Add(jComponent);
+        _nbtComponents.Add(nComponent);
+        
         return this;
     }
 
     public TextComponentBuilder AddSpace()
     {
-        _components.Add(new Dictionary<string, object> { { "text", " " } });
+        _jsonComponents.Add(new Dictionary<string, object> { { "text", " " } });
+        _nbtComponents.Add(new NbtCompound
+        {
+            new NbtString("text", " ")
+        });
         return this;
     }
 
@@ -58,7 +97,7 @@ public class TextComponentBuilder
         return new Dictionary<string, object>
         {
             { "text", "" },
-            { "extra", _components }
+            { "extra", _jsonComponents }
         };
     }
 
@@ -71,32 +110,49 @@ public class TextComponentBuilder
     }
 
     /// <summary>
-    /// Builds an NbtCompound Tag manually.
+    /// Builds an NbtFile Tag manually.
     /// </summary>
-    public CompoundTag ToNbtCompound()
+    public NbtFile ToNbtFile()
     {
-        CompoundTag root = new CompoundTag(null, true);
+        // Root Compound
+        // |
+        // |-> "extra" List
+        // |    [] component compound
+        // |    |
+        // |    |-> "bold" byte
+        // |    |
+        // |    |-> "color" string
+        // |    |
+        // |    |-> "italic" byte
+        // |    |
+        // |    |-> "obfuscated" byte
+        // |    |
+        // |    |-> "strikethrough" byte
+        // |    |
+        // |    |-> "underlined" byte
+        // |    |
+        // |    |-> "text" string
+        // |
+        // |-> "text" String
+
+        NbtFile file = new NbtFile();
         
-        root.Children.Add(new StringTag("text", ""));
+        NbtString rootText = new NbtString("text", "");
+        NbtList extraComponents = new NbtList("extra", NbtTagType.Compound);
 
-        CompoundTag extras = new CompoundTag("extra", false);
-
-        foreach (KeyValuePair<string, object> kvp in ToDictionary())
+        foreach (NbtCompound cmpnd in _nbtComponents)
         {
-            if (kvp.Value != null)
-            {
-                extras.Children.Add(new StringTag(kvp.Key.ToString().ToLower(), kvp.Value.ToString().ToLower()));
-            }
+            extraComponents.Add(cmpnd);
         }
         
-        root.Children.Add(extras);
-        root.AssemblePayload();
-
-        return root;
+        file.RootTag.Add(extraComponents);
+        file.RootTag.Add(rootText);
+        
+        return file;
     }
 
     /// <summary>
     /// Exposes raw components for converter use.
     /// </summary>
-    public IReadOnlyList<Dictionary<string, object>> GetComponents() => _components;
+    public IReadOnlyList<Dictionary<string, object>> GetComponents() => _jsonComponents;
 }

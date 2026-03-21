@@ -1,8 +1,10 @@
 ﻿using API.DataTypes.Player;
+using API.Logging;
 using API.NBT;
 using API.Networking;
 using API.TextComponents;
 using DotNetty.Transport.Channels;
+using fNbt;
 using Server.Managers;
 
 namespace Server.Packets.GamestateIndependent.Clientbound;
@@ -42,7 +44,7 @@ public class ClientboundDisconnectPacket : ICallable
                 // NBT Text Component
                 case PlayerGamestate.Configuration:
                 {
-                    p.Write(DisconnectMessage.ToNbtCompound().Payload.ToArray());
+                    p.Write(NbtToolkit.StripUnnecessary(DisconnectMessage.ToNbtFile().SaveToBuffer(NbtCompression.None)));
                     p.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:disconnect"].Id);
                     p.WriteLength();
                 
@@ -53,10 +55,10 @@ public class ClientboundDisconnectPacket : ICallable
                 // NBT Text Component
                 case PlayerGamestate.Play:
                 {
-                    p.Write(DisconnectMessage.ToNbtCompound().Payload.ToArray());
+                    p.Write(NbtToolkit.StripUnnecessary(DisconnectMessage.ToNbtFile().SaveToBuffer(NbtCompression.None)));
                     p.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:disconnect"].Id);
                     p.WriteLength();
-
+                    
                     await PlayerManager.Instance.ConnectedClients[client.Channel].SendPacket(p);
                     break;
                 }
