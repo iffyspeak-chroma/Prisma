@@ -20,7 +20,8 @@ public class ClientboundPlayLoginPacket : ICallable
 
         // Create just some generic entity for the joining player.
         int entityId = EntityManager.RetrieveNextId();
-        EntityManager.Instance.EntityList.Add(entityId,new GenericEntity());
+        
+        EntityManager.Instance.EntityList.Add(entityId, new GenericEntity(player.Uuid));
         player.AssociatedEntity = EntityManager.Instance.EntityList[entityId];
         
         packet.Write(entityId, false);
