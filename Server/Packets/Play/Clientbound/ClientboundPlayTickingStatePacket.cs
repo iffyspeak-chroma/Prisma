@@ -1,12 +1,11 @@
-﻿using API.DataTypes;
-using API.DataTypes.Player;
+﻿using API.DataTypes.Player;
 using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Play.Clientbound;
 
-public class ClientboundPlayGameEventPacket : ICallable
+public class ClientboundPlayTickingStatePacket : ICallable
 {
     public async void Call(IChannelHandlerContext context, Packet? packet)
     {
@@ -18,20 +17,13 @@ public class ClientboundPlayGameEventPacket : ICallable
         }
         else
         {
-            packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:game_event"].Id);
+            packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:ticking_state"].Id);
             packet.WriteLength();
             
             await client.SendPacket(packet);
             return;
         }
         
-        packet.Write(GameEvents.WaitForChunks);
         
-        packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:game_event"].Id);
-        packet.WriteLength();
-            
-        await client.SendPacket(packet);
-        
-        new ClientboundPlayTickingStatePacket().Call(context, null);
     }
 }
