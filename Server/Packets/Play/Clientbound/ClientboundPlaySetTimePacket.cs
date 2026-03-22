@@ -47,5 +47,7 @@ public class ClientboundPlaySetTimePacket : ICallable
         packet.WriteLength();
             
         await client.SendPacket(packet);
+        
+        new ClientboundPlayDefaultSpawnPositionPacket().Call(context, packet);
     }
 }
