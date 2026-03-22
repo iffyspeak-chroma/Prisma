@@ -23,7 +23,7 @@ public class PlayerManager
     {
         TextComponentBuilder builder = new TextComponentBuilder();
 
-        builder.AddText("Uh oh!\n", color: "red", bold: true);
+        builder.AddText("Disconnected!\n", color: "white", bold: true);
         builder.AddText($"{reason}", color: "red");
 
         DisconnectPlayer(player, builder);
