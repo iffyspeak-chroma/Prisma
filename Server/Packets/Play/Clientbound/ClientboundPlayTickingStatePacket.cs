@@ -24,6 +24,12 @@ public class ClientboundPlayTickingStatePacket : ICallable
             return;
         }
         
+        packet.Write(20f);
+        packet.Write(false);
         
+        packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:ticking_state"].Id);
+        packet.WriteLength();
+            
+        await client.SendPacket(packet);
     }
 }
