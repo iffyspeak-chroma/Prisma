@@ -57,7 +57,7 @@ class Program
         {
             Debug.Assert(Server.Instance.Configuration != null, "Server.Instance.Configuration != null");
             LogTool.Info("Configuration loaded!");
-            LogTool.Debug("Debug messages are enabled!", Server.Instance.Configuration.DebugMode);
+            //LogTool.Debug("Debug messages are enabled!");
         }
         
         // Next up, the packet report. It's pretty much the same thing but now for the packet report.

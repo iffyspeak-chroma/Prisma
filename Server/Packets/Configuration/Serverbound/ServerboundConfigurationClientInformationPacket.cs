@@ -27,7 +27,7 @@ public class ServerboundConfigurationClientInformationPacket : ICallable
         cs.ParticlePreference = (ParticlePreference) packet.ReadVarInt();
 
         client.Player.ClientSettings = cs;
-        LogTool.Debug($"{NetworkedClient.GetPlayerIdentifier(player)} uses {cs.Locale} and draws {cs.ViewDistance} chunks away.", Server.Instance.Configuration.DebugMode);
+        //LogTool.Debug($"{NetworkedClient.GetPlayerIdentifier(player)} uses {cs.Locale} and draws {cs.ViewDistance} chunks away.");
 
         new ClientboundConfigurationPluginMessagePacket().Call(context, null);
     }

@@ -27,17 +27,14 @@ public class LogTool
         Console.ForegroundColor = fgOriginal;
     }
 
-    public static void Debug(string message, bool debug)
+    public static void Debug(string message)
     {
-        if (debug)
-        {
-            ConsoleColor fgOriginal = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Blue;
+        ConsoleColor fgOriginal = Console.ForegroundColor;
+        Console.ForegroundColor = ConsoleColor.Blue;
         
-            Console.WriteLine($"Debug || {DateTime.Now} >> {message}");
+        Console.WriteLine($"Debug || {DateTime.Now} >> {message}");
         
-            Console.ForegroundColor = fgOriginal;
-        }
+        Console.ForegroundColor = fgOriginal;
     }
 
     public static void Raw(string message, ConsoleColor color = ConsoleColor.White)
