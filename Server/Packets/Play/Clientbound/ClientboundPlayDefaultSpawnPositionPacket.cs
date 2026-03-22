@@ -37,6 +37,6 @@ public class ClientboundPlayDefaultSpawnPositionPacket : ICallable
             
         await client.SendPacket(packet);
         
-        new ClientboundPlayGameEventPacket().Call(context, packet);
+        new ClientboundPlayGameEventPacket().Call(context, null);
     }
 }

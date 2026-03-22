@@ -48,6 +48,6 @@ public class ClientboundPlaySetTimePacket : ICallable
             
         await client.SendPacket(packet);
         
-        new ClientboundPlayDefaultSpawnPositionPacket().Call(context, packet);
+        new ClientboundPlayDefaultSpawnPositionPacket().Call(context, null);
     }
 }
