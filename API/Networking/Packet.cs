@@ -224,10 +224,21 @@ namespace API.Networking
         }
         
         /// <summary>Adds a double to the packet.</summary>
-        /// <param name="value">The string to add.</param>
+        /// <param name="value">The double to add.</param>
         public void Write(double value)
         {
             _buffer.AddRange(BitConverter.GetBytes(value));
+        }
+        
+        /// <summary>Adds a Position to the packet.</summary>
+        /// <param name="value">The position to add.</param>
+        public void Write(Position value)
+        {
+            long v = ((long)(value.X & 0x3FFFFFF) << 38) |
+                     ((long)(value.Z & 0x3FFFFFF) << 12) |
+                     ((long)(value.Y & 0xFFF));
+            
+            Write(v);
         }
 
         #endregion
@@ -524,6 +535,18 @@ namespace API.Networking
             {
                 throw new Exception("Could not read value of type 'double'!");
             }
+        }
+
+        /// <summary>Reads a Position from the packet.</summary>
+        /// <param name="moveReadPos">Move the buffer's read position.</param>
+        public Position ReadPosition(bool moveReadPos = true)
+        {
+            long tmp = ReadLong(moveReadPos);
+            int x = (int)((tmp >> 38) & 0x3FFFFFF);
+            int z = (int)((tmp >> 12) & 0x3FFFFFF);
+            int y = (int)(tmp & 0xFFF);
+
+            return new Position(x, y, z);
         }
 
         #endregion
