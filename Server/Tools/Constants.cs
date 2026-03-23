@@ -22,4 +22,17 @@ public class Constants
 
     #endregion
 
+    #region Colors
+
+    public static string ErrorColorPrimary = "#eb251e";
+    public static string ErrorColorSecondary = "#e65c57";
+
+    public static string WarningColorPrimary = "#ebeb1e";
+    public static string WarningColorSecondary = "#e6e357";
+
+    public static string SuccessColorPrimary = "#25eb1e";
+    public static string SuccessColorSecondary = "#5ce657";
+
+    #endregion
+
 }
