@@ -1,4 +1,4 @@
-﻿namespace Server;
+﻿namespace Server.Tools;
 
 public class Constants
 {

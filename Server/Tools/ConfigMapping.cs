@@ -1,4 +1,4 @@
-﻿namespace Server.ConfigurationTools;
+﻿namespace Server.Tools;
 
 public class ConfigMapping
 {
