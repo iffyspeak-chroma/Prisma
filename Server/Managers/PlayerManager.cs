@@ -3,6 +3,7 @@ using API.Networking;
 using API.TextComponents;
 using DotNetty.Transport.Channels;
 using Server.Packets.GamestateIndependent.Clientbound;
+using Server.Tools;
 
 namespace Server.Managers;
 
@@ -22,8 +23,8 @@ public class PlayerManager
     {
         TextComponentBuilder builder = new TextComponentBuilder();
 
-        builder.AddText("Disconnected!\n", color: "white", bold: true);
-        builder.AddText($"{reason}", color: "red");
+        builder.AddText("Disconnected!\n", color: Constants.ErrorColorPrimary, bold: true);
+        builder.AddText($"{reason}", color: Constants.ErrorColorSecondary);
 
         await DisconnectPlayer(player, builder);
     }
