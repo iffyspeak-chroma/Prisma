@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using API.DataTypes.Player;
-using API.Networking;
+﻿using API.Networking;
 using API.TextComponents;
 using DotNetty.Transport.Channels;
 using Server.Packets.GamestateIndependent.Clientbound;
