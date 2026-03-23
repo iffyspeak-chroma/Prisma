@@ -1,8 +1,9 @@
-﻿using API.Networking;
+﻿using API.DataTypes.Player;
+using API.Networking;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
 
-namespace API.DataTypes.Player;
+namespace API.Networking;
 
 public class NetworkedClient
 {
