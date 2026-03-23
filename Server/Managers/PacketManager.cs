@@ -3,6 +3,7 @@ using API.Logging;
 using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Packets.Configuration.Serverbound;
+using Server.Packets.GamestateIndependent.Serverbound;
 using Server.Packets.Handshake;
 using Server.Packets.Login.Serverbound;
 using Server.Packets.Play.Serverbound;
@@ -107,6 +108,8 @@ public class PacketManager
             new ServerboundConfigurationKnownPacksPacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:finish_configuration"].Id,
             new ServerboundConfigurationAcknowledgeFinishPacket().Call);
+        PacketList[gamestate].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:keep_alive"].Id,
+            new ServerboundKeepAlivePacket().Call);
 
         #endregion
 
@@ -125,6 +128,8 @@ public class PacketManager
             new ServerboundPlaySetPlayerPosRotPacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:set_carried_item"].Id,
             new ServerboundPlaySetCarriedItemPacket().Call);
+        PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:keep_alive"].Id,
+            new ServerboundKeepAlivePacket().Call);
 
         #endregion
     }
