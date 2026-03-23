@@ -237,8 +237,13 @@ namespace API.Networking
             long v = ((long)(value.X & 0x3FFFFFF) << 38) |
                      ((long)(value.Z & 0x3FFFFFF) << 12) |
                      ((long)(value.Y & 0xFFF));
-            
-            Write(v);
+
+            // Convert to big endian
+            byte[] bytes = BitConverter.GetBytes(v);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(bytes);
+
+            Write(bytes); // Assuming this writes a byte[] to your packet buffer
         }
 
         #endregion
@@ -541,10 +546,16 @@ namespace API.Networking
         /// <param name="moveReadPos">Move the buffer's read position.</param>
         public Position ReadPosition(bool moveReadPos = true)
         {
-            long tmp = ReadLong(moveReadPos);
-            int x = (int)((tmp >> 38) & 0x3FFFFFF);
-            int z = (int)((tmp >> 12) & 0x3FFFFFF);
-            int y = (int)(tmp & 0xFFF);
+            byte[] bytes = ReadBytes(8, moveReadPos); // Read 8 bytes for a long
+
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(bytes);
+
+            long tmp = BitConverter.ToInt64(bytes, 0);
+
+            int x = (int)(tmp >> 38);
+            int y = (int)(tmp << 52 >> 52); // preserves sign
+            int z = (int)(tmp << 26 >> 38);
 
             return new Position(x, y, z);
         }
