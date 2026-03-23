@@ -15,7 +15,7 @@ public class ServerboundConfigurationAcknowledgeFinishPacket : ICallable
         ServerPlayer player = client.Player;
 
         client.Gamestate = PlayerGamestate.Play;
-        LogTool.Info($"{NetworkedClient.GetPlayerIdentifier(player)} finished configuration!");
+        LogTool.Info($"{player.GetPlayerIdentifier()} finished configuration!");
         
         await new ClientboundPlayLoginPacket().Call(context, null);
     }

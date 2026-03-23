@@ -21,7 +21,7 @@ public class ServerboundConfigurationPluginMessagePacket : ICallable
         }
         else
         {
-            LogTool.Warn($"{NetworkedClient.GetPlayerIdentifier(player)} sent {identifier} but it could not be found.");
+            LogTool.Warn($"{player.GetPlayerIdentifier()} sent {identifier} but it could not be found.");
         }
 
         return Task.CompletedTask;

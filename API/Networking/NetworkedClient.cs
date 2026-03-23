@@ -15,11 +15,6 @@ public class NetworkedClient
     public PlayerConnectionInfo PlayerConnectionInfo { get; set; }
     public ServerPlayer Player { get; set; }
     public long LastHeartbeat { get; set; }
-
-    public static string GetPlayerIdentifier(ServerPlayer player)
-    {
-        return $"{player.Username}[{player.Uuid.ToString()}]";
-    }
     
     public NetworkedClient(IChannel channel, PlayerConnectionInfo pci)
     {

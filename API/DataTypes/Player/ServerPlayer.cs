@@ -24,4 +24,9 @@ public class ServerPlayer
         this.Username = u;
         this.Uuid = gu;
     }
+    
+    public string GetPlayerIdentifier()
+    {
+        return $"{Username}[{Uuid.ToString()}]";
+    }
 }

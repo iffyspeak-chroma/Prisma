@@ -15,7 +15,7 @@ public class ServerboundLoginAcknowledgePacket : ICallable
 
         client.Gamestate = PlayerGamestate.Configuration;
         
-        LogTool.Info($"Configuring data for {NetworkedClient.GetPlayerIdentifier(player)}...");
+        LogTool.Info($"Configuring data for {player.GetPlayerIdentifier()}...");
 
         return Task.CompletedTask;
     }
