@@ -27,7 +27,7 @@ public class ClientboundPlaySetTimePacket : ICallable
         // TODO: These should in theory come from the world the player is in
         
         // World tick age
-        packet.Write(0L);
+        packet.Write(0L, asVarLong: false);
         
         // Region time
         /*
@@ -37,7 +37,7 @@ public class ClientboundPlaySetTimePacket : ICallable
          *
          * https://minecraft.wiki/w/Java_Edition_protocol/Packets#Update_Time
          */
-        packet.Write(0L);
+        packet.Write(0L, asVarLong: false);
         
         // Advance daylight cycle
         packet.Write(false);
