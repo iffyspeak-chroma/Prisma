@@ -27,7 +27,7 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
         return syncPacket;
     }
     
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         // What is about to happen here is nasty and gross to me but
         // gets me to the next phase with minimal brain effort.
@@ -291,7 +291,7 @@ public class ClientboundConfigurationRegistryDataPacket : ICallable
             await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
         }
         
-        new ClientboundConfigurationUpdateTagsPacket().Call(context, null);
+        await new ClientboundConfigurationUpdateTagsPacket().Call(context, null);
         //new ClientboundConfigurationFinishPacket().Call(context, null);
     }
 }

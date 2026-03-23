@@ -11,7 +11,7 @@ namespace Server.Packets.Configuration.Serverbound;
 
 public class ServerboundConfigurationKnownPacksPacket : ICallable
 {
-    public void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         List<DataPackIdentity> packs = new List<DataPackIdentity>();
@@ -27,7 +27,7 @@ public class ServerboundConfigurationKnownPacksPacket : ICallable
         
         LogTool.Info($"{NetworkedClient.GetPlayerIdentifier(client.Player)} selected {packs.Count} pack(s).");
         
-        new ClientboundConfigurationRegistryDataPacket().Call(context, null);
+        await new ClientboundConfigurationRegistryDataPacket().Call(context, null);
         //new ClientboundConfigurationFinishPacket().Call(context, null); 
     }
 }

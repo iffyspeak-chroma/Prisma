@@ -12,25 +12,24 @@ namespace Server.Packets.GamestateIndependent.Clientbound;
 public class ClientboundDisconnectPacket : ICallable
 {
     public TextComponentBuilder DisconnectMessage = new TextComponentBuilder();
-    public void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
             
-        DoDisconnect(client);
+        await DoDisconnect(client);
     }
     
-    public void Call(NetworkedClient client, Packet? packet)
+    public async Task Call(NetworkedClient client, Packet? packet)
     {
-        DoDisconnect(client);
+        await DoDisconnect(client);
     }
 
-    private async void DoDisconnect(NetworkedClient client)
+    private async Task DoDisconnect(NetworkedClient client)
     {
         using (Packet p = new Packet())
         {
             switch (client.Gamestate)
             {
-                // JSON Text Component
                 case PlayerGamestate.Login:
                 {
                     p.Write(DisconnectMessage.ToJson());
@@ -40,8 +39,7 @@ public class ClientboundDisconnectPacket : ICallable
                     await PlayerManager.Instance.ConnectedClients[client.Channel].SendPacket(p);
                     break;
                 }
-
-                // NBT Text Component
+                
                 case PlayerGamestate.Configuration:
                 {
                     p.Write(NbtToolkit.StripUnnecessary(DisconnectMessage.ToNbtFile().SaveToBuffer(NbtCompression.None)));
@@ -51,8 +49,7 @@ public class ClientboundDisconnectPacket : ICallable
                     await PlayerManager.Instance.ConnectedClients[client.Channel].SendPacket(p);
                     break;
                 }
-            
-                // NBT Text Component
+
                 case PlayerGamestate.Play:
                 {
                     p.Write(NbtToolkit.StripUnnecessary(DisconnectMessage.ToNbtFile().SaveToBuffer(NbtCompression.None)));

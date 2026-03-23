@@ -8,7 +8,7 @@ namespace Server.Packets.Play.Clientbound;
 
 public class ClientboundPlayGameEventPacket : ICallable
 {
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         
@@ -32,7 +32,7 @@ public class ClientboundPlayGameEventPacket : ICallable
             
         await client.SendPacket(packet);
         
-        new ClientboundPlayTickingStatePacket().Call(context, null);
-        new ClientboundPlaySetCenterChunkPacket().Call(context, null);
+        await new ClientboundPlayTickingStatePacket().Call(context, null);
+        await new ClientboundPlaySetCenterChunkPacket().Call(context, null);
     }
 }

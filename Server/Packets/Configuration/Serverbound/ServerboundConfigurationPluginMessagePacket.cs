@@ -8,7 +8,7 @@ namespace Server.Packets.Configuration.Serverbound;
 
 public class ServerboundConfigurationPluginMessagePacket : ICallable
 {
-    public void Call(IChannelHandlerContext context, Packet? packet)
+    public Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         ServerPlayer player = client.Player;
@@ -23,5 +23,7 @@ public class ServerboundConfigurationPluginMessagePacket : ICallable
         {
             LogTool.Warn($"{NetworkedClient.GetPlayerIdentifier(player)} sent {identifier} but it could not be found.");
         }
+
+        return Task.CompletedTask;
     }
 }

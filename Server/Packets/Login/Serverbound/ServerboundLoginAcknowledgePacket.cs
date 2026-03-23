@@ -8,7 +8,7 @@ namespace Server.Packets.Login.Serverbound;
 
 public class ServerboundLoginAcknowledgePacket : ICallable
 {
-    public void Call(IChannelHandlerContext context, Packet? packet)
+    public Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         ServerPlayer player = client.Player;
@@ -16,5 +16,7 @@ public class ServerboundLoginAcknowledgePacket : ICallable
         client.Gamestate = PlayerGamestate.Configuration;
         
         LogTool.Info($"Configuring data for {NetworkedClient.GetPlayerIdentifier(player)}...");
+
+        return Task.CompletedTask;
     }
 }

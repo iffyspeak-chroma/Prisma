@@ -8,7 +8,7 @@ namespace Server.Packets.Play.Clientbound;
 
 public class ClientboundPlayDifficultyPacket : ICallable
 {
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         
@@ -23,7 +23,7 @@ public class ClientboundPlayDifficultyPacket : ICallable
             
             await client.SendPacket(p);
             
-            new ClientboundPlayPlayerAbilitiesPacket().Call(context, null);
+            await new ClientboundPlayPlayerAbilitiesPacket().Call(context, null);
         }
     }
 }

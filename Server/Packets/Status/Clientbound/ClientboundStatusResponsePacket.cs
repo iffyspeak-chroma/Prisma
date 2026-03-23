@@ -6,7 +6,7 @@ namespace Server.Packets.Status.Clientbound;
 
 public class ClientboundStatusResponsePacket : ICallable
 {
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         using (Packet p = new Packet(packet.ToArray()))
         {

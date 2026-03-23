@@ -7,7 +7,7 @@ namespace Server.Packets.Configuration.Clientbound;
 
 public class ClientboundConfigurationUpdateTagsPacket : ICallable
 {
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         Identifier registry = new Identifier("minecraft", "timeline");
         List<Tag> tags = new List<Tag>()
@@ -50,6 +50,6 @@ public class ClientboundConfigurationUpdateTagsPacket : ICallable
             await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
         }
         
-        new ClientboundConfigurationFinishPacket().Call(context, null);
+        await new ClientboundConfigurationFinishPacket().Call(context, null);
     }
 }

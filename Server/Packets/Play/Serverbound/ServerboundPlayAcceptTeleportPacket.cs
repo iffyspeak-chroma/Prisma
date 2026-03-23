@@ -7,7 +7,7 @@ namespace Server.Packets.Play.Serverbound;
 
 public class ServerboundPlayAcceptTeleportPacket : ICallable
 {
-    public void Call(IChannelHandlerContext context, Packet? packet)
+    public Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         ServerPlayer player = client.Player;
@@ -16,5 +16,7 @@ public class ServerboundPlayAcceptTeleportPacket : ICallable
 
         if (player.RecentTeleportId == teleportId)
             player.AcceptMovementPackets = true;
+
+        return Task.CompletedTask;
     }
 }

@@ -7,7 +7,7 @@ namespace Server.Packets.Play.Clientbound;
 
 public class ClientboundPlayPlayerAbilitiesPacket : ICallable
 {
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         CheatAbilities abilities = CheatAbilities.Invulnerable | CheatAbilities.PermitFlying;
@@ -27,7 +27,7 @@ public class ClientboundPlayPlayerAbilitiesPacket : ICallable
 
             await client.SendPacket(p);
             
-            new ClientboundPlaySetHeldSlotPacket().Call(context, null);
+            await new ClientboundPlaySetHeldSlotPacket().Call(context, null);
         }
     }
 }

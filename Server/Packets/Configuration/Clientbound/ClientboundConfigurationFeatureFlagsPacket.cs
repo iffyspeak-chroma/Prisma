@@ -6,7 +6,7 @@ namespace Server.Packets.Configuration.Clientbound;
 
 public class ClientboundConfigurationFeatureFlagsPacket : ICallable
 {
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         using (Packet p = new Packet())
         {
@@ -28,6 +28,6 @@ public class ClientboundConfigurationFeatureFlagsPacket : ICallable
             await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
         }
         
-        new ClientboundConfigurationKnownPacksPacket().Call(context, null);
+        await new ClientboundConfigurationKnownPacksPacket().Call(context, null);
     }
 }

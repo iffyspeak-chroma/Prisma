@@ -10,7 +10,7 @@ namespace Server.Packets.Status.Serverbound;
 
 public class ServerboundStatusRequestPacket : ICallable
 {
-    public void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         // TODO: We should only really be doing this if the server settings permit
         
@@ -27,7 +27,7 @@ public class ServerboundStatusRequestPacket : ICallable
         {
             p.Write(response);
 
-            new ClientboundStatusResponsePacket().Call(context, p);
+            await new ClientboundStatusResponsePacket().Call(context, p);
         }
     }
 }

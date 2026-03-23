@@ -10,7 +10,7 @@ namespace Server.Packets.Login.Serverbound;
 
 public class ServerboundLoginStartPacket : ICallable
 {
-    public void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         string playerName = packet.ReadString();
         Guid playerId = packet.ReadGuid();
@@ -29,7 +29,7 @@ public class ServerboundLoginStartPacket : ICallable
             p.Write(playerName); // User
             p.Write(0); // Properties
             
-            new ClientboundLoginSuccessPacket().Call(context, p);
+            await new ClientboundLoginSuccessPacket().Call(context, p);
         }
     }
 }

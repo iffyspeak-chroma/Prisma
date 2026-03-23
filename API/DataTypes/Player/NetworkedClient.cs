@@ -38,10 +38,13 @@ public class NetworkedClient
         PlayerConnectionInfo = pci;
     }
 
-    public async Task SendPacket(Packet packet)
+    public Task SendPacket(Packet packet)
     {
+        if (!Channel.Active)
+            return Task.CompletedTask;
+
         var buffer = Unpooled.WrappedBuffer(packet.ToArray());
-        await Channel.WriteAndFlushAsync(buffer);
+        return Channel.WriteAndFlushAsync(buffer);
     }
 
     public void DisconnectChannel()

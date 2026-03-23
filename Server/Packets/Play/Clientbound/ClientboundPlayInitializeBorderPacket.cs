@@ -7,7 +7,7 @@ namespace Server.Packets.Play.Clientbound;
 
 public class ClientboundPlayInitializeBorderPacket : ICallable
 {
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         
@@ -49,6 +49,6 @@ public class ClientboundPlayInitializeBorderPacket : ICallable
         
         await client.SendPacket(packet);
         
-        new ClientboundPlaySetTimePacket().Call(context, null);
+        await new ClientboundPlaySetTimePacket().Call(context, null);
     }
 }

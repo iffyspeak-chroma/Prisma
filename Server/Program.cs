@@ -158,7 +158,7 @@ class Program
                 .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
                 {
                     var pipeline = channel.Pipeline;
-                    pipeline.AddLast("handler", new ReceivedMessageHandler());
+                    pipeline.AddLast("handler", new AsyncReceivedMessageHandler());
                 }));
 
             if (Server.Instance == null)
@@ -177,11 +177,17 @@ class Program
                 ? IPAddress.Any
                 : IPAddress.Parse(Server.Instance.Configuration.BindAddress);
 
-            var serverBind = await bootstrap.BindAsync(bindAddress, Server.Instance.Configuration.Port);
-            LogTool.Info(
-                $"Server started successfully @ {bindAddress.ToString()}:{Server.Instance.Configuration.Port}!");
+            try
+            {
+                var serverBind = await bootstrap.BindAsync(bindAddress, Server.Instance.Configuration.Port);
+                LogTool.Info($"Server started successfully @ {bindAddress}:{Server.Instance.Configuration.Port}!");
 
-            await serverBind.CloseCompletion;
+                await serverBind.CloseCompletion;
+            }
+            catch (Exception ex)
+            {
+                LogTool.Exception(ex);
+            }
         }
         finally
         {

@@ -9,7 +9,7 @@ namespace Server.Packets.Play.Clientbound;
 
 public class ClientboundPlaySynchronizePlayerPositionPacket : ICallable
 {
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         ServerPlayer player = client.Player;

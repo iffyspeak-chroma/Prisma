@@ -7,7 +7,7 @@ namespace Server.Packets.Status.Serverbound;
 
 public class ServerboundPingRequestPacket : ICallable
 {
-    public void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         long timestamp = packet.ReadLong();
         
@@ -15,7 +15,7 @@ public class ServerboundPingRequestPacket : ICallable
         {
             p.Write(timestamp, asVarLong: false);
 
-            new ClientboundPongResponse().Call(context, p);
+            await new ClientboundPongResponse().Call(context, p);
         }
     }
 }

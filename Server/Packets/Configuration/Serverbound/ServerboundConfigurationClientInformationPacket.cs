@@ -9,7 +9,7 @@ namespace Server.Packets.Configuration.Serverbound;
 
 public class ServerboundConfigurationClientInformationPacket : ICallable
 {
-    public void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         ServerPlayer player = client.Player;
@@ -29,6 +29,6 @@ public class ServerboundConfigurationClientInformationPacket : ICallable
         client.Player.ClientSettings = cs;
         //LogTool.Debug($"{NetworkedClient.GetPlayerIdentifier(player)} uses {cs.Locale} and draws {cs.ViewDistance} chunks away.");
 
-        new ClientboundConfigurationPluginMessagePacket().Call(context, null);
+        await new ClientboundConfigurationPluginMessagePacket().Call(context, null);
     }
 }

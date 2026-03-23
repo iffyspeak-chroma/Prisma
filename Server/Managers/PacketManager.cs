@@ -14,45 +14,46 @@ public class PacketManager
 {
     public static readonly PacketManager Instance = new PacketManager();
     
-    public delegate void PacketHandler(IChannelHandlerContext context, Packet packet);
+    public delegate Task PacketHandler(IChannelHandlerContext context, Packet packet);
     public Dictionary<PlayerGamestate, Dictionary<int, PacketHandler?>> PacketList = new();
 
-    public void Handle(IChannelHandlerContext context, Packet packet)
+    public async Task Handle(IChannelHandlerContext context, Packet packet)
     {
         int packetId = packet.ReadVarInt();
-        PacketList[PlayerManager.Instance.ConnectedClients[context.Channel].Gamestate][packetId]?.Invoke(context, packet); 
+
+        var handler = PacketList[PlayerManager.Instance.ConnectedClients[context.Channel].Gamestate][packetId];
+
+        if (handler != null)
+        {
+            await handler(context, packet);
+        }
     }
 
-    public void ReceivedPacket(IChannelHandlerContext context, Packet packet)
+    public async Task ReceivedPacket(IChannelHandlerContext context, Packet packet)
     {
         if (!PlayerManager.Instance.ConnectedClients.ContainsKey(context.Channel))
         {
-            // This is a brand new connecting client. Add them onto our list.
             PlayerManager.Instance.ConnectedClients.Add(context.Channel, 
                 new NetworkedClient(PlayerGamestate.Handshake, context.Channel, new PlayerConnectionInfo()));
 
-            HandleDecompressedPacket(context, packet);
-
+            await HandleDecompressedPacket(context, packet);
             return;
         }
 
         if (!PlayerManager.Instance.ConnectedClients[context.Channel].IsCompressing)
         {
-            // Don't decompress, the client and server haven't agreed to just yet.
-            
-            HandleDecompressedPacket(context, packet);
+            await HandleDecompressedPacket(context, packet);
             return;
         }
-        
-        // Decompress the packet, the client and server have agreed!
+
         throw new NotImplementedException("Oopsies! Compression or Decompression have yet to be implemented..");
     }
 
-    private void HandleDecompressedPacket(IChannelHandlerContext context, Packet packet)
+    private async Task HandleDecompressedPacket(IChannelHandlerContext context, Packet packet)
     {
         try
         {
-            Handle(context, packet);
+            await Handle(context, packet);
         }
         catch (Exception exception)
         {

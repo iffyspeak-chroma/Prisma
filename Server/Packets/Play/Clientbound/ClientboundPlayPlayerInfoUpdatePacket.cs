@@ -10,7 +10,7 @@ public class ClientboundPlayPlayerInfoUpdatePacket : ICallable
 {
     public Dictionary<NetworkedClient, List<IPlayerActionFlag>> AffectedPlayers = new();
         
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         
@@ -54,7 +54,7 @@ public class ClientboundPlayPlayerInfoUpdatePacket : ICallable
 
             await client.SendPacket(p);
             
-            new ClientboundPlayInitializeBorderPacket().Call(context, null);
+            await new ClientboundPlayInitializeBorderPacket().Call(context, null);
         }
     }
 }

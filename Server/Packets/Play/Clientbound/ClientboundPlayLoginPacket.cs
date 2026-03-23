@@ -11,7 +11,7 @@ namespace Server.Packets.Play.Clientbound;
 
 public class ClientboundPlayLoginPacket : ICallable
 {
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         ServerPlayer player = client.Player;
@@ -102,6 +102,6 @@ public class ClientboundPlayLoginPacket : ICallable
 
         await client.SendPacket(packet);
         
-        new ClientboundPlayDifficultyPacket().Call(context, null);
+        await new ClientboundPlayDifficultyPacket().Call(context, null);
     }
 }

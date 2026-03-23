@@ -8,7 +8,7 @@ namespace Server.Packets.Play.Clientbound;
 
 public class ClientboundPlaySetHeldSlotPacket : ICallable
 {
-    public async void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         
@@ -27,7 +27,7 @@ public class ClientboundPlaySetHeldSlotPacket : ICallable
             await client.SendPacket(p);
         }
         
-        new ClientboundPlaySynchronizePlayerPositionPacket().Call(context, null);
+        await new ClientboundPlaySynchronizePlayerPositionPacket().Call(context, null);
 
         ClientboundPlayPlayerInfoUpdatePacket otherPlayersInfoPacket = new ClientboundPlayPlayerInfoUpdatePacket();
         foreach(KeyValuePair<IChannel, NetworkedClient> kvp in PlayerManager.Instance.ConnectedClients)
@@ -42,13 +42,13 @@ public class ClientboundPlaySetHeldSlotPacket : ICallable
                 });
             }
         }
-        otherPlayersInfoPacket.Call(context, null);
+        await otherPlayersInfoPacket.Call(context, null);
 
         ClientboundPlayPlayerInfoUpdatePacket currentPlayerInfoPacket = new ClientboundPlayPlayerInfoUpdatePacket();
         currentPlayerInfoPacket.AffectedPlayers.Add(client, new List<IPlayerActionFlag>()
         {
             new AddPlayerAction(client.Player)
         });
-        currentPlayerInfoPacket.Call(context, null);
+        await currentPlayerInfoPacket.Call(context, null);
     }
 }

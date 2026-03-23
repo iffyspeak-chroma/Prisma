@@ -7,7 +7,7 @@ namespace Server.Packets.Handshake;
 
 public class ServerboundHandshakePacket : ICallable
 {
-    public void Call(IChannelHandlerContext context, Packet? packet)
+    public Task Call(IChannelHandlerContext context, Packet? packet)
     {
         if (packet == null)
         {
@@ -24,5 +24,7 @@ public class ServerboundHandshakePacket : ICallable
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         client.Gamestate = nextIntent;
         client.PlayerConnectionInfo = pci;
+
+        return Task.CompletedTask;
     }
 }

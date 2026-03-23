@@ -9,7 +9,7 @@ namespace Server.Packets.Configuration.Serverbound;
 
 public class ServerboundConfigurationAcknowledgeFinishPacket : ICallable
 {
-    public void Call(IChannelHandlerContext context, Packet? packet)
+    public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         ServerPlayer player = client.Player;
@@ -17,6 +17,6 @@ public class ServerboundConfigurationAcknowledgeFinishPacket : ICallable
         client.Gamestate = PlayerGamestate.Play;
         LogTool.Info($"{NetworkedClient.GetPlayerIdentifier(player)} finished configuration!");
         
-        new ClientboundPlayLoginPacket().Call(context, null);
+        await new ClientboundPlayLoginPacket().Call(context, null);
     }
 }
