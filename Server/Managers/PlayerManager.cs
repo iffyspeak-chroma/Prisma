@@ -9,25 +9,25 @@ public class PlayerManager
 {
     public static readonly PlayerManager Instance = new PlayerManager();
 
-    public static void DisconnectPlayer(NetworkedClient player, TextComponentBuilder reason)
+    public static async Task DisconnectPlayer(NetworkedClient player, TextComponentBuilder reason)
     {
         ClientboundDisconnectPacket packet = new ClientboundDisconnectPacket();
         packet.DisconnectMessage = reason;
         
-        packet.Call(player, new Packet());
+        await packet.Call(player, new Packet());
     }
     
-    public static void DisconnectPlayer(NetworkedClient player, string reason = "No reason specified!")
+    public static async Task DisconnectPlayer(NetworkedClient player, string reason = "No reason specified!")
     {
         TextComponentBuilder builder = new TextComponentBuilder();
 
         builder.AddText("Disconnected!\n", color: "white", bold: true);
         builder.AddText($"{reason}", color: "red");
 
-        DisconnectPlayer(player, builder);
+        await DisconnectPlayer(player, builder);
     }
 
-    public static async void SendPacketToAll(Packet packet)
+    public static async Task SendPacketToAll(Packet packet)
     {
         foreach (KeyValuePair<IChannel, NetworkedClient> pair in Instance.ConnectedClients)
         {
@@ -35,7 +35,7 @@ public class PlayerManager
         }
     }
 
-    public static async void SendPacketToAll(Packet packet, NetworkedClient exception)
+    public static async Task SendPacketToAll(Packet packet, NetworkedClient exception)
     {
         foreach (KeyValuePair<IChannel, NetworkedClient> pair in Instance.ConnectedClients)
         {
