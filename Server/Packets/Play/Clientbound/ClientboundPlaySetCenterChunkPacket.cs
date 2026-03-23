@@ -1,12 +1,11 @@
-﻿using API.DataTypes;
-using API.DataTypes.Player;
+﻿using API.DataTypes.Player;
 using API.Networking;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Play.Clientbound;
 
-public class ClientboundPlayGameEventPacket : ICallable
+public class ClientboundPlaySetCenterChunkPacket : ICallable
 {
     public async void Call(IChannelHandlerContext context, Packet? packet)
     {
@@ -18,21 +17,20 @@ public class ClientboundPlayGameEventPacket : ICallable
         }
         else
         {
-            packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:game_event"].Id);
+            packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:set_chunk_cache_center"].Id);
             packet.WriteLength();
             
             await client.SendPacket(packet);
             return;
         }
         
-        packet.Write(GameEvents.WaitForChunks);
+        // Center Chunk X/Z
+        packet.Write(0);
+        packet.Write(0);
         
-        packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:game_event"].Id);
+        packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:set_chunk_cache_center"].Id);
         packet.WriteLength();
             
         await client.SendPacket(packet);
-        
-        new ClientboundPlayTickingStatePacket().Call(context, null);
-        new ClientboundPlaySetCenterChunkPacket().Call(context, null);
     }
 }
