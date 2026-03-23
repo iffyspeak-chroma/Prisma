@@ -14,6 +14,7 @@ public class NetworkedClient
     public PlayerGamestate Gamestate { get; set; }
     public PlayerConnectionInfo PlayerConnectionInfo { get; set; }
     public ServerPlayer Player { get; set; }
+    public long LastHeartbeat { get; set; }
 
     public static string GetPlayerIdentifier(ServerPlayer player)
     {

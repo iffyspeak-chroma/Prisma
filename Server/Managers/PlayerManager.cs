@@ -1,4 +1,5 @@
-﻿using API.Networking;
+﻿using API.DataTypes.Player;
+using API.Networking;
 using API.TextComponents;
 using DotNetty.Transport.Channels;
 using Server.Packets.GamestateIndependent.Clientbound;
@@ -25,6 +26,11 @@ public class PlayerManager
         builder.AddText($"{reason}", color: "red");
 
         await DisconnectPlayer(player, builder);
+    }
+    
+    public static async Task SendHeartbeat(NetworkedClient player)
+    {
+        await new ClientboundKeepAlivePacket().Call(player, null);
     }
 
     public static async Task SendPacketToAll(Packet packet)
