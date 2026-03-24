@@ -29,9 +29,14 @@ public class PlayerManager
         await DisconnectPlayer(player, builder);
     }
     
-    public static async Task SendHeartbeat(NetworkedClient player)
+    public static async Task SendHeartbeatAsync(NetworkedClient player)
     {
         await new ClientboundKeepAlivePacket().Call(player, null);
+    }
+
+    public static void SendHeartbeat(NetworkedClient player)
+    {
+        _ = new ClientboundKeepAlivePacket().Call(player, null);
     }
 
     public static async Task SendPacketToAll(Packet packet)

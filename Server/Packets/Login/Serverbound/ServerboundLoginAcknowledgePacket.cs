@@ -14,9 +14,17 @@ public class ServerboundLoginAcknowledgePacket : ICallable
         ServerPlayer player = client.Player;
 
         client.Gamestate = PlayerGamestate.Configuration;
+
+        client.TransmitHeartbeat += DoHeartbeat;
+        client.StartHeartbeat();
         
         LogTool.Info($"Configuring data for {player.GetPlayerIdentifier()}...");
 
         return Task.CompletedTask;
+    }
+
+    private void DoHeartbeat(NetworkedClient client)
+    {
+        _ = PlayerManager.SendHeartbeatAsync(client);
     }
 }

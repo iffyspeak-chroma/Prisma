@@ -22,8 +22,11 @@ public class ServerboundKeepAlivePacket : ICallable
 
         // Disconnect the player if the timestamp id they send is 5 seconds out of date.
         if (!(last - rxTimestamp >= 5000))
+        {
+            client.ResetTimeout();
             return;
-
+        }
+        
         TextComponentBuilder builder = new TextComponentBuilder();
         builder.AddText("Disconnected!", color: Constants.ErrorColorPrimary, bold: true);
         builder.AddText("Client is too desynced from server.", color: Constants.ErrorColorSecondary);

@@ -1,9 +1,11 @@
 ﻿using API.DataTypes.Player;
 using API.Logging;
 using API.Networking;
+using API.TextComponents;
 using DotNetty.Transport.Channels;
 using Server.Packets.Play.Clientbound;
 using Server.Managers;
+using Server.Tools;
 
 namespace Server.Packets.Configuration.Serverbound;
 
@@ -16,7 +18,19 @@ public class ServerboundConfigurationAcknowledgeFinishPacket : ICallable
 
         client.Gamestate = PlayerGamestate.Play;
         LogTool.Info($"{player.GetPlayerIdentifier()} finished configuration!");
+
+        client.TimeoutReached += HandleTimeout;
+        client.StartTimeoutCountdown();
         
         await new ClientboundPlayLoginPacket().Call(context, null);
+    }
+
+    private void HandleTimeout(NetworkedClient client)
+    {
+        TextComponentBuilder builder = new TextComponentBuilder();
+        builder.AddText("Disconnected!", color: Constants.ErrorColorPrimary, bold: true);
+        builder.AddText("Client timed out.", color: Constants.ErrorColorSecondary);
+
+        _ = PlayerManager.DisconnectPlayer(client, builder);
     }
 }

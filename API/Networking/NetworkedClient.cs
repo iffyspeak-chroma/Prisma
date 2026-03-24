@@ -14,7 +14,86 @@ public class NetworkedClient
     public PlayerGamestate Gamestate { get; set; }
     public PlayerConnectionInfo PlayerConnectionInfo { get; set; }
     public ServerPlayer Player { get; set; }
-    public long LastHeartbeat { get; set; }
+    
+
+    #region Heartbeat
+
+        public long LastHeartbeat { get; set; }
+
+        private int timeoutStart = 15;
+        private int timeoutRemaining;
+        private object timeoutLock = new();
+
+        private bool heartbeatActive;
+        private bool timeoutActive;
+
+        public event Action<NetworkedClient> TransmitHeartbeat;
+        public event Action<NetworkedClient> TimeoutReached;
+        
+        public void StartHeartbeat()
+        {
+            heartbeatActive = true;
+            _ = AsyncHeartbeatLoop();
+        }
+
+        private async Task AsyncHeartbeatLoop()
+        {
+            while (heartbeatActive)
+            {
+                await Task.Delay(1000);
+                TransmitHeartbeat?.Invoke(this);
+            }
+        }
+
+        public void StartTimeoutCountdown()
+        {
+            lock (timeoutLock)
+            {
+                timeoutRemaining = timeoutStart;
+            }
+
+            timeoutActive = true;
+        }
+
+        private async Task AsyncTimeoutLoop()
+        {
+            while (timeoutActive)
+            {
+                await Task.Delay(1000);
+
+                bool timedOut = false;
+                lock (timeoutLock)
+                {
+                    timeoutRemaining--;
+                    if (timeoutRemaining <= 0)
+                    {
+                        timedOut = true;
+                    }
+
+                    if (timedOut)
+                    {
+                        TimeoutReached?.Invoke(this);
+                        StopTimers();
+                    }
+                }
+            }
+        }
+
+        public void ResetTimeout()
+        {
+            lock (timeoutLock)
+            {
+                timeoutRemaining = timeoutStart;
+            }
+        }
+
+        public void StopTimers()
+        {
+            heartbeatActive = false;
+            timeoutActive = false;
+        }
+
+    #endregion
     
     public NetworkedClient(IChannel channel, PlayerConnectionInfo pci)
     {
