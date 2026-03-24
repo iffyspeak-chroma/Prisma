@@ -130,8 +130,14 @@ public class PacketManager
             new ServerboundPlaySetCarriedItemPacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:keep_alive"].Id,
             new ServerboundKeepAlivePacket().Call);
+        PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:player_loaded"].Id,
+            new ServerboundPlayPlayerLoadedPacket().Call);
+        PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:player_abilities"].Id,
+            new ServerboundPlayPlayerAbilitiesPacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:client_information"].Id,
             new ServerboundClientInformationPacket().Call);
+        PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:move_player_rot"].Id,
+            new ServerboundPlayMovePlayerRotationPacket().Call);
 
         #endregion
     }
