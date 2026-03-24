@@ -138,7 +138,8 @@ public class PacketManager
             new ServerboundClientInformationPacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:move_player_rot"].Id,
             new ServerboundPlayMovePlayerRotationPacket().Call);
-
+        PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:chat"].Id,
+            new ServerboundPlayChatPacket().Call);
         #endregion
     }
 }
