@@ -1,6 +1,6 @@
-﻿using API.DataTypes.Player;
-using API.Networking;
-using API.TextComponents;
+﻿using API.Protocol.Networking;
+using API.Protocol.Packets;
+using API.Text;
 using DotNetty.Transport.Channels;
 using Server.Packets.GamestateIndependent.Clientbound;
 using Server.Tools;

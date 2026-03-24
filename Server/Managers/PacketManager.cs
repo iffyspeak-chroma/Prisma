@@ -1,6 +1,7 @@
-﻿using API.DataTypes.Player;
-using API.Logging;
-using API.Networking;
+﻿using API.Logging;
+using API.Player.State;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Packets.Configuration.Serverbound;
 using Server.Packets.GamestateIndependent.Serverbound;
@@ -147,8 +148,8 @@ public class PacketManager
             new ServerboundPlayMovePlayerRotationPacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:chat"].Id,
             new ServerboundPlayChatPacket().Call);
-        //PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:chat_command"].Id,
-        //    new ServerboundPlayChatCommandPacket().Call);
+        PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:chat_command"].Id,
+            new ServerboundPlayChatCommandPacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:move_player_pos"].Id,
             new ServerboundPlayMovePlayerPositionPacket().Call);
         #endregion

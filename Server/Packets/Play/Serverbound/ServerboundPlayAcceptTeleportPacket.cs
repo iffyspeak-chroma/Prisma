@@ -1,11 +1,12 @@
-﻿using API.DataTypes.Player;
-using API.Networking;
+﻿using API.Player;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Play.Serverbound;
 
-public class ServerboundPlayAcceptTeleportPacket : ICallable
+public class ServerboundPlayAcceptTeleportPacket : ICallablePacket
 {
     public Task Call(IChannelHandlerContext context, Packet? packet)
     {

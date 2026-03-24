@@ -1,12 +1,14 @@
-﻿using API.DataTypes.Player;
-using API.Logging;
-using API.Networking;
+﻿using API.Logging;
+using API.Player;
+using API.Player.State;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Login.Serverbound;
 
-public class ServerboundLoginAcknowledgePacket : ICallable
+public class ServerboundLoginAcknowledgePacket : ICallablePacket
 {
     public Task Call(IChannelHandlerContext context, Packet? packet)
     {

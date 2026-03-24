@@ -1,11 +1,11 @@
-﻿using API.Logging;
-using API.Networking;
+﻿using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Packets.Status.Clientbound;
 
 namespace Server.Packets.Status.Serverbound;
 
-public class ServerboundPingRequestPacket : ICallable
+public class ServerboundPingRequestPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {

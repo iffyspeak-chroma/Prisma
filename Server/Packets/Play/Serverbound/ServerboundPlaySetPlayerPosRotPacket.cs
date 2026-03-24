@@ -1,12 +1,12 @@
-﻿using API.DataTypes;
-using API.DataTypes.Entities;
-using API.DataTypes.Player;
-using API.Networking;
+﻿using API.Core.Transform;
+using API.Player.State;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 
 namespace Server.Packets.Play.Serverbound;
 
-public class ServerboundPlaySetPlayerPosRotPacket : ICallable
+public class ServerboundPlaySetPlayerPosRotPacket : ICallablePacket
 {
     public Task Call(IChannelHandlerContext context, Packet? packet)
     {

@@ -1,14 +1,15 @@
-﻿using API.DataTypes;
-using API.DataTypes.Entities;
-using API.DataTypes.Player;
-using API.Networking;
+﻿using API.Core.Transform;
+using API.Game.World;
+using API.Player;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 using Server.Tools;
 
 namespace Server.Packets.Play.Clientbound;
 
-public class ClientboundPlaySynchronizePlayerPositionPacket : ICallable
+public class ClientboundPlaySynchronizePlayerPositionPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {

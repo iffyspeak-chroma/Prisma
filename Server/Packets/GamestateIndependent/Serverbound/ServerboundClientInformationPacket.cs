@@ -1,12 +1,15 @@
-﻿using API.DataTypes.Player;
-using API.Networking;
+﻿using API.Player;
+using API.Player.Cosmetics;
+using API.Player.Settings;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 using Server.Packets.Configuration.Clientbound;
 
 namespace Server.Packets.GamestateIndependent.Serverbound;
 
-public class ServerboundClientInformationPacket : ICallable
+public class ServerboundClientInformationPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {

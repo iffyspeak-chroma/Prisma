@@ -1,15 +1,15 @@
-﻿using API.DataTypes.Player;
-using API.Logging;
-using API.NBT;
-using API.Networking;
-using API.TextComponents;
+﻿using API.Player.State;
+using API.Protocol.NBT;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
+using API.Text;
 using DotNetty.Transport.Channels;
 using fNbt;
 using Server.Managers;
 
 namespace Server.Packets.GamestateIndependent.Clientbound;
 
-public class ClientboundDisconnectPacket : ICallable
+public class ClientboundDisconnectPacket : ICallablePacket
 {
     public TextComponentBuilder DisconnectMessage = new TextComponentBuilder();
     public async Task Call(IChannelHandlerContext context, Packet? packet)

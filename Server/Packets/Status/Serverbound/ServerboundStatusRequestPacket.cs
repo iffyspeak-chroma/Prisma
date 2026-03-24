@@ -1,14 +1,14 @@
 ﻿using System.Text.Json;
-using API.DataTypes;
-using API.Logging;
-using API.Networking;
-using API.TextComponents;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
+using API.Protocol.Status;
+using API.Text;
 using DotNetty.Transport.Channels;
 using Server.Packets.Status.Clientbound;
 
 namespace Server.Packets.Status.Serverbound;
 
-public class ServerboundStatusRequestPacket : ICallable
+public class ServerboundStatusRequestPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {

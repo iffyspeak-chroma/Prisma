@@ -1,12 +1,13 @@
-﻿using API.DataTypes.Player;
-using API.DataTypes.Player.PlayerActionFlags;
-using API.Networking;
+﻿using API.Player.Actions.PlayerActionFlags;
+using API.Player.State;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Play.Clientbound;
 
-public class ClientboundPlaySetHeldSlotPacket : ICallable
+public class ClientboundPlaySetHeldSlotPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {

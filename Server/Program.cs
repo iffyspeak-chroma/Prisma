@@ -2,7 +2,7 @@
 using System.Net;
 using System.Text.Json;
 using API.Logging;
-using API.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;

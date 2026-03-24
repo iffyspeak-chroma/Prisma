@@ -1,9 +1,10 @@
-﻿using API.Networking;
+﻿using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 
 namespace Server.Packets.Play.Serverbound;
 
-public class ServerboundPlaySetCarriedItemPacket : ICallable
+public class ServerboundPlaySetCarriedItemPacket : ICallablePacket
 {
     public Task Call(IChannelHandlerContext context, Packet? packet)
     {

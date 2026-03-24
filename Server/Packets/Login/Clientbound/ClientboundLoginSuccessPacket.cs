@@ -1,10 +1,11 @@
-﻿using API.Networking;
+﻿using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Login.Clientbound;
 
-public class ClientboundLoginSuccessPacket : ICallable
+public class ClientboundLoginSuccessPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {

@@ -1,11 +1,12 @@
-﻿using API.DataTypes.Mojang;
-using API.Networking;
+﻿using API.Protocol.Mojang;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Configuration.Clientbound;
 
-public class ClientboundConfigurationRegistryDataPacket : ICallable
+public class ClientboundConfigurationRegistryDataPacket : ICallablePacket
 {
     private List<Packet> _registrySync = new List<Packet>();
 

@@ -1,12 +1,13 @@
-﻿using API.DataTypes.DataPacks;
-using API.DataTypes.Mojang;
-using API.Networking;
+﻿using API.DataPacks;
+using API.Protocol.Mojang;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Configuration.Clientbound;
 
-public class ClientboundConfigurationKnownPacksPacket : ICallable
+public class ClientboundConfigurationKnownPacksPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
@@ -24,7 +25,7 @@ public class ClientboundConfigurationKnownPacksPacket : ICallable
             foreach (DataPackIdentity pack in datapacks)
             {
                 p.Write(pack.Namespace);
-                p.Write(pack.ID);
+                p.Write(pack.Id);
                 p.Write(pack.Version);
             }
             

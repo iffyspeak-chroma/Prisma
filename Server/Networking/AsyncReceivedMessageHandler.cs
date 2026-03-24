@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using API.Logging;
-using API.Networking;
+using API.Protocol.Packets;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
 using Server.Managers;

@@ -1,12 +1,12 @@
-﻿using API.DataTypes;
-using API.DataTypes.Player;
-using API.Networking;
+﻿using API.Core.Transform;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Play.Clientbound;
 
-public class ClientboundPlayDefaultSpawnPositionPacket : ICallable
+public class ClientboundPlayDefaultSpawnPositionPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {

@@ -1,11 +1,12 @@
-﻿using API.DataTypes.Player;
-using API.Networking;
+﻿using API.Player.State;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.GamestateIndependent.Clientbound;
 
-public class ClientboundKeepAlivePacket : ICallable
+public class ClientboundKeepAlivePacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {

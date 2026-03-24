@@ -1,7 +1,9 @@
-﻿using API.DataTypes.Player;
-using API.Logging;
-using API.Networking;
-using API.TextComponents;
+﻿using API.Logging;
+using API.Player;
+using API.Player.State;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
+using API.Text;
 using DotNetty.Transport.Channels;
 using Server.Packets.Play.Clientbound;
 using Server.Managers;
@@ -9,7 +11,7 @@ using Server.Tools;
 
 namespace Server.Packets.Configuration.Serverbound;
 
-public class ServerboundConfigurationAcknowledgeFinishPacket : ICallable
+public class ServerboundConfigurationAcknowledgeFinishPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {

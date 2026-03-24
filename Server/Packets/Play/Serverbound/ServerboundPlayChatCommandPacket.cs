@@ -1,12 +1,13 @@
-﻿using API.DataTypes.Player;
-using API.Logging;
-using API.Networking;
+﻿using API.Logging;
+using API.Player;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Play.Serverbound;
 
-public class ServerboundPlayChatCommandPacket : ICallable
+public class ServerboundPlayChatCommandPacket : ICallablePacket
 {
     public Task Call(IChannelHandlerContext context, Packet? packet)
     {

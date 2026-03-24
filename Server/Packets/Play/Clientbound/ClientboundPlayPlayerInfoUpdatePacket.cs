@@ -1,12 +1,13 @@
-﻿using API.DataTypes.Player;
-using API.DataTypes.Player.PlayerActionFlags;
-using API.Networking;
+﻿using API.Player;
+using API.Player.Actions.PlayerActionFlags;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Play.Clientbound;
 
-public class ClientboundPlayPlayerInfoUpdatePacket : ICallable
+public class ClientboundPlayPlayerInfoUpdatePacket : ICallablePacket
 {
     public Dictionary<NetworkedClient, List<IPlayerActionFlag>> AffectedPlayers = new();
         

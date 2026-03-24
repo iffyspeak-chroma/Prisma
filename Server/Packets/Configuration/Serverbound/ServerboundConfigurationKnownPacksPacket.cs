@@ -1,15 +1,16 @@
-﻿using API.DataTypes.DataPacks;
-using API.DataTypes.Mojang;
-using API.DataTypes.Player;
+﻿using API.DataPacks;
 using API.Logging;
-using API.Networking;
+using API.Player;
+using API.Protocol.Mojang;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Packets.Configuration.Clientbound;
 using Server.Managers;
 
 namespace Server.Packets.Configuration.Serverbound;
 
-public class ServerboundConfigurationKnownPacksPacket : ICallable
+public class ServerboundConfigurationKnownPacksPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {

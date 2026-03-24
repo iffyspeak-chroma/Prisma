@@ -1,11 +1,12 @@
-﻿using API.DataTypes.Mojang;
-using API.Networking;
+﻿using API.Protocol.Mojang;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Configuration.Clientbound;
 
-public class ClientboundConfigurationUpdateTagsPacket : ICallable
+public class ClientboundConfigurationUpdateTagsPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {

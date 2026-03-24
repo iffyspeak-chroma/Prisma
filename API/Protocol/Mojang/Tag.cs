@@ -1,0 +1,26 @@
+﻿using API.Protocol.Packets;
+
+namespace API.Protocol.Mojang;
+
+public class Tag : IWriteToPackets
+{
+    public Identifier TagName { get; private set; }
+    public List<int> Entries { get; private set; }
+
+    public Tag(Identifier name, List<int> entries)
+    {
+        this.TagName = name;
+        this.Entries = entries;
+    }
+    
+    public void WriteToPacket(Packet packet)
+    {
+        TagName.WriteToPacket(packet);
+        
+        packet.Write(Entries.Count);
+        foreach (int entry in Entries)
+        {
+            packet.Write(entry);
+        }
+    }
+}

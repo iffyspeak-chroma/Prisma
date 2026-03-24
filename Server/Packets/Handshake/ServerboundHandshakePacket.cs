@@ -1,11 +1,12 @@
-﻿using API.DataTypes.Player;
-using API.Networking;
+﻿using API.Player.State;
+using API.Protocol.Networking;
+using API.Protocol.Packets;
 using DotNetty.Transport.Channels;
 using Server.Managers;
 
 namespace Server.Packets.Handshake;
 
-public class ServerboundHandshakePacket : ICallable
+public class ServerboundHandshakePacket : ICallablePacket
 {
     public Task Call(IChannelHandlerContext context, Packet? packet)
     {

@@ -1,4 +1,4 @@
-﻿using API.DataTypes.Entities;
+﻿using API.Entities;
 
 namespace Server.Managers;
 
