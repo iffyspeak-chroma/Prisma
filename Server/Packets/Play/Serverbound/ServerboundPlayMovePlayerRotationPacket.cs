@@ -21,7 +21,7 @@ public class ServerboundPlayMovePlayerRotationPacket : ICallable
         float pitch = packet.ReadFloat();
         
         // TODO: Probably find something to do with these flags.
-        RotationFlags flags = (RotationFlags) packet.ReadByte();
+        MovementFlags flags = (MovementFlags) packet.ReadByte();
 
         if (player.AssociatedEntity != null)
         {
