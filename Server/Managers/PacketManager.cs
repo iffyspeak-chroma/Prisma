@@ -22,11 +22,18 @@ public class PacketManager
     {
         int packetId = packet.ReadVarInt();
 
-        var handler = PacketList[PlayerManager.Instance.ConnectedClients[context.Channel].Gamestate][packetId];
-
-        if (handler != null)
+        try
         {
-            await handler(context, packet);
+            var handler = PacketList[PlayerManager.Instance.ConnectedClients[context.Channel].Gamestate][packetId];
+
+            if (handler != null)
+            {
+                await handler(context, packet);
+            }
+        }
+        catch (KeyNotFoundException exception)
+        {
+            LogTool.Debug($"GS:{PlayerManager.Instance.ConnectedClients[context.Channel].Gamestate.ToString()},PID:0x{packetId:X2} is not yet implemented.");
         }
     }
 
@@ -140,8 +147,8 @@ public class PacketManager
             new ServerboundPlayMovePlayerRotationPacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:chat"].Id,
             new ServerboundPlayChatPacket().Call);
-        PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:chat_command"].Id,
-            new ServerboundPlayChatCommandPacket().Call);
+        //PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:chat_command"].Id,
+        //    new ServerboundPlayChatCommandPacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:move_player_pos"].Id,
             new ServerboundPlayMovePlayerPositionPacket().Call);
         #endregion
