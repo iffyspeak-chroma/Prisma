@@ -1,18 +1,20 @@
 ﻿using API.DataTypes.Player;
-using API.Logging;
 using API.Networking;
 using DotNetty.Transport.Channels;
-using Server.Packets.Configuration.Clientbound;
 using Server.Managers;
+using Server.Packets.Configuration.Clientbound;
 
-namespace Server.Packets.Configuration.Serverbound;
+namespace Server.Packets.GamestateIndependent.Serverbound;
 
-public class ServerboundConfigurationClientInformationPacket : ICallable
+public class ServerboundClientInformationPacket : ICallable
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
         ServerPlayer player = client.Player;
+
+        if (packet == null)
+            return;
         
         ClientSettings cs = new ClientSettings();
         

@@ -101,7 +101,7 @@ public class PacketManager
         PacketList.Add(gamestate, new Dictionary<int, PacketHandler?>());
         
         PacketList[gamestate].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:client_information"].Id, 
-            new ServerboundConfigurationClientInformationPacket().Call);
+            new ServerboundClientInformationPacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:custom_payload"].Id,
             new ServerboundConfigurationPluginMessagePacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Configuration.Serverbound["minecraft:select_known_packs"].Id,
@@ -130,6 +130,8 @@ public class PacketManager
             new ServerboundPlaySetCarriedItemPacket().Call);
         PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:keep_alive"].Id,
             new ServerboundKeepAlivePacket().Call);
+        PacketList[gamestate].Add(PacketReport.Mapping.Play.Serverbound["minecraft:client_information"].Id,
+            new ServerboundClientInformationPacket().Call);
 
         #endregion
     }
