@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using System.Text.Json;
+using API.Core;
+using API.Core.Managers;
 using API.Logging;
 using API.Protocol.Packets;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using Server.Tools;
-using Server.Managers;
 using Server.Networking;
 
 namespace Server;
@@ -31,7 +31,7 @@ class Program
         }
         
         // Give the server a new instance.
-        Server.Instance = new Server();
+        API.Core.Server.Instance = new API.Core.Server();
         
         // NOW, we have the fun task of loading the configuration.
         try
@@ -43,7 +43,7 @@ class Program
 
             string json = File.ReadAllText(Constants.ConfigurationFile);
 
-            ConfigMapping? config = JsonSerializer.Deserialize<ConfigMapping>(json);
+            ServerConfiguration? config = JsonSerializer.Deserialize<ServerConfiguration>(json);
 
             if (config == null)
             {
@@ -51,11 +51,11 @@ class Program
                 return;
             }
 
-            Server.Instance.Configuration = config;
+            API.Core.Server.Instance.Configuration = config;
         }
         finally
         {
-            Debug.Assert(Server.Instance.Configuration != null, "Server.Instance.Configuration != null");
+            Debug.Assert(API.Core.Server.Instance.Configuration != null, "Server.Instance.Configuration != null");
             LogTool.Info("Configuration loaded!");
             //LogTool.Debug("Debug messages are enabled!");
         }
@@ -72,7 +72,7 @@ class Program
             PacketReport report = new PacketReport();
             report.Load(Constants.PacketReportFile);
 
-            Server.Instance.PacketReport = report;
+            API.Core.Server.Instance.PacketReport = report;
         }
         finally
         {
@@ -106,7 +106,7 @@ class Program
             Directory.CreateDirectory(Constants.ConfigurationDirectory);
             
             // Create them a default configuration file!
-            var json = JsonSerializer.Serialize(new ConfigMapping(), new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(new ServerConfiguration(), new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(Constants.ConfigurationFile, json);
         }
         finally
@@ -129,13 +129,13 @@ class Program
 
     static void UseDefaultConfiguration()
     {
-        if (Server.Instance != null)
+        if (API.Core.Server.Instance != null)
         {
-            Server.Instance.Configuration = new ConfigMapping();
+            API.Core.Server.Instance.Configuration = new ServerConfiguration();
             LogTool.Warn("Missing configuration file! Using default values.");
             
             // Quickly, save a default copy.
-            var json = JsonSerializer.Serialize(new ConfigMapping(), new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(new ServerConfiguration(), new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(Constants.ConfigurationFile, json);
             
             return;
@@ -161,26 +161,26 @@ class Program
                     pipeline.AddLast("handler", new AsyncReceivedMessageHandler());
                 }));
 
-            if (Server.Instance == null)
+            if (API.Core.Server.Instance == null)
             {
                 LogTool.Error("Server instance is not initialized yet! (How did you manage to get here?)");
                 return;
             }
 
-            if (Server.Instance.Configuration == null)
+            if (API.Core.Server.Instance.Configuration == null)
             {
                 LogTool.Error("Server configuration is not initialized yet! (How did you manage to get here?)");
                 return;
             }
 
-            IPAddress bindAddress = Server.Instance.Configuration.BindAddress == "0.0.0.0"
+            IPAddress bindAddress = API.Core.Server.Instance.Configuration.BindAddress == "0.0.0.0"
                 ? IPAddress.Any
-                : IPAddress.Parse(Server.Instance.Configuration.BindAddress);
+                : IPAddress.Parse(API.Core.Server.Instance.Configuration.BindAddress);
 
             try
             {
-                var serverBind = await bootstrap.BindAsync(bindAddress, Server.Instance.Configuration.Port);
-                LogTool.Info($"Server started successfully @ {bindAddress}:{Server.Instance.Configuration.Port}!");
+                var serverBind = await bootstrap.BindAsync(bindAddress, API.Core.Server.Instance.Configuration.Port);
+                LogTool.Info($"Server started successfully @ {bindAddress}:{API.Core.Server.Instance.Configuration.Port}!");
 
                 await serverBind.CloseCompletion;
             }

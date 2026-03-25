@@ -1,0 +1,30 @@
+﻿using API.Core.Managers;
+using API.Player.State;
+using API.Protocol.Networking;
+using DotNetty.Transport.Channels;
+
+namespace API.Protocol.Packets.Handshake;
+
+public class ServerboundHandshakePacket : ICallablePacket
+{
+    public Task Call(IChannelHandlerContext context, Packet? packet)
+    {
+        if (packet == null)
+        {
+            throw new NullReferenceException("Packet is null where it shouldn't be.");
+        }
+        
+        int protocolVersion = packet.ReadVarInt();
+        string connectionAddress = packet.ReadString();
+        ushort connectionPort = (ushort) packet.ReadShort(flipped: true);
+        PlayerGamestate nextIntent = (PlayerGamestate)packet.ReadVarInt();
+        
+        PlayerConnectionInfo pci = new  PlayerConnectionInfo(protocolVersion, connectionAddress,  connectionPort);
+
+        NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
+        client.Gamestate = nextIntent;
+        client.PlayerConnectionInfo = pci;
+
+        return Task.CompletedTask;
+    }
+}

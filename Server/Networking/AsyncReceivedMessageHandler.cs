@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
+using API.Core.Managers;
 using API.Logging;
 using API.Protocol.Packets;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
-using Server.Managers;
 
 namespace Server.Networking;
 
@@ -11,8 +11,8 @@ public class AsyncReceivedMessageHandler : ChannelHandlerAdapter
 {
     public override void ChannelRead(IChannelHandlerContext context, object message)
     {
-        Debug.Assert(Server.Instance != null, "Server.Instance != null");
-        Debug.Assert(Server.Instance.Configuration != null, "Server.Instance.Configuration != null");
+        Debug.Assert(API.Core.Server.Instance != null, "Server.Instance != null");
+        Debug.Assert(API.Core.Server.Instance.Configuration != null, "Server.Instance.Configuration != null");
         
         if (message is IByteBuffer data)
         {
