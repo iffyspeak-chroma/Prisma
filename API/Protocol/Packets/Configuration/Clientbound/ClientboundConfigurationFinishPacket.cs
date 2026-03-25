@@ -8,12 +8,23 @@ public class ClientboundConfigurationFinishPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
-        using (Packet p = new Packet())
+        if (packet == null)
         {
-            p.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:finish_configuration"].Id);
-            p.WriteLength();
-
-            await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
+            packet = new Packet();
         }
+        else
+        {
+            packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:finish_configuration"].Id);
+            packet.WriteLength();
+
+            await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
+            
+            return;
+        }
+        
+        packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:finish_configuration"].Id);
+        packet.WriteLength();
+
+        await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
     }
 }

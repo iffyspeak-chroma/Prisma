@@ -8,16 +8,27 @@ public class ClientboundConfigurationPluginMessagePacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
-        using (Packet p = new Packet())
+        if (packet == null)
         {
-            p.Write("minecraft:brand"); // Identifier
-            p.Write("Prisma"); // Data
-            
-            p.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:custom_payload"].Id);
-            p.WriteLength();
-            
-            await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
+            packet = new Packet();
         }
+        else
+        {
+            packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:custom_payload"].Id);
+            packet.WriteLength();
+            
+            await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
+
+            return;
+        }
+        
+        packet.Write("minecraft:brand"); // Identifier
+        packet.Write("Prisma"); // Data
+            
+        packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:custom_payload"].Id);
+        packet.WriteLength();
+            
+        await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
 
         await new ClientboundConfigurationFeatureFlagsPacket().Call(context, null);
     }

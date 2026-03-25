@@ -8,25 +8,36 @@ public class ClientboundConfigurationFeatureFlagsPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
-        using (Packet p = new Packet())
+        if (packet == null)
         {
-            List<string> featureIdentifiers = new List<string>()
-            {
-                "minecraft:vanilla"
-            };
-            
-            p.Write(featureIdentifiers.Count);
-            
-            foreach (string identifier in featureIdentifiers)
-            {
-                p.Write(identifier);
-            }
-            
-            p.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:update_enabled_features"].Id);
-            p.WriteLength();
-            
-            await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
+            packet = new Packet();
         }
+        else
+        {
+            packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:update_enabled_features"].Id);
+            packet.WriteLength();
+            
+            await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
+
+            return;
+        }
+        
+        List<string> featureIdentifiers = new List<string>()
+        {
+            "minecraft:vanilla"
+        };
+            
+        packet.Write(featureIdentifiers.Count);
+            
+        foreach (string identifier in featureIdentifiers)
+        {
+            packet.Write(identifier);
+        }
+            
+        packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:update_enabled_features"].Id);
+        packet.WriteLength();
+            
+        await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
         
         await new ClientboundConfigurationKnownPacksPacket().Call(context, null);
     }

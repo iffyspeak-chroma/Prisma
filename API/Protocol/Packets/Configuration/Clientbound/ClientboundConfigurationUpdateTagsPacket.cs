@@ -9,6 +9,20 @@ public class ClientboundConfigurationUpdateTagsPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
+        if (packet == null)
+        {
+            packet = new Packet();
+        }
+        else
+        {
+            packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:update_tags"].Id);
+            packet.WriteLength();
+
+            await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
+
+            return;
+        }
+        
         Identifier registry = new Identifier("minecraft", "timeline");
         List<Tag> tags = new List<Tag>()
         {
@@ -31,24 +45,22 @@ public class ClientboundConfigurationUpdateTagsPacket : ICallablePacket
                 })
         };
 
-        using (Packet p = new Packet())
+        // Only writing to 1 registry? (Some kind of something I didn't notice in the docs)
+        packet.Write(1);
+            
+        registry.WriteToPacket(packet);
+
+        packet.Write(tags.Count);
+        foreach (Tag tag in tags)
         {
-            // Only writing to 1 registry? (Some kind of something I didn't notice in the docs)
-            p.Write(1);
-            
-            registry.WriteToPacket(p);
-
-            p.Write(tags.Count);
-            foreach (Tag tag in tags)
-            {
-                tag.WriteToPacket(p);
-            }
-            
-            p.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:update_tags"].Id);
-            p.WriteLength();
-
-            await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
+            tag.WriteToPacket(packet);
         }
+            
+        packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:update_tags"].Id);
+        packet.WriteLength();
+
+        await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
+        
         
         await new ClientboundConfigurationFinishPacket().Call(context, null);
     }

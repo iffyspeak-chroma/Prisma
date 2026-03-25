@@ -10,24 +10,37 @@ public class ClientboundPlayPlayerAbilitiesPacket : ICallablePacket
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
+
+        if (packet == null)
+        {
+            packet = new Packet();
+        }
+        else
+        {
+            packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:player_abilities"].Id);
+            packet.WriteLength();
+
+            await client.SendPacket(packet);
+
+            return;
+        }
+        
         CheatAbilities abilities = CheatAbilities.Invulnerable | CheatAbilities.PermitFlying;
 
-        using (Packet p = new Packet())
-        {
-            p.Write((byte) abilities);
+        
+        packet.Write((byte) abilities);
 
-            // Flight speed
-            p.Write(0.05f);
+        // Flight speed
+        packet.Write(0.05f);
             
-            // FOV Mod
-            p.Write(0.1f);
+        // FOV Mod
+        packet.Write(0.1f);
             
-            p.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:player_abilities"].Id);
-            p.WriteLength();
+        packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:player_abilities"].Id);
+        packet.WriteLength();
 
-            await client.SendPacket(p);
+        await client.SendPacket(packet);
             
-            await new ClientboundPlaySetHeldSlotPacket().Call(context, null);
-        }
+        await new ClientboundPlaySetHeldSlotPacket().Call(context, null);
     }
 }

@@ -11,6 +11,11 @@ public class ServerboundStatusRequestPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
+        if (packet == null)
+        {
+            return;
+        }
+        
         // TODO: We should only really be doing this if the server settings permit
         
         StatusResponseFormat status = new StatusResponseFormat();
@@ -22,11 +27,8 @@ public class ServerboundStatusRequestPacket : ICallablePacket
         
         string response = JsonSerializer.Serialize(status);
 
-        using (Packet p = new Packet())
-        {
-            p.Write(response);
+        packet.Write(response);
 
-            await new ClientboundStatusResponsePacket().Call(context, p);
-        }
+        await new ClientboundStatusResponsePacket().Call(context, packet);
     }
 }

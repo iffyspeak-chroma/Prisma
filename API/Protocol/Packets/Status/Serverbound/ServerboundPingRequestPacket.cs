@@ -8,13 +8,15 @@ public class ServerboundPingRequestPacket : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
+        if (packet == null)
+        {
+            return;
+        }
+        
         long timestamp = packet.ReadLong();
         
-        using (Packet p = new Packet())
-        {
-            p.Write(timestamp, asVarLong: false);
+        packet.Write(timestamp, asVarLong: false);
 
-            await new ClientboundPongResponse().Call(context, p);
-        }
+        await new ClientboundPongResponse().Call(context, packet);
     }
 }
