@@ -19,6 +19,13 @@ public class AsyncReceivedMessageHandler : ChannelHandlerAdapter
             var raw = new byte[data.ReadableBytes];
             data.GetBytes(data.ReaderIndex, raw);
             
+
+            if (raw[0] == 0xFE && raw[1] == 0x01)
+            {
+                // Legacy status packet
+                return;
+            }
+            
             using (Packet rMessage = new Packet(raw))
             {
                 while (rMessage.UnreadLength() > 0)
