@@ -126,6 +126,7 @@ public class NetworkedClient
 
     public void DisconnectChannel()
     {
+        StopTimers();
         Channel.CloseAsync();
     }
 }
