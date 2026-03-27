@@ -1,4 +1,5 @@
 ﻿using API.Core.Managers;
+using API.Logging;
 using API.Protocol.Networking;
 using DotNetty.Transport.Channels;
 
@@ -8,16 +9,19 @@ public class ClientboundPongResponse : ICallablePacket
 {
     public async Task Call(IChannelHandlerContext context, Packet? packet)
     {
-        using (Packet p = new Packet(packet.ToArray()))
+        if (packet == null)
         {
-            p.InsertInt(PacketReport.Mapping.Status.Clientbound["minecraft:pong_response"].Id);
-            p.WriteLength();
-
-            await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(p);
-
-            // Since they aren't actually dead-set on playing just yet, we'll remove them from our list
-            PlayerManager.Instance.ConnectedClients[context.Channel].DisconnectChannel();
-            PlayerManager.Instance.ConnectedClients.Remove(context.Channel);
+            packet = new Packet();
         }
+        
+        packet.InsertInt(PacketReport.Mapping.Status.Clientbound["minecraft:pong_response"].Id);
+        packet.WriteLength();
+
+        await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
+
+        // Since they aren't actually dead-set on playing just yet, we'll remove them from our list
+        PlayerManager.Instance.ConnectedClients[context.Channel].DisconnectChannel();
+        PlayerManager.Instance.ConnectedClients.Remove(context.Channel);
+        
     }
 }

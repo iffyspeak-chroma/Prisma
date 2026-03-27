@@ -10,10 +10,13 @@ public class ServerboundPingRequestPacket : ICallablePacket
     {
         if (packet == null)
         {
-            return;
+            packet = new Packet();
         }
         
         long timestamp = packet.ReadLong();
+        
+        // Ensure we aren't using previous packet's bytes. Oops.
+        packet = new Packet();
         
         packet.Write(timestamp, asVarLong: false);
 
