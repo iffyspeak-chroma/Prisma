@@ -29,7 +29,7 @@ public class ClientboundConfigurationKnownPacksPacket : ICallablePacket
             
         DataPackIdentity corePack = new DataPackIdentity(
             Identifier.Parse("minecraft:core"),
-            "1.21.11_unobfuscated");
+            "26.1");
             
         datapacks.Add(corePack);
 
