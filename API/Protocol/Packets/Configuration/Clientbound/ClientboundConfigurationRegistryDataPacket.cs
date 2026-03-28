@@ -71,6 +71,7 @@ public class ClientboundConfigurationRegistryDataPacket : ICallablePacket
             Identifier.Parse("minecraft:out_of_world"),
             Identifier.Parse("minecraft:outside_border"),
             Identifier.Parse("minecraft:stalagmite"),
+            Identifier.Parse("minecraft:spear"),
             Identifier.Parse("minecraft:starve"),
             Identifier.Parse("minecraft:sweet_berry_bush"),
             Identifier.Parse("minecraft:wither")
@@ -170,6 +171,14 @@ public class ClientboundConfigurationRegistryDataPacket : ICallablePacket
         
         _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:cat_variant"), catIdentityList));
 
+        List<Identifier> catSoundIdentityList = new List<Identifier>()
+        {
+            Identifier.Parse("minecraft:classic"),
+            Identifier.Parse("minecraft:royal")
+        };
+        
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:cat_sound_variant"), catSoundIdentityList));
+
         #endregion
         
         #region Chicken Variants
@@ -183,6 +192,14 @@ public class ClientboundConfigurationRegistryDataPacket : ICallablePacket
 
         _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:chicken_variant"), chickenIdentityList));
         
+        List<Identifier> chickenSoundIdentityList = new List<Identifier>()
+        {
+            Identifier.Parse("minecraft:classic"),
+            Identifier.Parse("minecraft:picky")
+        };
+        
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:chicken_sound_variant"), chickenSoundIdentityList));
+        
         #endregion
 
         #region Cow Variants
@@ -195,6 +212,14 @@ public class ClientboundConfigurationRegistryDataPacket : ICallablePacket
         };
         
         _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:cow_variant"), cowIdentityList));
+        
+        List<Identifier> cowSoundIdentityList = new List<Identifier>()
+        {
+            Identifier.Parse("minecraft:classic"),
+            Identifier.Parse("minecraft:moody")
+        };
+        
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:cow_sound_variant"), cowSoundIdentityList));
 
         #endregion
 
@@ -221,6 +246,15 @@ public class ClientboundConfigurationRegistryDataPacket : ICallablePacket
         };
         
         _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:pig_variant"), pigIdentityList));
+        
+        List<Identifier> pigSoundIdentityList = new List<Identifier>()
+        {
+            Identifier.Parse("minecraft:classic"),
+            Identifier.Parse("minecraft:mini"),
+            Identifier.Parse("minecraft:big")
+        };
+        
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:pig_sound_variant"), pigSoundIdentityList));
 
         #endregion
 
@@ -280,6 +314,88 @@ public class ClientboundConfigurationRegistryDataPacket : ICallablePacket
         };
         
         _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:timeline"), timelineIdentityList));
+
+        #endregion
+
+        #region World Clock
+
+        List<Identifier> clockIdentityList = new List<Identifier>()
+        {
+            Identifier.Parse("minecraft:the_end"),
+            Identifier.Parse("minecraft:overworld")
+        };
+        
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:world_clock"), clockIdentityList));
+
+        #endregion
+
+        #region Trim Materials
+
+        List<Identifier> trimMaterialIdentityList = new List<Identifier>()
+        {
+            Identifier.Parse("minecraft:amethyst"),
+            Identifier.Parse("minecraft:copper"),
+            Identifier.Parse("minecraft:diamond"),
+            Identifier.Parse("minecraft:emerald"),
+            Identifier.Parse("minecraft:gold"),
+            Identifier.Parse("minecraft:iron"),
+            Identifier.Parse("minecraft:lapis"),
+            Identifier.Parse("minecraft:netherite"),
+            Identifier.Parse("minecraft:quartz"),
+            Identifier.Parse("minecraft:redstone"),
+            Identifier.Parse("minecraft:resin"),
+        };
+        
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:trim_material"), trimMaterialIdentityList));
+
+        #endregion
+
+        #region Jukebox Discs
+
+        List<Identifier> discIdentityList = new List<Identifier>()
+        {
+            Identifier.Parse("minecraft:5"),
+            Identifier.Parse("minecraft:11"),
+            Identifier.Parse("minecraft:13"),
+            Identifier.Parse("minecraft:blocks"),
+            Identifier.Parse("minecraft:cat"),
+            Identifier.Parse("minecraft:chirp"),
+            Identifier.Parse("minecraft:creator"),
+            Identifier.Parse("minecraft:creator_music_box"),
+            Identifier.Parse("minecraft:far"),
+            Identifier.Parse("minecraft:lava_chicken"),
+            Identifier.Parse("minecraft:mall"),
+            Identifier.Parse("minecraft:mellohi"),
+            Identifier.Parse("minecraft:otherside"),
+            Identifier.Parse("minecraft:pigstep"),
+            Identifier.Parse("minecraft:precipice"),
+            Identifier.Parse("minecraft:relic"),
+            Identifier.Parse("minecraft:stal"),
+            Identifier.Parse("minecraft:strad"),
+            Identifier.Parse("minecraft:tears"),
+            Identifier.Parse("minecraft:wait"),
+            Identifier.Parse("minecraft:ward")
+        };
+        
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:jukebox_song"), discIdentityList));
+
+        #endregion
+
+        #region Instruments
+
+        List<Identifier> instrumentIdentityList = new List<Identifier>()
+        {
+            Identifier.Parse("minecraft:admire_goat_horn"),
+            Identifier.Parse("minecraft:call_goat_horn"),
+            Identifier.Parse("minecraft:dream_goat_horn"),
+            Identifier.Parse("minecraft:feel_goat_horn"),
+            Identifier.Parse("minecraft:ponder_goat_horn"),
+            Identifier.Parse("minecraft:seek_goat_horn"),
+            Identifier.Parse("minecraft:sing_goat_horn"),
+            Identifier.Parse("minecraft:yearn_goat_horn"),
+        };
+        
+        _registrySync.Add(GenerateRegistryDataPacket(Identifier.Parse("minecraft:instrument"), instrumentIdentityList));
 
         #endregion
 
