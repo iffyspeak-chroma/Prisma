@@ -159,6 +159,7 @@ class Program
 
                 if (latestR == null || latestS == null)
                 {
+                    LogTool.Error("Release and snapshot data are null.");
                     fileCheckCode |= (byte)FileCheckFlags.VersionData;
                     return;
                 }
