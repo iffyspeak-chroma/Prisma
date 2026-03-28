@@ -50,7 +50,7 @@ public class ClientboundPlaySetTimePacket : ICallablePacket
         packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:set_time"].Id);
         packet.WriteLength();
         
-        LogTool.Debug(BitConverter.ToString(packet.ToArray()).Replace("-", ""));
+        //LogTool.Debug(BitConverter.ToString(packet.ToArray()).Replace("-", ""));
             
         await client.SendPacket(packet);
         
