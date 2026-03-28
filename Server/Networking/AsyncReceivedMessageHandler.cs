@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
+using System.Net.Mime;
 using API.Core.Managers;
 using API.Logging;
 using API.Protocol.Packets;
+using API.Protocol.Packets.Handshake.Legacy;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
 
@@ -20,9 +22,10 @@ public class AsyncReceivedMessageHandler : ChannelHandlerAdapter
             data.GetBytes(data.ReaderIndex, raw);
             
 
-            if (raw[0] == 0xFE && raw[1] == 0x01)
+            if (raw[0] == 0xFE && raw[1] == 0x01 && raw[2] == 0xFA)
             {
                 // Legacy status packet
+                _ = new LegacyServerboundHandshakePacket().Call(context, new Packet(raw));
                 return;
             }
             
