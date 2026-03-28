@@ -15,6 +15,7 @@
       <PackageReference Include="DotNetty.Handlers" Version="0.7.6" />
       <PackageReference Include="DotNetty.Transport" Version="0.7.6" />
       <PackageReference Include="fNbt" Version="1.0.0" />
+      <PackageReference Include="System.Net.Http.Json" Version="10.0.5" />
     </ItemGroup>
 
     <ItemGroup>
