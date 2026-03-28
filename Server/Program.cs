@@ -286,10 +286,7 @@ class Program
 
     static void DownloadServerFile(HttpClient client, VersionDetails details)
     {
-        Task.Run(async () =>
-        {
-            await Downloader.DownloadFileAsync(client, details.Downloads.Server.Url, Constants.PackedServerFile);
-        });
+        Downloader.DownloadFileAsync(client, details.Downloads.Server.Url, Constants.PackedServerFile).Wait();
     }
 
     static void DoDataGeneration(bool didUpdate = false)
