@@ -1,6 +1,6 @@
 ﻿namespace API.Game.Events;
 
-public class GameEventOptions
+public class PacketGameEventOptions
 {
     public static class Generic
     {

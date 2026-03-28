@@ -25,8 +25,8 @@ public class ClientboundPlayGameEventPacket : ICallablePacket
         }
         
         // Event type and event options.
-        packet.Write(GameEvents.WaitForChunks);
-        packet.Write(GameEventOptions.Generic.Empty);
+        packet.Write(PacketGameEvents.WaitForChunks);
+        packet.Write(PacketGameEventOptions.Generic.Empty);
         
         packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:game_event"].Id);
         packet.WriteLength();

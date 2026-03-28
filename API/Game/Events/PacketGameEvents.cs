@@ -1,6 +1,6 @@
 ﻿namespace API.Game.Events;
 
-public class GameEvents
+public class PacketGameEvents
 {
     public static byte InvalidRespawnBlock = 0;
 
