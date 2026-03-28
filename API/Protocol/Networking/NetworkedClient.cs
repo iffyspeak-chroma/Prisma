@@ -15,7 +15,7 @@ public class NetworkedClient
     public PlayerGamestate Gamestate { get; set; }
     public PlayerConnectionInfo PlayerConnectionInfo { get; set; }
     public ServerPlayer Player { get; set; }
-    
+    public DisconnectReason DisconnectReason { get; set; } = Networking.DisconnectReason.Generic;
 
     #region Heartbeat
 

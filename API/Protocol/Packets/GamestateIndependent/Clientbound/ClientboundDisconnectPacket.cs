@@ -67,7 +67,7 @@ public class ClientboundDisconnectPacket : ICallablePacket
             }
         
             PlayerManager.Instance.ConnectedClients[client.Channel].DisconnectChannel();
-            PlayerManager.Instance.ConnectedClients.Remove(client.Channel);
+            //PlayerManager.Instance.ConnectedClients.Remove(client.Channel);
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Net.Mime;
 using API.Core.Managers;
+using API.Game.Events;
 using API.Logging;
+using API.Protocol.Networking;
 using API.Protocol.Packets;
 using API.Protocol.Packets.Handshake.Legacy;
 using DotNetty.Buffers;
@@ -11,6 +13,13 @@ namespace Server.Networking;
 
 public class AsyncReceivedMessageHandler : ChannelHandlerAdapter
 {
+    private readonly EventDispatcher _events;
+
+    public AsyncReceivedMessageHandler(EventDispatcher events)
+    {
+        _events = events;
+    }
+    
     public override void ChannelRead(IChannelHandlerContext context, object message)
     {
         Debug.Assert(API.Core.Server.Instance != null, "Server.Instance != null");
@@ -65,6 +74,20 @@ public class AsyncReceivedMessageHandler : ChannelHandlerAdapter
         LogTool.Exception(exception);
         LogTool.Error("Closing connection.");
         
+        PlayerManager.Instance.ConnectedClients[context.Channel].DisconnectReason = DisconnectReason.Exception;
         context.CloseAsync();
+    }
+
+    public override void ChannelInactive(IChannelHandlerContext context)
+    {
+        NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
+
+        if (client.DisconnectReason == DisconnectReason.Generic)
+            client.DisconnectReason = DisconnectReason.Disconnect;
+
+        _events.Publish(new PlayerDisconnectEvent(client, client.DisconnectReason));
+        PlayerManager.Instance.ConnectedClients.Remove(context.Channel);
+        
+        base.ChannelInactive(context);
     }
 }

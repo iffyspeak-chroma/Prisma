@@ -27,7 +27,7 @@ public class ClientboundPongResponsePacket : ICallablePacket
                 
                 // Since they aren't actually dead-set on playing just yet, we'll remove them from our list
                 PlayerManager.Instance.ConnectedClients[context.Channel].DisconnectChannel();
-                PlayerManager.Instance.ConnectedClients.Remove(context.Channel);
+                //PlayerManager.Instance.ConnectedClients.Remove(context.Channel);
                 break;
             }
             
