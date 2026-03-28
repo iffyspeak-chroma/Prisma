@@ -31,6 +31,6 @@ public class ServerboundKeepAlivePacket : ICallablePacket
         builder.AddText("Disconnected!", color: Constants.ErrorColorPrimary, bold: true);
         builder.AddText("Client is too desynced from server.", color: Constants.ErrorColorSecondary);
 
-        await PlayerManager.DisconnectPlayer(client, builder);
+        await PlayerManager.KickPlayer(client, builder);
     }
 }

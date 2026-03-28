@@ -10,7 +10,7 @@ public class PlayerManager
 {
     public static readonly PlayerManager Instance = new PlayerManager();
 
-    public static async Task DisconnectPlayer(NetworkedClient player, TextComponentBuilder reason)
+    public static async Task KickPlayer(NetworkedClient player, TextComponentBuilder reason)
     {
         ClientboundDisconnectPacket packet = new ClientboundDisconnectPacket();
         packet.DisconnectMessage = reason;
@@ -18,14 +18,14 @@ public class PlayerManager
         await packet.Call(player, new Packet());
     }
     
-    public static async Task DisconnectPlayer(NetworkedClient player, string reason = "No reason specified!")
+    public static async Task KickPlayer(NetworkedClient player, string reason = "No reason specified!")
     {
         TextComponentBuilder builder = new TextComponentBuilder();
 
         builder.AddText("Disconnected!\n", color: Constants.ErrorColorPrimary, bold: true);
         builder.AddText($"{reason}", color: Constants.ErrorColorSecondary);
 
-        await DisconnectPlayer(player, builder);
+        await KickPlayer(player, builder);
     }
     
     public static async Task SendHeartbeatAsync(NetworkedClient player)

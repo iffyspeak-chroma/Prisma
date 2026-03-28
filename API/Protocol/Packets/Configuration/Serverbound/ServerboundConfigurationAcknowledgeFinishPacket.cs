@@ -32,6 +32,6 @@ public class ServerboundConfigurationAcknowledgeFinishPacket : ICallablePacket
         builder.AddText("Disconnected!", color: Constants.ErrorColorPrimary, bold: true);
         builder.AddText("Client timed out.", color: Constants.ErrorColorSecondary);
 
-        _ = PlayerManager.DisconnectPlayer(client, builder);
+        _ = PlayerManager.KickPlayer(client, builder);
     }
 }
