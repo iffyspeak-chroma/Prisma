@@ -28,8 +28,8 @@ public class ServerboundKeepAlivePacket : ICallablePacket
         }
         
         TextComponentBuilder builder = new TextComponentBuilder();
-        builder.AddText("Disconnected!", color: Constants.ErrorColorPrimary, bold: true);
-        builder.AddText("Client is too desynced from server.", color: Constants.ErrorColorSecondary);
+        builder.AddText("Disconnected!", color: GenericColorPalette.Error.Primary, bold: true);
+        builder.AddText("Client is too desynced from server.", color: GenericColorPalette.Error.Secondary);
 
         await PlayerManager.KickPlayer(client, builder);
     }

@@ -29,8 +29,8 @@ public class ServerboundConfigurationAcknowledgeFinishPacket : ICallablePacket
     private void HandleTimeout(NetworkedClient client)
     {
         TextComponentBuilder builder = new TextComponentBuilder();
-        builder.AddText("Disconnected!", color: Constants.ErrorColorPrimary, bold: true);
-        builder.AddText("Client timed out.", color: Constants.ErrorColorSecondary);
+        builder.AddText("Disconnected!", color: GenericColorPalette.Error.Primary, bold: true);
+        builder.AddText("Client timed out.", color: GenericColorPalette.Error.Secondary);
 
         _ = PlayerManager.KickPlayer(client, builder);
     }

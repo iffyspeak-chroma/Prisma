@@ -20,9 +20,9 @@ public class ClientboundPlaySynchronizePlayerPositionPacket : ICallablePacket
             // A teleport was not already specified so just create one
             packet = new Packet();
             
-            packet.Write(Constants.GlobalTeleportId);
-            player.RecentTeleportId = Constants.GlobalTeleportId;
-            Constants.GlobalTeleportId++;
+            packet.Write(EntityManager.Instance.GlobalTeleportId);
+            player.RecentTeleportId = EntityManager.Instance.GlobalTeleportId;
+            EntityManager.Instance.GlobalTeleportId++;
 
             // TODO: Proper implementation
             // Send them to wherever their spawn is or world spawn if they don't have one

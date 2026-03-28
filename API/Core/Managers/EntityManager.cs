@@ -24,6 +24,8 @@ public class EntityManager
 
         return (Instance.EntityList.Count + 1);
     }
+    
+    public int GlobalTeleportId = 0;
 
     public Dictionary<int, GenericEntity> EntityList = new Dictionary<int, GenericEntity>();
 }
