@@ -3,6 +3,7 @@ using System.Net;
 using System.Text.Json;
 using API.Core;
 using API.Core.Managers;
+using API.Game.Events;
 using API.Logging;
 using API.Protocol.Packets;
 using DotNetty.Transport.Bootstrapping;
@@ -82,6 +83,9 @@ class Program
         // Initialize the PacketManager's PacketList
         PacketManager.Instance.InitializePacketList();
         
+        // Initialize the EventDispatcher
+        API.Core.Server.Instance.EventDispatcher = new EventDispatcher();
+        
         // It's officially time to try and start the server. For realsies now.
         StartServerAsync().Wait();
     }
@@ -158,7 +162,7 @@ class Program
                 .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
                 {
                     var pipeline = channel.Pipeline;
-                    pipeline.AddLast("handler", new AsyncReceivedMessageHandler());
+                    pipeline.AddLast("handler", new AsyncReceivedMessageHandler(API.Core.Server.Instance!.EventDispatcher));
                 }));
 
             if (API.Core.Server.Instance == null)
