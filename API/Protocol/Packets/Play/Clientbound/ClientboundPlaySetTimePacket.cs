@@ -1,4 +1,5 @@
 ﻿using API.Core.Managers;
+using API.Logging;
 using API.Protocol.Networking;
 using DotNetty.Transport.Channels;
 
@@ -25,8 +26,13 @@ public class ClientboundPlaySetTimePacket : ICallablePacket
         
         // TODO: These should in theory come from the world the player is in
         
+        // TODO:
+        // 26.1 says there was 8 bytes extra.
+        // Consider checking back at https://minecraft.wiki/w/Java_Edition_protocol/Packets to see what the packet
+        // is supposed to be now.
+        
         // World tick age
-        packet.Write(0L, asVarLong: false);
+        // packet.Write(0L, asVarLong: false);
         
         // Region time
         /*
@@ -41,9 +47,10 @@ public class ClientboundPlaySetTimePacket : ICallablePacket
         // Advance daylight cycle
         packet.Write(false);
         
-        
         packet.InsertInt(PacketReport.Mapping.Play.Clientbound["minecraft:set_time"].Id);
         packet.WriteLength();
+        
+        LogTool.Debug(BitConverter.ToString(packet.ToArray()).Replace("-", ""));
             
         await client.SendPacket(packet);
         
