@@ -1,8 +1,8 @@
 ﻿using API.Protocol.Networking;
-using API.Protocol.Packets.Status.Clientbound;
+using API.Protocol.Packets.GamestateIndependent.Clientbound;
 using DotNetty.Transport.Channels;
 
-namespace API.Protocol.Packets.Status.Serverbound;
+namespace API.Protocol.Packets.GamestateIndependent.Serverbound;
 
 public class ServerboundPingRequestPacket : ICallablePacket
 {
@@ -10,16 +10,14 @@ public class ServerboundPingRequestPacket : ICallablePacket
     {
         if (packet == null)
         {
-            packet = new Packet();
+            throw new InvalidOperationException("Packet should not be null in this context.");
         }
         
         long timestamp = packet.ReadLong();
-        
-        // Ensure we aren't using previous packet's bytes. Oops.
         packet = new Packet();
         
         packet.Write(timestamp, asVarLong: false);
 
-        await new ClientboundPongResponse().Call(context, packet);
+        await new ClientboundPongResponsePacket().Call(context, packet);
     }
 }
