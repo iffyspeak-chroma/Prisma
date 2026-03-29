@@ -254,7 +254,7 @@ class Program
                 downloadedUpdate = true;
             }
             
-            DoDataGeneration(downloadedUpdate);
+            DoDataGeneration(downloadedUpdate).Wait();
 
             if (!File.Exists(Constants.PacketReportFile))
             {
@@ -289,18 +289,17 @@ class Program
         Downloader.DownloadFileAsync(client, details.Downloads.Server.Url, Constants.PackedServerFile).Wait();
     }
 
-    static void DoDataGeneration(bool didUpdate = false)
+    static Task DoDataGeneration(bool didUpdate = false)
     {
         if (!didUpdate)
-            return;
-        
-        LogTool.Info($"Performing data generation for version {API.Core.Server.Instance.VersionName}...");
+            return Task.CompletedTask;
 
-        var psi = new ProcessStartInfo()
+        LogTool.Info($"Performing data generation for version {API.Core.Server.Instance.VersionName}...");
+        
+        var psi = new ProcessStartInfo
         {
             FileName = "java",
-            Arguments =
-                $"-DbundlerMainClass=net.minecraft.data.Main -jar \"{Constants.PackedServerFile}\" --output \"{Constants.GeneratedDataDirectory}\" --all",
+            Arguments = $"-DbundlerMainClass=net.minecraft.data.Main -jar server.jar --output \"{Constants.GeneratedDataDirectory}\" --all",
             WorkingDirectory = Constants.VersionDirectory,
             UseShellExecute = false,
             CreateNoWindow = true
@@ -314,6 +313,8 @@ class Program
             LogTool.Error("Data generation failure.");
             fileCheckCode |= (byte)FileCheckFlags.DataGenerationFailure;
         }
+
+        return Task.CompletedTask;
     }
 
     static async Task StartServerAsync()
