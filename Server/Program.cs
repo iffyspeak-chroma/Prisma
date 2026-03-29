@@ -247,9 +247,9 @@ class Program
                 API.Core.Server.Instance.ProtocolId = versionInfo.ProtocolVersion;
             }
 
-            if (!Directory.Exists(Constants.GeneratedDataDirectory))
+            if (!Directory.Exists(Constants.MinecraftDataDirectory))
             {
-                Directory.CreateDirectory(Constants.GeneratedDataDirectory);
+                Directory.CreateDirectory(Constants.MinecraftDataDirectory);
                 // Even if we didn't have to update the file, the directory could've been deleted.
                 downloadedUpdate = true;
             }
@@ -299,7 +299,7 @@ class Program
         var psi = new ProcessStartInfo
         {
             FileName = "java",
-            Arguments = $"-DbundlerMainClass=net.minecraft.data.Main -jar server.jar --output \"{Constants.GeneratedDataDirectory}\" --all",
+            Arguments = $"-DbundlerMainClass=net.minecraft.data.Main -jar server.jar --output \"{Constants.MinecraftDataDirectory}\" --all",
             WorkingDirectory = Constants.VersionDirectory,
             UseShellExecute = false,
             CreateNoWindow = true
