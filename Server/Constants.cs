@@ -13,14 +13,14 @@ public class Constants
     // (root) -> version
     public static string VersionDirectory = Path.Join(ExecutingDirectory, "version");
     
-    // (root) -> data
-    public static string DataDirectory = Path.Join(ExecutingDirectory, "data");
+    // (root) -> packdata
+    public static string PackDataDirectory = Path.Join(ExecutingDirectory, "packdata");
     
-    // (root) -> data -> minecraft
-    public static string MinecraftDataDirectory = Path.Join(DataDirectory, "minecraft");
+    // (root) -> packdata -> minecraft
+    public static string MinecraftDataDirectory = Path.Join(PackDataDirectory, "minecraft");
     
-    // (root) -> data -> custom
-    public static string CustomDataDirectory = Path.Join(DataDirectory, "custom");
+    // (root) -> packdata -> custom
+    public static string CustomDataDirectory = Path.Join(PackDataDirectory, "custom");
 
     #endregion
     
@@ -29,7 +29,7 @@ public class Constants
     // (root) -> config -> config.json
     public static string ConfigurationFile = Path.Combine(ConfigurationDirectory, "config.json");
     
-    // (root) -> data -> minecraft -> reports -> packets.json
+    // (root) -> packdata -> minecraft -> reports -> packets.json
     public static string PacketReportFile = Path.Combine(MinecraftDataDirectory, "reports", "packets.json");
     
     // (root) -> version -> server.jar

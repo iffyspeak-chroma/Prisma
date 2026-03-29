@@ -32,6 +32,9 @@ public class ClientboundConfigurationRegistryDataPacket : ICallablePacket
         // What is about to happen here is nasty and gross to me but
         // gets me to the next phase with minimal brain effort.
         
+        // I'm so sorry you put yourself through that, my friend.
+        // I'm gonna fix this now... Manually entering in registries can't hurt you anymore
+        
         #region Dimension Types
         
         List<Identifier> dimensionTypeIdentities = new List<Identifier>()

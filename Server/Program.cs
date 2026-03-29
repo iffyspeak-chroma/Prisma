@@ -5,8 +5,10 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using API.Core;
 using API.Core.Managers;
+using API.DataPacks;
 using API.Game.Events;
 using API.Logging;
+using API.Protocol.Mojang;
 using API.Protocol.Packets;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
@@ -66,6 +68,12 @@ class Program
             LogTool.Error("Missing required files in configuration folder!");
             Environment.Exit(fileCheckCode);
         }
+        
+        // Load the game's registries and tags
+        API.Core.Server.Instance.GameData = new GameData();
+        LoadRegistries(API.Core.Server.Instance.GameData);
+        LoadTags(API.Core.Server.Instance.GameData);
+        ResolveAllTags(API.Core.Server.Instance.GameData);
         
         // Next up, the packet report. It's pretty much the same thing but now for the packet report.
         try
@@ -315,6 +323,160 @@ class Program
         }
 
         return Task.CompletedTask;
+    }
+
+    static void LoadRegistries(GameData gameData)
+    {
+        var dataRoot = Path.Combine(Constants.MinecraftDataDirectory, "data", "minecraft");
+
+        foreach (var dir in Directory.EnumerateDirectories(dataRoot))
+        {
+            var folderName = Path.GetFileName(dir);
+
+            if (folderName == "tags")
+                continue;
+
+            var identifier = new Identifier("minecraft", folderName);
+
+            var registry = new Registry
+            {
+                Identifier = identifier
+            };
+
+            foreach (var file in Directory.EnumerateFiles(dir, "*.json", SearchOption.AllDirectories))
+            {
+                var relative = Path.GetRelativePath(dir, file)
+                    .Replace('\\', '/')
+                    .Replace(".json", "");
+
+                var entryId = new Identifier("minecraft", relative);
+
+                registry.Entries[entryId] = new RegistryEntry
+                {
+                    Id = entryId,
+                    RawJson = File.ReadAllText(file)
+                };
+            }
+
+            gameData.Registries[identifier] = registry;
+        }
+    }
+    
+    static void LoadTags(GameData gameData)
+    {
+        var tagsRoot = Path.Combine(Constants.MinecraftDataDirectory, "data", "minecraft", "tags");
+
+        foreach (var registryDir in Directory.EnumerateDirectories(tagsRoot))
+        {
+            var folderName = Path.GetFileName(registryDir);
+
+            var registryName = folderName switch
+            {
+                "blocks" => new Identifier("minecraft", "block"),
+                "items" => new Identifier("minecraft", "item"),
+                "fluids" => new Identifier("minecraft", "fluid"),
+                "entity_types" => new Identifier("minecraft", "entity_type"),
+                _ => new Identifier("minecraft", folderName)
+            };
+
+            var group = new TagGroup
+            {
+                RegistryId = registryName
+            };
+
+            foreach (var file in Directory.EnumerateFiles(registryDir, "*.json", SearchOption.AllDirectories))
+            {
+                var relative = Path.GetRelativePath(registryDir, file)
+                    .Replace('\\', '/')
+                    .Replace(".json", "");
+
+                var tagId = new Identifier("minecraft", relative);
+
+                using var doc = JsonDocument.Parse(File.ReadAllText(file));
+
+                var values = new List<TagValue>();
+
+                if (doc.RootElement.TryGetProperty("values", out var arr))
+                {
+                    foreach (var v in arr.EnumerateArray())
+                    {
+                        var raw = v.GetString();
+
+                        if (raw.StartsWith("#"))
+                        {
+                            values.Add(new TagValue
+                            {
+                                IsTag = true,
+                                Id = Identifier.Parse(raw.Substring(1))
+                            });
+                        }
+                        else
+                        {
+                            values.Add(new TagValue
+                            {
+                                IsTag = false,
+                                Id = Identifier.Parse(raw)
+                            });
+                        }
+                    }
+                }
+
+                group.Tags[tagId] = new Tag
+                {
+                    Id = tagId,
+                    Values = values
+                };
+            }
+
+            gameData.TagGroups[registryName] = group;
+        }
+    }
+
+    static HashSet<Identifier> ResolveTag(TagGroup group, Identifier tagId, HashSet<Identifier> visiting)
+    {
+        if (!group.Tags.TryGetValue(tagId, out var tag))
+            throw new Exception($"Unknown tag: {tagId}");
+        
+        if (tag.Resolved.Count > 0)
+            return tag.Resolved;
+        
+        if (visiting.Contains(tagId))
+            throw new Exception($"Tag cycle detected: {tagId}");
+
+        visiting.Add(tagId);
+
+        var result = new HashSet<Identifier>();
+
+        foreach (var value in tag.Values)
+        {
+            if (value.IsTag)
+            {
+                var nested = ResolveTag(group, value.Id, visiting);
+
+                foreach (var id in nested)
+                    result.Add(id);
+            }
+            else
+            {
+                result.Add(value.Id);
+            }
+        }
+
+        visiting.Remove(tagId);
+
+        tag.Resolved = result;
+        return result;
+    }
+
+    static void ResolveAllTags(GameData gameData)
+    {
+        foreach (var group in gameData.TagGroups.Values)
+        {
+            foreach (var tagId in group.Tags.Keys)
+            {
+                ResolveTag(group, tagId, new HashSet<Identifier>());
+            }
+        }
     }
 
     static async Task StartServerAsync()
