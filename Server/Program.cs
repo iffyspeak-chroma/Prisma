@@ -381,7 +381,11 @@ class Program
 
                 var registryId = string.IsNullOrEmpty(directory) ? $"{ns}" : $"{ns}:{directory}";
                 var entryName = Path.GetFileNameWithoutExtension(file);
-                var entryId = string.IsNullOrEmpty(directory) ? $"{ns}:{entryName}" : $"{ns}:{directory}/{entryName}";
+                var entryId = RegistryManager.FlatRegistries.Contains(directory)
+                    ? $"{ns}:{entryName}"
+                    : string.IsNullOrEmpty(directory)
+                        ? $"{ns}:{entryName}"
+                        : $"{ns}:{directory}/{entryName}";
 
                 var json = File.ReadAllText(file);
                 using var doc = JsonDocument.Parse(json);
