@@ -1,4 +1,5 @@
 ﻿using API.Core.Managers;
+using API.Protocol.Mojang;
 using API.Protocol.Networking;
 using DotNetty.Transport.Channels;
 
@@ -20,17 +21,30 @@ public class ClientboundConfigurationUpdateTagsPacket : ICallablePacket
             return;
         }
         
-        packet.Write(RegistryManager.Instance.Tags.Count);
+        var tagsByRegistry = RegistryManager.Instance.Tags
+            .GroupBy(
+                t => t.RegistryId.ToString()
+                );
 
-        foreach (var tag in RegistryManager.Instance.Tags)
+        packet.Write(tagsByRegistry.Count());
+
+        foreach (var group in tagsByRegistry)
         {
-            tag.TagName.WriteToPacket(packet);
-            
-            packet.Write(tag.Entries.Count);
+            var registryId = Identifier.Parse(group.Key);
+            registryId.WriteToPacket(packet);
 
-            foreach (var protocolId in tag.Entries)
+            packet.Write(group.Count());
+
+            foreach (var tag in group)
             {
-                packet.Write(protocolId);
+                tag.TagName.WriteToPacket(packet);
+
+                packet.Write(tag.Entries.Count);
+
+                foreach (var protocolId in tag.Entries)
+                {
+                    packet.Write(protocolId);
+                }
             }
         }
 

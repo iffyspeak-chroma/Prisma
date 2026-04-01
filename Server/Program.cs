@@ -75,7 +75,7 @@ class Program
         LogTool.Info("Loading registries... (this might take a bit)");
         LoadRegistryIds();
         LoadRegistryData();
-        ResolveAllTags();
+        //ResolveAllTags();
         
         // Next up, the packet report
         try
@@ -365,7 +365,7 @@ class Program
     static void LoadRegistryData()
     {
         var registries = new Dictionary<string, Registry>();
-
+        
         foreach (var namespaceDir in Directory.GetDirectories(Path.Combine(Constants.VanillaDirectory, "data")))
         {
             var ns = Path.GetFileName(namespaceDir);
@@ -389,29 +389,20 @@ class Program
 
                 var json = File.ReadAllText(file);
                 using var doc = JsonDocument.Parse(json);
-                
+
                 var tag = NbtToolkit.ParseElement(doc.RootElement);
-                
-                NbtCompound compound;
-                if (tag is NbtCompound c)
-                {
-                    compound = c;
-                }
-                else
+                if (!(tag is NbtCompound compound))
                 {
                     LogTool.Warn($"Skipping file '{file}' because it is not a JSON object.");
                     continue;
                 }
-                
+
                 if (!registries.TryGetValue(registryId, out var registry))
                 {
-                    registry = new Registry
-                    {
-                        RegistryId = Identifier.Parse(registryId)
-                    };
+                    registry = new Registry { RegistryId = Identifier.Parse(registryId) };
                     registries.Add(registryId, registry);
                 }
-                
+
                 registry.Entries.Add(new RegistryEntry
                 {
                     EntryId = Identifier.Parse(entryId),
@@ -421,47 +412,47 @@ class Program
         }
 
         RegistryManager.Instance.Registries.AddRange(registries.Values);
+        
+        ResolveAllTags();
     }
 
     static Dictionary<string, List<RawTagEntry>> LoadRawTags()
     {
         var result = new Dictionary<string, List<RawTagEntry>>();
+        var tagsRoot = Path.Combine(Constants.VanillaDirectory, "data", "minecraft", "tags");
 
-        var ns = "minecraft";
-
-        var tagsDir = Path.Combine(Directory.GetDirectories(Path.Combine(Constants.VanillaDirectory, "data", "minecraft", "tags")));
-
-        if (!Directory.Exists(tagsDir))
+        if (!Directory.Exists(tagsRoot))
             return result;
 
-        foreach (var file in Directory.GetFiles(tagsDir, "*.json", SearchOption.AllDirectories))
+        foreach (var file in Directory.GetFiles(tagsRoot, "*.json", SearchOption.AllDirectories))
         {
-            var relativePath = Path.GetRelativePath(tagsDir, file).Replace('\\', '/');
-            var directory = Path.GetDirectoryName(relativePath)!;
-
-            var registryId = $"{ns}:{directory}";
+            var relativePath = Path.GetRelativePath(tagsRoot, file).Replace('\\', '/');
+            var directory = Path.GetDirectoryName(relativePath)?.Replace('\\', '/') ?? "";
+            
+            var registryId = $"minecraft:{directory}";
 
             var tagName = Path.GetFileNameWithoutExtension(file);
-            var tagId = $"{ns}:{tagName}";
+            var tagId = $"minecraft:{tagName}";
 
             using var doc = JsonDocument.Parse(File.ReadAllText(file));
 
-            var rawTag = new RawTagEntry
-            {
-                Id = Identifier.Parse(tagId)
-            };
+            var rawTag = new RawTagEntry { Id = Identifier.Parse(tagId) };
 
-            foreach (var val in doc.RootElement.GetProperty("values").EnumerateArray())
+            if (!doc.RootElement.TryGetProperty("values", out var values))
             {
-                rawTag.Values.Add(val.GetString()!);
+                LogTool.Warn($"Tag file '{file}' has no 'values' array, skipping.");
+                continue;
             }
+
+            foreach (var val in values.EnumerateArray())
+                rawTag.Values.Add(val.GetString()!);
 
             if (!result.TryGetValue(registryId, out var list))
             {
                 list = new List<RawTagEntry>();
                 result[registryId] = list;
             }
-            
+
             list.Add(rawTag);
         }
 
@@ -519,12 +510,24 @@ class Program
 
             if (registry == null)
             {
-                LogTool.Warn($"Registry '{registryId}' not found for tags, skipping.");
+                //LogTool.Warn($"Registry '{registryId}' not found for tags, skipping.");
+                continue;
+            }
+            
+            if (!registry.Entries.Any(e =>
+                    e.Data != null &&
+                    e.Data.Contains("protocol_id") &&
+                    e.Data["protocol_id"] is NbtInt))
+            {
                 continue;
             }
 
-            var entryLookup = registry.Entries.ToDictionary(
-                e => e.EntryId.ToString(), e => ((NbtInt)e.Data["protocol_id"]).Value);
+            var entryLookup = registry.Entries
+                .Where(e => e.Data != null && e.Data.Contains("protocol_id") && e.Data["protocol_id"] is NbtInt)
+                .ToDictionary(
+                    e => e.EntryId.ToString(),
+                    e => ((NbtInt)e.Data["protocol_id"]).Value
+                );
 
             var tagLookup = rawTags.ToDictionary(t => t.Id.ToString());
 
@@ -534,6 +537,7 @@ class Program
                 
                 RegistryManager.Instance.Tags.Add(new TagEntry
                 {
+                    RegistryId = Identifier.Parse(registryId),
                     TagName = rawTag.Id,
                     Entries = resolved.Distinct().ToList()
                 });
