@@ -51,12 +51,14 @@ public class ClientboundConfigurationRegistryDataPacket : ICallablePacket
                     NbtFile file = new NbtFile(entry.Data);
                     packet.Write(NbtToolkit.StripUnnecessary(file.SaveToBuffer(NbtCompression.None)));
                 }
-                
-                packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:registry_data"].Id);
-                packet.WriteLength();
-            
-                await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
             }
+            
+            packet.InsertInt(PacketReport.Mapping.Configuration.Clientbound["minecraft:registry_data"].Id);
+            packet.WriteLength();
+            
+            await PlayerManager.Instance.ConnectedClients[context.Channel].SendPacket(packet);
+
+            packet = new Packet();
         }
         
         await new ClientboundConfigurationUpdateTagsPacket().Call(context, null);
