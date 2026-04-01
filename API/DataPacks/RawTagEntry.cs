@@ -2,8 +2,8 @@
 
 namespace API.DataPacks;
 
-public class TagValue
+public class RawTagEntry
 {
-    public bool IsTag { get; init; }
     public Identifier Id { get; init; }
+    public List<string> Values { get; } = new();
 }

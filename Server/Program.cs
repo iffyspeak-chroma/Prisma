@@ -9,10 +9,12 @@ using API.DataPacks;
 using API.Game.Events;
 using API.Logging;
 using API.Protocol.Mojang;
+using API.Protocol.NBT;
 using API.Protocol.Packets;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using fNbt;
 using Server.Networking;
 using Server.Updater;
 
@@ -70,12 +72,12 @@ class Program
         }
         
         // Load the game's registries and tags
-        API.Core.Server.Instance.GameData = new GameData();
-        LoadRegistries(API.Core.Server.Instance.GameData);
-        LoadTags(API.Core.Server.Instance.GameData);
-        ResolveAllTags(API.Core.Server.Instance.GameData);
+        LogTool.Info("Loading registries... (this might take a bit)");
+        LoadRegistryIds();
+        LoadRegistryData();
+        ResolveAllTags();
         
-        // Next up, the packet report. It's pretty much the same thing but now for the packet report.
+        // Next up, the packet report
         try
         {
             if (!File.Exists(Constants.PacketReportFile))
@@ -196,9 +198,9 @@ class Program
                     Directory.CreateDirectory(Constants.VersionDirectory);
                 
                 LogTool.Info("Checking version...");
-                if (File.Exists(Constants.PackedServerFile) && details?.Downloads?.Server != null)
+                if (File.Exists(Constants.MojangServerFile) && details?.Downloads?.Server != null)
                 {
-                    var storedShaTask = HashUtil.ComputeSha1Async(Constants.PackedServerFile);
+                    var storedShaTask = HashUtil.ComputeSha1Async(Constants.MojangServerFile);
                     storedShaTask.Wait();
                     var storedSha = storedShaTask.Result;
                     var remoteSha = details.Downloads.Server.Sha1;
@@ -224,14 +226,14 @@ class Program
                     }
                 }
 
-                if (!File.Exists(Constants.PackedServerFile))
+                if (!File.Exists(Constants.MojangServerFile))
                 {
                     LogTool.Error("Failed to find server file.");
                     fileCheckCode |= (byte)FileCheckFlags.DownloadFailure;
                     return;
                 }
 
-                using var archive = ZipFile.OpenRead(Constants.PackedServerFile);
+                using var archive = ZipFile.OpenRead(Constants.MojangServerFile);
                 var entry = archive.GetEntry("version.json");
 
                 if (entry == null)
@@ -255,9 +257,9 @@ class Program
                 API.Core.Server.Instance.ProtocolId = versionInfo.ProtocolVersion;
             }
 
-            if (!Directory.Exists(Constants.MinecraftDataDirectory))
+            if (!Directory.Exists(Constants.VanillaDirectory))
             {
-                Directory.CreateDirectory(Constants.MinecraftDataDirectory);
+                Directory.CreateDirectory(Constants.VanillaDirectory);
                 // Even if we didn't have to update the file, the directory could've been deleted.
                 downloadedUpdate = true;
             }
@@ -294,7 +296,7 @@ class Program
 
     static void DownloadServerFile(HttpClient client, VersionDetails details)
     {
-        Downloader.DownloadFileAsync(client, details.Downloads.Server.Url, Constants.PackedServerFile).Wait();
+        Downloader.DownloadFileAsync(client, details.Downloads.Server.Url, Constants.MojangServerFile).Wait();
     }
 
     static Task DoDataGeneration(bool didUpdate = false)
@@ -307,7 +309,7 @@ class Program
         var psi = new ProcessStartInfo
         {
             FileName = "java",
-            Arguments = $"-DbundlerMainClass=net.minecraft.data.Main -jar server.jar --output \"{Constants.MinecraftDataDirectory}\" --all",
+            Arguments = $"-DbundlerMainClass=net.minecraft.data.Main -jar server.jar --output \"{Constants.VanillaDirectory}\" --all",
             WorkingDirectory = Constants.VersionDirectory,
             UseShellExecute = false,
             CreateNoWindow = true
@@ -325,156 +327,212 @@ class Program
         return Task.CompletedTask;
     }
 
-    static void LoadRegistries(GameData gameData)
+    static void LoadRegistryIds()
     {
-        var dataRoot = Path.Combine(Constants.MinecraftDataDirectory, "data", "minecraft");
+        var json = File.ReadAllText(Constants.RegistriesReportFile);
 
-        foreach (var dir in Directory.EnumerateDirectories(dataRoot))
+        var options = new JsonSerializerOptions()
         {
-            var folderName = Path.GetFileName(dir);
+            PropertyNameCaseInsensitive = true
+        };
 
-            if (folderName == "tags")
-                continue;
+        var root = JsonSerializer.Deserialize<RootDto>(json, options);
 
-            var identifier = new Identifier("minecraft", folderName);
-
+        foreach (var (registryKey, registryDto) in root!)
+        {
             var registry = new Registry
             {
-                Identifier = identifier
+                RegistryId = Identifier.Parse(registryKey)
             };
 
-            foreach (var file in Directory.EnumerateFiles(dir, "*.json", SearchOption.AllDirectories))
+            foreach (var (entryKey, entryJson) in registryDto.Entries)
             {
-                var relative = Path.GetRelativePath(dir, file)
-                    .Replace('\\', '/')
-                    .Replace(".json", "");
+                var tag = NbtToolkit.ParseElement(entryJson);
 
-                var entryId = new Identifier("minecraft", relative);
-
-                registry.Entries[entryId] = new RegistryEntry
+                var compound = tag as NbtCompound ?? new NbtCompound("");
+                
+                registry.Entries.Add(new RegistryEntry
                 {
-                    Id = entryId,
-                    RawJson = File.ReadAllText(file)
-                };
+                    EntryId = Identifier.Parse(entryKey),
+                    Data = compound
+                });
             }
 
-            gameData.Registries[identifier] = registry;
+            RegistryManager.Instance.Registries.Add(registry);
         }
     }
-    
-    static void LoadTags(GameData gameData)
+
+    static void LoadRegistryData()
     {
-        var tagsRoot = Path.Combine(Constants.MinecraftDataDirectory, "data", "minecraft", "tags");
+        var registries = new Dictionary<string, Registry>();
 
-        foreach (var registryDir in Directory.EnumerateDirectories(tagsRoot))
+        foreach (var namespaceDir in Directory.GetDirectories(Path.Combine(Constants.VanillaDirectory, "data")))
         {
-            var folderName = Path.GetFileName(registryDir);
+            var ns = Path.GetFileName(namespaceDir);
 
-            var registryName = folderName switch
+            foreach (var file in Directory.GetFiles(namespaceDir, "*.json", SearchOption.AllDirectories))
             {
-                "blocks" => new Identifier("minecraft", "block"),
-                "items" => new Identifier("minecraft", "item"),
-                "fluids" => new Identifier("minecraft", "fluid"),
-                "entity_types" => new Identifier("minecraft", "entity_type"),
-                _ => new Identifier("minecraft", folderName)
-            };
+                var relativePath = Path.GetRelativePath(namespaceDir, file).Replace('\\', '/');
 
-            var group = new TagGroup
-            {
-                RegistryId = registryName
-            };
+                if (relativePath.StartsWith("tags/"))
+                    continue;
 
-            foreach (var file in Directory.EnumerateFiles(registryDir, "*.json", SearchOption.AllDirectories))
-            {
-                var relative = Path.GetRelativePath(registryDir, file)
-                    .Replace('\\', '/')
-                    .Replace(".json", "");
+                var directory = Path.GetDirectoryName(relativePath)?.Replace('\\', '/') ?? "";
 
-                var tagId = new Identifier("minecraft", relative);
+                var registryId = string.IsNullOrEmpty(directory) ? $"{ns}" : $"{ns}:{directory}";
+                var entryName = Path.GetFileNameWithoutExtension(file);
+                var entryId = string.IsNullOrEmpty(directory) ? $"{ns}:{entryName}" : $"{ns}:{directory}/{entryName}";
 
-                using var doc = JsonDocument.Parse(File.ReadAllText(file));
-
-                var values = new List<TagValue>();
-
-                if (doc.RootElement.TryGetProperty("values", out var arr))
+                var json = File.ReadAllText(file);
+                using var doc = JsonDocument.Parse(json);
+                
+                var tag = NbtToolkit.ParseElement(doc.RootElement);
+                
+                NbtCompound compound;
+                if (tag is NbtCompound c)
                 {
-                    foreach (var v in arr.EnumerateArray())
-                    {
-                        var raw = v.GetString();
-
-                        if (raw.StartsWith("#"))
-                        {
-                            values.Add(new TagValue
-                            {
-                                IsTag = true,
-                                Id = Identifier.Parse(raw.Substring(1))
-                            });
-                        }
-                        else
-                        {
-                            values.Add(new TagValue
-                            {
-                                IsTag = false,
-                                Id = Identifier.Parse(raw)
-                            });
-                        }
-                    }
+                    compound = c;
                 }
-
-                group.Tags[tagId] = new Tag
+                else
                 {
-                    Id = tagId,
-                    Values = values
-                };
+                    LogTool.Warn($"Skipping file '{file}' because it is not a JSON object.");
+                    continue;
+                }
+                
+                if (!registries.TryGetValue(registryId, out var registry))
+                {
+                    registry = new Registry
+                    {
+                        RegistryId = Identifier.Parse(registryId)
+                    };
+                    registries.Add(registryId, registry);
+                }
+                
+                registry.Entries.Add(new RegistryEntry
+                {
+                    EntryId = Identifier.Parse(entryId),
+                    Data = compound
+                });
             }
-
-            gameData.TagGroups[registryName] = group;
         }
+
+        RegistryManager.Instance.Registries.AddRange(registries.Values);
     }
 
-    static HashSet<Identifier> ResolveTag(TagGroup group, Identifier tagId, HashSet<Identifier> visiting)
+    static Dictionary<string, List<RawTagEntry>> LoadRawTags()
     {
-        if (!group.Tags.TryGetValue(tagId, out var tag))
-            throw new Exception($"Unknown tag: {tagId}");
-        
-        if (tag.Resolved.Count > 0)
-            return tag.Resolved;
-        
-        if (visiting.Contains(tagId))
-            throw new Exception($"Tag cycle detected: {tagId}");
+        var result = new Dictionary<string, List<RawTagEntry>>();
 
-        visiting.Add(tagId);
+        var ns = "minecraft";
 
-        var result = new HashSet<Identifier>();
+        var tagsDir = Path.Combine(Directory.GetDirectories(Path.Combine(Constants.VanillaDirectory, "data", "minecraft", "tags")));
 
-        foreach (var value in tag.Values)
+        if (!Directory.Exists(tagsDir))
+            return result;
+
+        foreach (var file in Directory.GetFiles(tagsDir, "*.json", SearchOption.AllDirectories))
         {
-            if (value.IsTag)
-            {
-                var nested = ResolveTag(group, value.Id, visiting);
+            var relativePath = Path.GetRelativePath(tagsDir, file).Replace('\\', '/');
+            var directory = Path.GetDirectoryName(relativePath)!;
 
-                foreach (var id in nested)
-                    result.Add(id);
-            }
-            else
+            var registryId = $"{ns}:{directory}";
+
+            var tagName = Path.GetFileNameWithoutExtension(file);
+            var tagId = $"{ns}:{tagName}";
+
+            using var doc = JsonDocument.Parse(File.ReadAllText(file));
+
+            var rawTag = new RawTagEntry
             {
-                result.Add(value.Id);
+                Id = Identifier.Parse(tagId)
+            };
+
+            foreach (var val in doc.RootElement.GetProperty("values").EnumerateArray())
+            {
+                rawTag.Values.Add(val.GetString()!);
             }
+
+            if (!result.TryGetValue(registryId, out var list))
+            {
+                list = new List<RawTagEntry>();
+                result[registryId] = list;
+            }
+            
+            list.Add(rawTag);
         }
 
-        visiting.Remove(tagId);
-
-        tag.Resolved = result;
         return result;
     }
 
-    static void ResolveAllTags(GameData gameData)
+    static List<int> ResolveTag(RawTagEntry tag, string registryId,
+        Dictionary<string, int> entryLookup, Dictionary<string, RawTagEntry> tagLookup,
+        HashSet<string> visited)
     {
-        foreach (var group in gameData.TagGroups.Values)
+        var result = new List<int>();
+
+        if (!visited.Add(tag.Id.ToString()))
+            return result;
+
+        foreach (var value in tag.Values)
         {
-            foreach (var tagId in group.Tags.Keys)
+            if (value.StartsWith("#"))
             {
-                ResolveTag(group, tagId, new HashSet<Identifier>());
+                var tagId = value.Substring(1);
+
+                if (tagLookup.TryGetValue(tagId, out var nested))
+                {
+                    result.AddRange(ResolveTag(nested, registryId, entryLookup, tagLookup, visited));
+                }
+                else
+                {
+                    LogTool.Warn($"Missing tag '{tagId}' in registry '{registryId}'");
+                }
+
+                continue;
+            }
+
+            if (entryLookup.TryGetValue(value, out var protocolId))
+            {
+                result.Add(protocolId);
+            }
+            else
+            {
+                LogTool.Warn($"Missing entry '{value}' in registry '{registryId}'");
+            }
+        }
+
+        return result;
+    }
+
+    static void ResolveAllTags()
+    {
+        var rawTagsByRegistry = LoadRawTags();
+
+        foreach (var (registryId, rawTags) in rawTagsByRegistry)
+        {
+            var registry =
+                RegistryManager.Instance.Registries.FirstOrDefault(r => r.RegistryId.ToString() == registryId);
+
+            if (registry == null)
+            {
+                LogTool.Warn($"Registry '{registryId}' not found for tags, skipping.");
+                continue;
+            }
+
+            var entryLookup = registry.Entries.ToDictionary(
+                e => e.EntryId.ToString(), e => ((NbtInt)e.Data["protocol_id"]).Value);
+
+            var tagLookup = rawTags.ToDictionary(t => t.Id.ToString());
+
+            foreach (var rawTag in rawTags)
+            {
+                var resolved = ResolveTag(rawTag, registryId, entryLookup, tagLookup, new HashSet<string>());
+                
+                RegistryManager.Instance.Tags.Add(new TagEntry
+                {
+                    TagName = rawTag.Id,
+                    Entries = resolved.Distinct().ToList()
+                });
             }
         }
     }

@@ -4,6 +4,6 @@ namespace API.DataPacks;
 
 public class Registry
 {
-    public Identifier Identifier { get; init; }
-    public Dictionary<Identifier, RegistryEntry> Entries { get; } = new();
+    public Identifier RegistryId { get; init; }
+    public List<RegistryEntry> Entries { get; } = new();
 }

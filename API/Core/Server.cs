@@ -15,6 +15,4 @@ public class Server
 
     public string VersionName = "26.1";
     public int ProtocolId = 775;
-
-    public GameData GameData;
 }
