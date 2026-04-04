@@ -1,5 +1,6 @@
 ﻿using System.Buffers.Binary;
 using System.Text;
+using API.Core;
 using API.Logging;
 using API.Protocol.Networking;
 using DotNetty.Buffers;
@@ -19,7 +20,7 @@ public class LegacyClientboundStatusPacket : ICallablePacket
         
         responsePieces.Add("§1"); // Identifier
         responsePieces.Add("127"); // Protocol Version
-        responsePieces.Add("26.1"); // Server version
+        responsePieces.Add($"{Server.Instance?.VersionName}"); // Server version
         responsePieces.Add("Your client is outdated."); // MotD
         responsePieces.Add("0"); // Current player count
         responsePieces.Add("0"); // Max player count

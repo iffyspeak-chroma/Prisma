@@ -48,7 +48,7 @@ public class Identifier : IWriteToPackets
     {
         if (!Regex.IsMatch(ns, "^[a-z0-9._-]+$"))
         {
-            throw new ArgumentException("Namespace contains invalid characters!");
+            throw new ArgumentException($"Namespace '{ns}' contains invalid characters!");
         }
     }
 
@@ -56,7 +56,7 @@ public class Identifier : IWriteToPackets
     {
         if (!Regex.IsMatch(va, "^[a-z0-9._/-]+$"))
         {
-            throw new ArgumentException("Value contains invalid characters!");
+            throw new ArgumentException($"Value '{va}' contains invalid characters!");
         }
     }
     

@@ -1,4 +1,5 @@
-﻿using API.Core.Managers;
+﻿using API.Core;
+using API.Core.Managers;
 using API.DataPacks;
 using API.Protocol.Mojang;
 using API.Protocol.Networking;
@@ -29,7 +30,7 @@ public class ClientboundConfigurationKnownPacksPacket : ICallablePacket
             
         DataPackIdentity corePack = new DataPackIdentity(
             Identifier.Parse("minecraft:core"),
-            "26.1");
+            $"{Server.Instance?.VersionName}");
             
         datapacks.Add(corePack);
 

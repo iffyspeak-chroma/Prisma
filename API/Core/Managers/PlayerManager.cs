@@ -22,8 +22,8 @@ public class PlayerManager
     {
         TextComponentBuilder builder = new TextComponentBuilder();
 
-        builder.AddText("Disconnected!\n", color: Constants.ErrorColorPrimary, bold: true);
-        builder.AddText($"{reason}", color: Constants.ErrorColorSecondary);
+        builder.AddText("Disconnected!\n", color: GenericColorPalette.Error.Primary, bold: true);
+        builder.AddText($"{reason}", color: GenericColorPalette.Error.Secondary);
 
         await KickPlayer(player, builder);
     }
