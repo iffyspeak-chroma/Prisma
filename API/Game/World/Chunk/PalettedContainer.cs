@@ -1,8 +1,9 @@
 ﻿using API.Core;
+using API.Protocol.Packets;
 
 namespace API.Game.World.Chunk;
 
-public class PalettedContainer
+public class PalettedContainer : ISerializable
 {
     private byte bitsPerEntry;
     private readonly List<int> palette = new();
@@ -107,4 +108,7 @@ public class PalettedContainer
     public List<int> GetPalette() => palette;
     public long[] GetData() => data;
     public int BitsPerEntry => bitsPerEntry;
+
+    public void Serialize(Packet packet)
+    }
 }
