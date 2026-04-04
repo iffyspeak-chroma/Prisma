@@ -8,15 +8,17 @@ public class PalettedContainer : ISerializable
     private byte bitsPerEntry;
     private readonly List<int> palette = new();
     private long[] data;
+    private bool isBlock;
 
     private readonly int size;
 
-    public PalettedContainer(int size)
+    public PalettedContainer(int size, bool isBlock)
     {
         this.size = size;
         palette.Add(0);
         bitsPerEntry = 1;
         ResizeData();
+        this.isBlock = isBlock;
     }
     
     private void ResizeData()
@@ -32,7 +34,10 @@ public class PalettedContainer : ISerializable
         if (index != -1) return index;
 
         palette.Add(value);
-        byte neededBits = (byte) ExtendedMath.CeilLog2(palette.Count);
+        byte neededBits = (byte)ExtendedMath.CeilLog2(palette.Count);
+
+        if (isBlock)
+            neededBits = (byte)Math.Max((byte) 4, neededBits);
 
         if (neededBits > bitsPerEntry)
         {
@@ -110,5 +115,33 @@ public class PalettedContainer : ISerializable
     public int BitsPerEntry => bitsPerEntry;
 
     public void Serialize(Packet packet)
+    {
+        int bits = this.BitsPerEntry;
+
+        if (isBlock)
+            bits = Math.Max(4, bits);
+        
+        packet.Write((byte) bits);
+
+        bool usePalette = bits < 9;
+
+        if (usePalette)
+        {
+            var palette = this.GetPalette();
+            packet.Write(palette.Count);
+
+            foreach (var entry in palette)
+            {
+                packet.Write(entry);
+            }
+        }
+
+        var data = GetData();
+        packet.Write(data.Length);
+
+        foreach (long l in data)
+        {
+            packet.Write(l, asVarLong: false);
+        }
     }
 }
