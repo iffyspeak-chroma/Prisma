@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
-using System.Net.Mime;
 using API.Core.Managers;
 using API.Game.Events;
 using API.Logging;
+using API.Player.State;
 using API.Protocol.Networking;
 using API.Protocol.Packets;
 using API.Protocol.Packets.Handshake.Legacy;
@@ -82,9 +82,42 @@ public class AsyncReceivedMessageHandler : ChannelHandlerAdapter
     {
         NetworkedClient client = PlayerManager.Instance.ConnectedClients[context.Channel];
 
-        if (client.DisconnectReason == DisconnectReason.Generic)
-            client.DisconnectReason = DisconnectReason.Disconnect;
+        if (!(client.Gamestate == PlayerGamestate.Handshake || client.Gamestate == PlayerGamestate.Status))
+        {
+            if (client.DisconnectReason == DisconnectReason.Generic)
+                client.DisconnectReason = DisconnectReason.Disconnect;
 
+            switch (client.DisconnectReason)
+            {
+                case DisconnectReason.Exception:
+                {
+                    LogTool.Info($"{client.Player.GetPlayerIdentifier()} was kicked from server because an exception occurred.");
+                    break;
+                }
+
+                case DisconnectReason.Kicked:
+                {
+                    LogTool.Info($"{client.Player.GetPlayerIdentifier()} was kicked from the server.");
+                    break;
+                }
+
+                case DisconnectReason.TimedOut:
+                {
+                    LogTool.Info($"{client.Player.GetPlayerIdentifier()} timed out.");
+                    break;
+                }
+            
+                case DisconnectReason.Disconnect:
+                case DisconnectReason.Generic:
+                case DisconnectReason.Unknown:
+                default:
+                {
+                    LogTool.Info($"{client.Player.GetPlayerIdentifier()} left the server.");
+                    break;
+                }
+            }
+        }
+        
         _events.Publish(new PlayerDisconnectEvent(client, client.DisconnectReason));
         PlayerManager.Instance.ConnectedClients.Remove(context.Channel);
         
