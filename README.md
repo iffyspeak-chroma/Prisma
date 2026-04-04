@@ -32,7 +32,7 @@ There's so much to do that it's really not worthing writing a whole section over
 
 I fully support contributing to the project but I cannot guarentee your contribution will be merged into the project. There's not exactly a code of conduct for contributing or anything but general rules are as follows:
 - No intentionally harmful contributions
-- No README changes to become a contributor
+- No README changes only to become a contributor (if you actually contribute something: you may sign your name)
 - Ensure contributions are "functional" (they don't have to work fully, just as long as they do something without causing a crash, it's fairly functional)
 
 ## Contributors
