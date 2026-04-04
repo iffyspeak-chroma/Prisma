@@ -1,6 +1,8 @@
-﻿namespace API.Core.Types;
+﻿using API.Protocol.Packets;
 
-public class BitSet
+namespace API.Core.Types;
+
+public class BitSet : ISerializable
 {
     private readonly List<long> data = new();
 
@@ -22,5 +24,14 @@ public class BitSet
         if (longIndex >= data.Count) return false;
 
         return (data[longIndex] & (1L << (index % 64))) != 0;
+    }
+
+    public void Serialize(Packet packet)
+    {
+        packet.Write(data.Count);
+        foreach (long l in data)
+        {
+            packet.Write(l, asVarLong: false);
+        }
     }
 }
