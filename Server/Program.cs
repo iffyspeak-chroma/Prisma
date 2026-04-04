@@ -21,11 +21,11 @@ class Program
         LogTool.Info("Loading registries... (this might take a bit)");
         new RegistryLoader();
         
-        LogTool.Info("Resolving tags");
+        LogTool.Info("Resolving tags.");
         new TagResolver();
         
         // Next up, the packet report
-        LogTool.Info("Checking for packet report");
+        LogTool.Info("Checking for packet report.");
         try
         {
             if (!File.Exists(Constants.PacketReportFile))
