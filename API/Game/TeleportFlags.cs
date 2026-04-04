@@ -1,4 +1,4 @@
-﻿namespace API.Game.World;
+﻿namespace API.Game;
 
 [Flags]
 public enum TeleportFlags
