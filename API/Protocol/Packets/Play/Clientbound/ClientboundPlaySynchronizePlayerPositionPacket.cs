@@ -27,7 +27,7 @@ public class ClientboundPlaySynchronizePlayerPositionPacket : ICallablePacket
             // TODO: Proper implementation
             // Send them to wherever their spawn is or world spawn if they don't have one
             Location spawn = new Location(0d, 64d, 0d);
-            spawn.WriteToPacket(packet);
+            spawn.Serialize(packet);
             
             // Set their entity location too :)
             player.AssociatedEntity?.Location = spawn;
@@ -36,13 +36,13 @@ public class ClientboundPlaySynchronizePlayerPositionPacket : ICallablePacket
             // TODO: Don't use Location for this kinda thing, even if convinient for now.
             // Set their velocity (because it has no parameters, it'll be zero'd out)
             Location velocity = new Location();
-            velocity.WriteToPacket(packet);
+            velocity.Serialize(packet);
 
             player.AssociatedEntity?.Velocity = velocity;
 
             // TODO: I mean again, do this properly. Read it from the world file or something.
             Heading facing = new Heading();
-            facing.WriteToPacket(packet);
+            facing.Serialize(packet);
 
             player.AssociatedEntity?.LookDirection = facing;
 

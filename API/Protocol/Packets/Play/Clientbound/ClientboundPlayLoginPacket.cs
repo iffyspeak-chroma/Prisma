@@ -40,7 +40,7 @@ public class ClientboundPlayLoginPacket : ICallablePacket
         packet.Write(dimensionList.Count);
         foreach (Identifier dimension in dimensionList)
         {
-            dimension.WriteToPacket(packet);
+            dimension.Serialize(packet);
         }
         
         // Server's max player count

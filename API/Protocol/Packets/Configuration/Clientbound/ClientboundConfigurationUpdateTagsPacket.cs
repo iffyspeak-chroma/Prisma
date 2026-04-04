@@ -31,13 +31,13 @@ public class ClientboundConfigurationUpdateTagsPacket : ICallablePacket
         foreach (var group in tagsByRegistry)
         {
             var registryId = Identifier.Parse(group.Key);
-            registryId.WriteToPacket(packet);
+            registryId.Serialize(packet);
 
             packet.Write(group.Count());
 
             foreach (var tag in group)
             {
-                tag.TagName.WriteToPacket(packet);
+                tag.TagName.Serialize(packet);
 
                 packet.Write(tag.Entries.Count);
 

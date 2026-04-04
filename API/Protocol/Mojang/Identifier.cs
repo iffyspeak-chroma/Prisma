@@ -4,7 +4,7 @@ using API.Protocol.Packets;
 
 namespace API.Protocol.Mojang;
 
-public class Identifier : IWriteToPackets
+public class Identifier : ISerializable
 {
     public string Namespace { get; private set; }
     public string Value { get; private set; }
@@ -60,7 +60,7 @@ public class Identifier : IWriteToPackets
         }
     }
     
-    public void WriteToPacket(Packet packet)
+    public void Serialize(Packet packet)
     { 
         packet.Write($"{this.Namespace}:{this.Value}");
     }

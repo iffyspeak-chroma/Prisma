@@ -2,7 +2,7 @@
 
 namespace API.Core.Transform;
 
-public class Location : IWriteToPackets
+public class Location : ISerializable
 {
     public double X { get; set; }
     public double Y { get; set; }
@@ -22,7 +22,7 @@ public class Location : IWriteToPackets
         Z = z;
     }
 
-    public void WriteToPacket(Packet packet)
+    public void Serialize(Packet packet)
     {
         packet.Write(X);
         packet.Write(Y);

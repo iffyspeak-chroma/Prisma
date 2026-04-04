@@ -30,13 +30,13 @@ public class ClientboundConfigurationRegistryDataPacket : ICallablePacket
         
         foreach (Registry registry in RegistryManager.Instance.Registries)
         {
-            registry.RegistryId.WriteToPacket(packet);
+            registry.RegistryId.Serialize(packet);
             
             packet.Write(registry.Entries.Count);
 
             foreach (RegistryEntry entry in registry.Entries)
             {
-                entry.EntryId.WriteToPacket(packet);
+                entry.EntryId.Serialize(packet);
 
                 bool hasData = entry.Data != null;
                 

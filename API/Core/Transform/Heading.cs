@@ -2,7 +2,7 @@
 
 namespace API.Core.Transform;
 
-public class Heading : IWriteToPackets
+public class Heading : ISerializable
 {
     public float Yaw;
     public float Pitch;
@@ -19,7 +19,7 @@ public class Heading : IWriteToPackets
         Pitch = pitch;
     }
 
-    public void WriteToPacket(Packet packet)
+    public void Serialize(Packet packet)
     {
         packet.Write(Yaw);
         packet.Write(Pitch);

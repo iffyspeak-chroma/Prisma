@@ -2,8 +2,8 @@
 
 namespace API.Protocol.Types;
 
-public class Optional<T> : IWriteToPackets
-    where T : IWriteToPackets
+public class Optional<T> : ISerializable
+    where T : ISerializable
 {
     private readonly T? _value;
 
@@ -19,7 +19,7 @@ public class Optional<T> : IWriteToPackets
 
     private void CheckValidity()
     {
-        if (typeof(T) != typeof(IWriteToPackets))
+        if (typeof(T) != typeof(ISerializable))
             throw new InvalidOperationException("Type does not inherit IWriteToPackets interface!");
 
         // I mean if we're writing an optional of nothing... we really shouldn't write anything.
@@ -27,10 +27,10 @@ public class Optional<T> : IWriteToPackets
             _shouldWrite = false;
     }
 
-    public void WriteToPacket(Packet packet)
+    public void Serialize(Packet packet)
     {
         if (_shouldWrite)
-            _value!.WriteToPacket(packet);
+            _value!.Serialize(packet);
         else
             packet.Write(0);
     }
