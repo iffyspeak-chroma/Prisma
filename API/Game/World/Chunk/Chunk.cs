@@ -8,6 +8,7 @@ public class Chunk
     public int Z { get; }
     public Heightmap[] Heightmaps { get; }
     public ChunkSection[] Sections { get; }
+    public List<BlockEntity> BlockEntities { get; } = new();
 
     public Chunk(int x, int z, int worldHeight)
     {
