@@ -8,7 +8,7 @@ namespace API.Game.World.Chunk;
 
 public class ChunkSerializer
 {
-    public static byte[] Serialize(Chunk chunk /*, object? lightmap*/)
+    public static byte[] Serialize(Chunk chunk)
     {
         using (Packet p = new Packet())
         {
@@ -51,13 +51,9 @@ public class ChunkSerializer
                 
                 p.Write(rawData);
             }
-
-            /*
-            if (lightmap != null)
-            {
-                // TODO: Lightmap (Yagami)
-            }
-            */
+            
+            // Lightmap Yagami vs (L)ightmap Lawliet isn't even close.
+            chunk.Lightmap.Serialize(p);
             
             return p.ToArray() ?? throw new InvalidOperationException("Serialization array is null!");
         }
