@@ -9,6 +9,7 @@ public class Chunk
     public Heightmap[] Heightmaps { get; }
     public ChunkSection[] Sections { get; }
     public List<BlockEntity> BlockEntities { get; } = new();
+    public Lightmap Lightmap;
 
     public Chunk(int x, int z, int worldHeight)
     {
@@ -27,5 +28,7 @@ public class Chunk
         {
             Sections[i] = new ChunkSection();
         }
+
+        Lightmap = new();
     }
 }
