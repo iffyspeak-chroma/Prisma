@@ -1,4 +1,5 @@
-﻿using API.Core;
+﻿using System.Buffers.Binary;
+using API.Core;
 using API.Protocol.Packets;
 
 namespace API.Game.World.ChunkData;
@@ -141,7 +142,7 @@ public class PalettedContainer : ISerializable
 
         foreach (long l in data)
         {
-            packet.Write(l, asVarLong: false);
+            packet.Write(BinaryPrimitives.ReverseEndianness(l), asVarLong: false);
         }
     }
 }
