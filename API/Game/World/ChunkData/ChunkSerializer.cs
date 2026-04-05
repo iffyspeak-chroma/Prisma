@@ -12,8 +12,8 @@ public class ChunkSerializer
     {
         using (Packet p = new Packet())
         {
-            p.Write(chunk.X, asVarInt: false);
-            p.Write(chunk.Z, asVarInt: false);
+            p.Write(BinaryPrimitives.ReverseEndianness(chunk.X), asVarInt: false);
+            p.Write(BinaryPrimitives.ReverseEndianness(chunk.Z), asVarInt: false);
             
             p.Write(chunk.Heightmaps.Length);
             foreach (Heightmap heightmap in chunk.Heightmaps)
