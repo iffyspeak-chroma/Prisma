@@ -26,7 +26,7 @@ public class ClientboundPlaySynchronizePlayerPositionPacket : ICallablePacket
 
             // TODO: Proper implementation
             // Send them to wherever their spawn is or world spawn if they don't have one
-            Location spawn = new Location(0d, 64d, 0d);
+            Location spawn = new Location(0d, 160d, 0d);
             spawn.Serialize(packet);
             
             // Set their entity location too :)

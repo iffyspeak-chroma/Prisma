@@ -26,7 +26,7 @@ public class ClientboundPlayDefaultSpawnPositionPacket : ICallablePacket
         
         packet.Write("minecraft:overworld");
         
-        packet.Write(new Position(0, 64, 0));
+        packet.Write(new Position(0, 160, 0));
         
         packet.Write(0.0f);
         packet.Write(0.0f);
