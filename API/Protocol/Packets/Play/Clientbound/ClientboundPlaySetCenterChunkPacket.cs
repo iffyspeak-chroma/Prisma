@@ -31,5 +31,7 @@ public class ClientboundPlaySetCenterChunkPacket : ICallablePacket
         packet.WriteLength();
             
         await client.SendPacket(packet);
+
+        await new ClientboundPlayLevelChunkWithLightPacket().Call(context, null);
     }
 }
