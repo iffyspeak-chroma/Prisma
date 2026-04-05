@@ -1,7 +1,7 @@
 ﻿using API.Core;
 using API.Protocol.Packets;
 
-namespace API.Game.World.Chunk;
+namespace API.Game.World.ChunkData;
 
 public class PalettedContainer : ISerializable
 {

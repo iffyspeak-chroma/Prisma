@@ -1,7 +1,7 @@
 ﻿using API.Core.Types;
 using API.Protocol.Packets;
 
-namespace API.Game.World.Chunk;
+namespace API.Game.World.ChunkData;
 
 public class Lightmap : ISerializable
 {
