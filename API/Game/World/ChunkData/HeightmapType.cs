@@ -1,4 +1,4 @@
-﻿namespace API.Game.World.Chunk;
+﻿namespace API.Game.World.ChunkData;
 
 public enum HeightmapType
 {

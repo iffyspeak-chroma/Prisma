@@ -1,6 +1,5 @@
 ﻿using System.Buffers.Binary;
 using API.Entities;
-using API.Game.World.Chunk;
 using API.Protocol.NBT;
 using API.Protocol.Packets;
 using fNbt;

@@ -1,6 +1,6 @@
 ﻿using API.Core;
 
-namespace API.Game.World.Chunk;
+namespace API.Game.World.ChunkData;
 
 public class Heightmap
 {
